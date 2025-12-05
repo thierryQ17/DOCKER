@@ -1,0 +1,26 @@
+﻿nom_colonne;nomColonneSQL;nomTableSQL;;
+code_commune;codeCommune;t_mairies;;
+file1_longitude;longitude;t_mairies;;
+file1_latitude;latitude;t_mairies;;
+file1_code_postal;codePostal;t_mairies;;
+file1_telephone;telephone;t_mairies;;
+file1_adresse_courriel;email;t_mairies;;
+file1_site_internet;siteInternet;t_mairies;;
+file1_plage_ouverture;plageOuverture;t_mairies;;
+file1_numero_voie;adresseMairie;t_mairies;;
+file3_code_arrond;codeArrondissement;t_mairies;;
+file3_nom_arrond;nomArrondissement;t_mairies;;
+file3_code_canton;codeCanton;t_mairies;;
+file3_nom_canton;nomCanton;t_mairies;;
+file3_nom_commune;nomCommune;t_mairies;;
+file3_population;nbHabitants;t_mairies;;
+XXXXX;codeRegion;t_mairies;foreignKey;table Regions
+XXXXX;codeDept;t_mairies;foreignKey;table Departements
+;;;;
+XXXXX;codeCommune;t_maire;foreignKey;
+file2_Nom du maire;nomMaire;t_maire;;
+file2_Prénom du maire;prenomMaire;t_maire;;
+XXXXX;nomPrenom : properCase(prenomMaire) upperCase(nomMaire);t_maire;;
+file2_Code sexe;codeSex;t_maire;;
+file2_Date de naissance;dateNaissance;t_maire;;
+file2_Libellé de la catégorie socio-professionnelle;metierMaire;t_maire;;

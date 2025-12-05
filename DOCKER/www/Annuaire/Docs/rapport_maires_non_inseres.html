@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport - Maires Non Insérés</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .stat-card.danger h3 {
+            color: #dc3545;
+        }
+
+        .stat-card.success h3 {
+            color: #28a745;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .problem-types {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .problem-types h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .problem-types ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        .problem-types li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #667eea;
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .badge.warning {
+            background: #ffc107;
+            color: #856404;
+        }
+
+        .badge.danger {
+            background: #dc3545;
+        }
+
+        .region-section {
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .region-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .dept-row {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dept-info {
+            flex: 1;
+        }
+
+        .dept-info strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .dept-count {
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .filter-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filter-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .filter-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .empty-circo {
+            background: #fff3cd;
+            color: #856404;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-style: italic;
+        }
+
+        .footer {
+            background: #343a40;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function filterResults() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const sections = document.getElementsByClassName('region-section');
+
+            for (let section of sections) {
+                const text = section.textContent || section.innerText;
+                if (text.toUpperCase().indexOf(filter) > -1) {
+                    section.style.display = '';
+                } else {
+                    section.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Rapport d'Analyse - Maires Non Insérés</h1>
+            <p>Analyse des correspondances entre le CSV et la base de données</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>29,491</h3>
+                <p>Total dans le CSV</p>
+            </div>
+            <div class="stat-card success">
+                <h3>27,660</h3>
+                <p>Maires insérés</p>
+            </div>
+            <div class="stat-card danger">
+                <h3>1,831</h3>
+                <p>Maires non insérés</p>
+            </div>
+            <div class="stat-card">
+                <h3>93.8%</h3>
+                <p>Taux de réussite</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="problem-types">
+                <h3>🔍 Types de problèmes identifiés</h3>
+                <ul>
+                    <li><strong>Formatage des circonscriptions:</strong> Différences entre "1ere circo" (CSV) et "1ère circo" (table circonscriptions)</li>
+                    <li><strong>Circonscriptions vides:</strong> Certaines entrées ont une circonscription vide dans le CSV</li>
+                    <li><strong>Circonscriptions "A verifier":</strong> Données incomplètes dans le CSV (Aisne: 542 maires, Somme: 509 maires, Seine-Maritime: 653 maires)</li>
+                    <li><strong>Corse:</strong> 359 maires sans circonscription définie (2A: 124, 2B: 235)</li>
+                </ul>
+            </div>
+
+            <h2>🗺️ Détail par Région</h2>
+
+            <div class="filter-box">
+                <input type="text" id="searchInput" onkeyup="filterResults()" placeholder="Rechercher une région, un département ou une circonscription...">
+            </div>
+
+            <!-- Auvergne-Rhone-Alpes -->
+            <div class="region-section">
+                <h3>Auvergne-Rhone-Alpes <span class="badge">Total: 2,835 maires non insérés</span></h3>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Ain (01)</strong> - Problème de formatage "1ere/2e/3e/4e/5e circo"
+                    </div>
+                    <div class="dept-count">379 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Allier (03)</strong> - Problème de formatage "1ere/2e/3e circo"
+                    </div>
+                    <div class="dept-count">297 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Ardèche (07)</strong> - Problème de formatage "1ere/2e/3e circo"
+                    </div>
+                    <div class="dept-count">319 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Cantal (15)</strong> - Problème de formatage "1ere/2e circo"
+                    </div>
+                    <div class="dept-count">230 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Drôme (26)</strong> - Problème de formatage "1ere/2e/3e/4e circo"
+                    </div>
+                    <div class="dept-count">328 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Isère (38)</strong> - Problème de formatage "1ere à 10e circo"
+                    </div>
+                    <div class="dept-count">454 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Loire (42)</strong> - Problème de formatage "1ere à 6e circo"
+                    </div>
+                    <div class="dept-count">296 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Haute-Loire (43)</strong> - Problème de formatage "1ere/2e circo"
+                    </div>
+                    <div class="dept-count">238 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Puy-de-Dôme (63)</strong> - Problème de formatage "1ere à 5e circo"
+                    </div>
+                    <div class="dept-count">432 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Rhône (69)</strong> - Problème de formatage "1ere à 14e circo"
+                    </div>
+                    <div class="dept-count">255 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Savoie (73)</strong> - Problème de formatage "1ere à 4e circo"
+                    </div>
+                    <div class="dept-count">234 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Haute-Savoie (74)</strong> - Problème de formatage "1ere à 6e circo"
+                    </div>
+                    <div class="dept-count">253 maires</div>
+                </div>
+            </div>
+
+            <!-- Corse -->
+            <div class="region-section">
+                <h3>Corse <span class="badge danger">Total: 359 maires non insérés</span></h3>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Corse-du-Sud (2A)</strong> - <span class="empty-circo">Circonscription VIDE</span>
+                    </div>
+                    <div class="dept-count">124 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Haute-Corse (2B)</strong> - <span class="empty-circo">Circonscription VIDE</span>
+                    </div>
+                    <div class="dept-count">235 maires</div>
+                </div>
+            </div>
+
+            <!-- Hauts-de-France (cas critiques) -->
+            <div class="region-section">
+                <h3>Hauts-de-France <span class="badge warning">Total: 2,428 maires non insérés</span></h3>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Aisne (02)</strong> - <span class="badge danger">542 maires "A verifier"</span> + formatage
+                    </div>
+                    <div class="dept-count">769 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Nord (59)</strong> - Problème de formatage "1ere à 21e circo"
+                    </div>
+                    <div class="dept-count">636 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Oise (60)</strong> - Problème de formatage "1ere à 6e circo"
+                    </div>
+                    <div class="dept-count">638 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Pas-de-Calais (62)</strong> - Problème de formatage "1ere à 11e circo"
+                    </div>
+                    <div class="dept-count">671 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Somme (80)</strong> - <span class="badge danger">509 maires "A verifier"</span> + formatage
+                    </div>
+                    <div class="dept-count">758 maires</div>
+                </div>
+            </div>
+
+            <!-- Normandie (Seine-Maritime critique) -->
+            <div class="region-section">
+                <h3>Normandie <span class="badge warning">Total: 1,026 maires non insérés</span></h3>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Seine-Maritime (76)</strong> - <span class="badge danger">653 maires "A verifier"</span>
+                    </div>
+                    <div class="dept-count">654 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Calvados (14)</strong> - Problème de formatage + circonscriptions vides
+                    </div>
+                    <div class="dept-count">464 maires</div>
+                </div>
+
+                <div class="dept-row">
+                    <div class="dept-info">
+                        <strong>Eure (27)</strong> - Problème de formatage + circonscriptions vides
+                    </div>
+                    <div class="dept-count">199 maires</div>
+                </div>
+            </div>
+
+            <div class="problem-types" style="margin-top: 40px;">
+                <h3>💡 Recommandations</h3>
+                <ul>
+                    <li><strong>Normaliser le formatage:</strong> Remplacer "1ere circo" par "1ère circo", "2e circo" par "2ème circo", etc.</li>
+                    <li><strong>Compléter les données manquantes:</strong> Traiter les 1,704 maires marqués "A verifier" (Aisne, Somme, Seine-Maritime)</li>
+                    <li><strong>Définir les circonscriptions pour la Corse:</strong> 359 maires sans circonscription</li>
+                    <li><strong>Vérifier les circonscriptions vides:</strong> Environ 168 entrées avec champ vide</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Rapport généré automatiquement - Base de données: annuairesMairesDeFrance</p>
+        </div>
+    </div>
+</body>
+</html>

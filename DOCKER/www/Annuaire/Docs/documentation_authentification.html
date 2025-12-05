@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Système d'Authentification PHP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-menu .nav-item {
+            margin: 0;
+        }
+
+        .nav-menu .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-menu .nav-link i {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .nav-menu .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-menu .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-left-color: white;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 40px 60px;
+            max-width: 1200px;
+        }
+
+        /* Headers */
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            padding-top: 20px;
+            scroll-margin-top: 20px;
+        }
+
+        h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            scroll-margin-top: 20px;
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #718096;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            scroll-margin-top: 20px;
+        }
+
+        /* Code blocks */
+        pre {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        :not(pre) > code {
+            background: #f1f5f9;
+            color: #e11d48;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table thead {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        table th {
+            padding: 12px 15px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Badges */
+        .badge-custom {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .badge-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Alerts */
+        .alert-custom {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        /* Diagrams */
+        .diagram {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s;
+            z-index: 999;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+        }
+
+        .back-to-top.show {
+            display: flex;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .menu-toggle {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+        }
+
+        /* Liste numérotée stylisée */
+        ol {
+            counter-reset: item;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ol li {
+            counter-increment: item;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        ol li::before {
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding-left: 25px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Section avec icône */
+        .icon-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .icon-section i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Toggle (mobile) -->
+    <button class="menu-toggle d-md-none" onclick="toggleSidebar()">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="bi bi-shield-lock-fill me-2"></i>Documentation</h2>
+            <p>Système d'Authentification PHP</p>
+        </div>
+        <ul class="nav nav-menu flex-column">
+            <li class="nav-item"><a class="nav-link active" href="#overview"><i class="bi bi-book"></i>Vue d'ensemble</a></li>
+            <li class="nav-item"><a class="nav-link" href="#architecture"><i class="bi bi-diagram-3"></i>Architecture</a></li>
+            <li class="nav-item"><a class="nav-link" href="#installation"><i class="bi bi-download"></i>Installation</a></li>
+            <li class="nav-item"><a class="nav-link" href="#configuration"><i class="bi bi-gear"></i>Configuration</a></li>
+            <li class="nav-item"><a class="nav-link" href="#database"><i class="bi bi-database"></i>Base de données</a></li>
+            <li class="nav-item"><a class="nav-link" href="#usage"><i class="bi bi-code-square"></i>Utilisation</a></li>
+            <li class="nav-item"><a class="nav-link" href="#security"><i class="bi bi-shield-check"></i>Sécurité</a></li>
+            <li class="nav-item"><a class="nav-link" href="#api"><i class="bi bi-braces"></i>API AppAuth</a></li>
+            <li class="nav-item"><a class="nav-link" href="#users"><i class="bi bi-people"></i>Gestion utilisateurs</a></li>
+            <li class="nav-item"><a class="nav-link" href="#troubleshooting"><i class="bi bi-tools"></i>Dépannage</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 id="overview">Documentation - Système d'Authentification PHP</h1>
+
+        <div class="alert-custom alert-info">
+            <strong><i class="bi bi-info-circle me-2"></i>À propos</strong><br>
+            Ce système d'authentification personnalisé a été développé pour l'application <strong>Annuaire des Maires de France</strong>. Il offre une solution complète et sécurisée avec activation/désactivation configurable.
+        </div>
+
+        <p>Version : <span class="badge-custom badge-success">1.0</span> | Date : 26 novembre 2025</p>
+
+        <!-- Architecture -->
+        <h2 id="architecture">Architecture</h2>
+
+        <p>Le système est composé de plusieurs fichiers travaillant ensemble :</p>
+
+        <div class="diagram">
+www/Annuaire/
+├── config/
+│   └── auth_config.php          # Configuration centralisée
+├── classes/
+│   └── AppAuth.php              # Classe d'authentification principale
+├── auth_middleware.php          # Middleware de protection des pages
+├── login.php                    # Page de connexion
+├── logout.php                   # Page de déconnexion
+└── sql/
+    └── add_derniere_connexion.sql  # Migration SQL
+        </div>
+
+        <h3>Flux d'authentification</h3>
+
+        <div class="diagram">
+┌─────────────────┐
+│  Utilisateur    │
+│  accède à une   │
+│  page protégée  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ auth_middleware.php │ ◄─── Inclus en haut de chaque page protégée
+└────────┬────────────┘
+         │
+         ▼
+   ┌─────────────┐
+   │  Connecté ? │
+   └──────┬──────┘
+          │
+    ┌─────┴─────┐
+    │           │
+   OUI         NON
+    │           │
+    ▼           ▼
+┌────────┐  ┌──────────────┐
+│ Accès  │  │ Redirection  │
+│ accordé│  │ vers login   │
+└────────┘  └──────────────┘
+        </div>
+
+        <!-- Installation -->
+        <h2 id="installation">Installation</h2>
+
+        <h3>1. Prérequis</h3>
+
+        <ul>
+            <li><strong>PHP</strong> ≥ 7.4 (recommandé PHP 8.0+)</li>
+            <li><strong>MySQL</strong> ≥ 5.7 ou MariaDB ≥ 10.2</li>
+            <li>Extensions PHP requises :
+                <ul>
+                    <li><code>pdo</code></li>
+                    <li><code>pdo_mysql</code></li>
+                    <li><code>session</code></li>
+                    <li><code>mbstring</code></li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>2. Installation de la base de données</h3>
+
+        <h4>Option A : Migration SQL automatique</h4>
+        <pre><code class="language-bash">mysql -u root -p annuairesMairesDeFrance &lt; sql/add_derniere_connexion.sql</code></pre>
+
+        <h4>Option B : Via Docker</h4>
+        <pre><code class="language-bash">docker exec mysql_db bash -c "mysql -uroot -proot annuairesMairesDeFrance &lt; /path/to/add_derniere_connexion.sql"</code></pre>
+
+        <h4>Option C : Création manuelle</h4>
+        <pre><code class="language-sql">-- Ajouter la colonne derniere_connexion
+ALTER TABLE utilisateurs
+ADD COLUMN derniere_connexion DATETIME NULL AFTER actif;
+
+-- Créer un index pour les performances
+CREATE INDEX idx_derniere_connexion ON utilisateurs(derniere_connexion);</code></pre>
+
+        <div class="alert-custom alert-success">
+            <strong><i class="bi bi-check-circle me-2"></i>Auto-création des tables</strong><br>
+            Les tables <code>user_sessions</code> et <code>login_attempts</code> sont créées automatiquement par la classe AppAuth.
+        </div>
+
+        <!-- Configuration -->
+        <h2 id="configuration">Configuration</h2>
+
+        <h3>Fichier : <code>config/auth_config.php</code></h3>
+
+        <pre><code class="language-php">&lt;?php
+// ===== ACTIVATION/DÉSACTIVATION =====
+define('AUTH_ENABLED', true); // true = Auth activée, false = désactivée
+
+// ===== DURÉES =====
+define('AUTH_SESSION_DURATION', 2 * 60 * 60);      // Session : 2 heures
+define('AUTH_REMEMBER_DURATION', 7 * 24 * 60 * 60); // Remember me : 7 jours
+
+// ===== COOKIES =====
+define('AUTH_REMEMBER_COOKIE', 'annuaire_remember');
+
+// ===== SÉCURITÉ =====
+define('AUTH_MAX_ATTEMPTS', 5);         // Tentatives max
+define('AUTH_LOCKOUT_DURATION', 15 * 60); // Blocage : 15 minutes
+
+// ===== PAGES PUBLIQUES =====
+define('AUTH_PUBLIC_PAGES', [
+    'login.php',
+    'api.php'
+]);
+
+// ===== REDIRECTIONS =====
+define('AUTH_REDIRECT_AFTER_LOGIN', 'maires_responsive.php');
+define('AUTH_LOGIN_PAGE', 'login.php');</code></pre>
+
+        <h3>Paramètres détaillés</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Paramètre</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Défaut</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>AUTH_ENABLED</code></td>
+                    <td>boolean</td>
+                    <td>Active/désactive l'authentification</td>
+                    <td><code>true</code></td>
+                </tr>
+                <tr>
+                    <td><code>AUTH_SESSION_DURATION</code></td>
+                    <td>int</td>
+                    <td>Durée de session (secondes)</td>
+                    <td>7200 (2h)</td>
+                </tr>
+                <tr>
+                    <td><code>AUTH_REMEMBER_DURATION</code></td>
+                    <td>int</td>
+                    <td>Durée cookie "Remember me" (secondes)</td>
+                    <td>604800 (7j)</td>
+                </tr>
+                <tr>
+                    <td><code>AUTH_MAX_ATTEMPTS</code></td>
+                    <td>int</td>
+                    <td>Tentatives avant blocage</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td><code>AUTH_LOCKOUT_DURATION</code></td>
+                    <td>int</td>
+                    <td>Durée du blocage (secondes)</td>
+                    <td>900 (15min)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Base de données -->
+        <h2 id="database">Structure de la base de données</h2>
+
+        <h3>Table <code>utilisateurs</code> (modifiée)</h3>
+
+        <pre><code class="language-sql">CREATE TABLE utilisateurs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    pseudo VARCHAR(50) NOT NULL UNIQUE,
+    adresseMail VARCHAR(255) NOT NULL UNIQUE,
+    mdp VARCHAR(255) NOT NULL,                    -- Hash bcrypt
+    typeUtilisateur_id INT DEFAULT 4,
+    actif TINYINT(1) DEFAULT 1,
+    derniere_connexion DATETIME NULL,             -- ⭐ Nouvelle colonne
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_derniere_connexion (derniere_connexion)
+);</code></pre>
+
+        <h3>Table <code>user_sessions</code> (auto-créée)</h3>
+
+        <p>Stocke les tokens "Remember me" pour la connexion persistante.</p>
+
+        <pre><code class="language-sql">CREATE TABLE user_sessions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    selector VARCHAR(24) UNIQUE NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    INDEX idx_selector (selector),
+    INDEX idx_expires (expires)
+);</code></pre>
+
+        <h3>Table <code>login_attempts</code> (auto-créée)</h3>
+
+        <p>Enregistre les tentatives de connexion échouées.</p>
+
+        <pre><code class="language-sql">CREATE TABLE login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    attempt_time INT NOT NULL,
+    ip_address VARCHAR(45),
+    INDEX idx_email_time (email, attempt_time)
+);</code></pre>
+
+        <!-- Utilisation -->
+        <h2 id="usage">Utilisation</h2>
+
+        <h3>1. Protéger une page</h3>
+
+        <pre><code class="language-php">&lt;?php
+// En tout premier dans votre fichier
+require_once __DIR__ . '/auth_middleware.php';
+
+// Le reste de votre code
+// La variable $auth est maintenant disponible
+?&gt;</code></pre>
+
+        <h3>2. Afficher les informations utilisateur</h3>
+
+        <pre><code class="language-php">&lt;?php
+require_once __DIR__ . '/auth_middleware.php';
+
+$user = $auth->getUser();
+
+echo "Bonjour " . htmlspecialchars($user['prenom']) . " " . htmlspecialchars($user['nom']);
+echo "&lt;br&gt;Email : " . htmlspecialchars($user['email']);
+echo "&lt;br&gt;Type : " . $user['type']; // 1=Super Admin, 2=Admin, 3=Référent, 4=Membre
+?&gt;</code></pre>
+
+        <h3>3. Vérifier les rôles</h3>
+
+        <pre><code class="language-php">&lt;?php
+require_once __DIR__ . '/auth_middleware.php';
+
+// Vérifier si l'utilisateur est admin
+if ($auth->isAdmin()) {
+    echo "Accès admin autorisé";
+} else {
+    die("Accès réservé aux administrateurs");
+}
+
+// Vérifier un rôle spécifique
+if ($auth->hasRole(1)) {
+    echo "Vous êtes Super Admin";
+}
+?&gt;</code></pre>
+
+        <div class="alert-custom alert-info">
+            <strong>Rôles disponibles :</strong><br>
+            <span class="badge-custom badge-info">1</span> Super Admin |
+            <span class="badge-custom badge-info">2</span> Admin |
+            <span class="badge-custom badge-info">3</span> Référent |
+            <span class="badge-custom badge-info">4</span> Membre
+        </div>
+
+        <!-- Sécurité -->
+        <h2 id="security">Fonctionnalités de sécurité</h2>
+
+        <h3>1. Hashing des mots de passe</h3>
+
+        <p>Le système utilise <strong>bcrypt</strong> via <code>password_hash()</code> de PHP :</p>
+
+        <pre><code class="language-php">// Création d'un utilisateur
+$hashedPassword = password_hash('motdepasse123', PASSWORD_DEFAULT);
+
+// Vérification
+if (password_verify($passwordInput, $user['mdp'])) {
+    // Mot de passe correct
+}</code></pre>
+
+        <div class="alert-custom alert-success">
+            <strong>Caractéristiques bcrypt :</strong>
+            <ul>
+                <li>Algorithme : bcrypt (blowfish)</li>
+                <li>Format : <code>$2y$10$...</code> (60 caractères)</li>
+                <li>Coût : 10 (par défaut PHP)</li>
+                <li>Salage automatique et unique par mot de passe</li>
+            </ul>
+        </div>
+
+        <h3>2. Protection anti-brute-force</h3>
+
+        <p>Le système limite les tentatives de connexion :</p>
+
+        <ul>
+            <li>Maximum <strong>5 tentatives</strong> échouées</li>
+            <li>Blocage pendant <strong>15 minutes</strong></li>
+            <li>Comptage sur une fenêtre glissante</li>
+            <li>Réinitialisation automatique après expiration</li>
+            <li>Nettoyage des anciennes entrées (&gt;24h)</li>
+        </ul>
+
+        <h3>3. Tokens "Remember me" sécurisés</h3>
+
+        <p>Le système utilise la méthode <strong>selector:token</strong> recommandée :</p>
+
+        <pre><code class="language-php">// Génération
+$selector = bin2hex(random_bytes(12));  // 24 caractères hex
+$token = bin2hex(random_bytes(32));     // 64 caractères hex
+$hashedToken = hash('sha256', $token);  // Stocké en base</code></pre>
+
+        <div class="alert-custom alert-warning">
+            <strong><i class="bi bi-shield-exclamation me-2"></i>Sécurité :</strong>
+            <ul>
+                <li>Le token original n'est jamais stocké en base</li>
+                <li>Seul le hash SHA256 est conservé</li>
+                <li>Si la base est compromise, les tokens ne peuvent pas être réutilisés</li>
+                <li>HttpOnly activé sur le cookie</li>
+            </ul>
+        </div>
+
+        <!-- API -->
+        <h2 id="api">API de la classe AppAuth</h2>
+
+        <h3>Constructeur</h3>
+
+        <pre><code class="language-php">__construct(PDO $pdo, bool $enabled = true)</code></pre>
+
+        <p><strong>Exemple :</strong></p>
+        <pre><code class="language-php">$auth = new AppAuth($pdo, AUTH_ENABLED);</code></pre>
+
+        <h3>Méthodes principales</h3>
+
+        <h4><code>isLoggedIn(): bool</code></h4>
+        <p>Vérifie si l'utilisateur est connecté.</p>
+        <pre><code class="language-php">if ($auth->isLoggedIn()) {
+    echo "Utilisateur connecté";
+}</code></pre>
+
+        <h4><code>login(string $email, string $password, bool $remember = false): array</code></h4>
+        <p>Authentifie un utilisateur.</p>
+        <pre><code class="language-php">$result = $auth->login('jean.dupont@email.fr', 'motdepasse123', true);
+
+if ($result['success']) {
+    header('Location: dashboard.php');
+} else {
+    echo "Erreur : " . $result['error'];
+}</code></pre>
+
+        <h4><code>logout(): bool</code></h4>
+        <p>Déconnecte l'utilisateur.</p>
+        <pre><code class="language-php">$auth->logout();
+header('Location: login.php');</code></pre>
+
+        <h4><code>getUser(): ?array</code></h4>
+        <p>Récupère les informations de l'utilisateur connecté.</p>
+        <pre><code class="language-php">$user = $auth->getUser();
+// ['id', 'nom', 'prenom', 'email', 'pseudo', 'type']</code></pre>
+
+        <h4><code>isAdmin(): bool</code></h4>
+        <p>Vérifie si l'utilisateur est admin ou super admin.</p>
+        <pre><code class="language-php">if ($auth->isAdmin()) {
+    // Afficher le panneau d'administration
+}</code></pre>
+
+        <!-- Gestion utilisateurs -->
+        <h2 id="users">Gestion des utilisateurs</h2>
+
+        <h3>Créer un utilisateur via PHP</h3>
+
+        <pre><code class="language-php">&lt;?php
+require_once 'config/database.php';
+
+$nom = 'Dupont';
+$prenom = 'Jean';
+$pseudo = 'jdupont';
+$email = 'jean.dupont@email.fr';
+$password = 'motdepasse123';
+$type = 4; // Membre
+$actif = 1;
+
+$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+$stmt = $pdo->prepare("
+    INSERT INTO utilisateurs (nom, prenom, pseudo, adresseMail, mdp, typeUtilisateur_id, actif)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+");
+
+$stmt->execute([$nom, $prenom, $pseudo, $email, $hashedPassword, $type, $actif]);
+
+echo "Utilisateur créé avec succès !";
+?&gt;</code></pre>
+
+        <h3>Réinitialiser un mot de passe</h3>
+
+        <pre><code class="language-php">&lt;?php
+$userId = 1;
+$newPassword = 'nouveaumotdepasse';
+$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+$stmt = $pdo->prepare("UPDATE utilisateurs SET mdp = ? WHERE id = ?");
+$stmt->execute([$hashedPassword, $userId]);
+?&gt;</code></pre>
+
+        <h3>Activer/Désactiver un compte</h3>
+
+        <pre><code class="language-sql">-- Désactiver
+UPDATE utilisateurs SET actif = 0 WHERE id = 1;
+
+-- Activer
+UPDATE utilisateurs SET actif = 1 WHERE id = 1;</code></pre>
+
+        <!-- Dépannage -->
+        <h2 id="troubleshooting">Dépannage</h2>
+
+        <h3>Problème : "Session déjà démarrée"</h3>
+
+        <div class="alert-custom alert-warning">
+            <strong>Erreur :</strong> <code>Warning: session_start(): A session had already been started</code>
+        </div>
+
+        <p><strong>Solution :</strong> Le middleware démarre automatiquement la session. Ne pas appeler <code>session_start()</code>.</p>
+
+        <pre><code class="language-php">// ❌ Éviter
+session_start();
+require_once 'auth_middleware.php';
+
+// ✅ Correct
+require_once 'auth_middleware.php';</code></pre>
+
+        <h3>Problème : Redirection infinie</h3>
+
+        <p><strong>Cause :</strong> La page de login n'est pas dans <code>AUTH_PUBLIC_PAGES</code></p>
+
+        <p><strong>Solution :</strong></p>
+        <pre><code class="language-php">// Dans auth_config.php
+define('AUTH_PUBLIC_PAGES', [
+    'login.php',  // ⭐ Important !
+    'api.php'
+]);</code></pre>
+
+        <h3>Problème : Mot de passe non reconnu</h3>
+
+        <p><strong>Vérification :</strong></p>
+        <pre><code class="language-sql">SELECT id, pseudo, LEFT(mdp, 4) as hash_type, LENGTH(mdp) as hash_length
+FROM utilisateurs
+WHERE id = 1;</code></pre>
+
+        <p>Résultat attendu : <code>hash_type = $2y$</code> et <code>hash_length = 60</code></p>
+
+        <h3>Problème : Cookie "Remember me" ne fonctionne pas</h3>
+
+        <p><strong>Diagnostic :</strong></p>
+        <pre><code class="language-php">// Vérifier les cookies
+var_dump($_COOKIE);
+
+// Vérifier les tokens en base
+SELECT * FROM user_sessions WHERE user_id = 1;</code></pre>
+
+        <h3>Auditer les connexions</h3>
+
+        <pre><code class="language-sql">-- Afficher les dernières connexions
+SELECT id, nom, prenom, adresseMail, derniere_connexion
+FROM utilisateurs
+WHERE derniere_connexion IS NOT NULL
+ORDER BY derniere_connexion DESC
+LIMIT 20;
+
+-- Utilisateurs inactifs depuis 30 jours
+SELECT id, nom, prenom, adresseMail, derniere_connexion
+FROM utilisateurs
+WHERE derniere_connexion < DATE_SUB(NOW(), INTERVAL 30 DAY)
+   OR derniere_connexion IS NULL;</code></pre>
+
+        <!-- Conclusion -->
+        <h2>Conclusion</h2>
+
+        <div class="alert-custom alert-success">
+            <strong><i class="bi bi-check-circle-fill me-2"></i>Ce système offre :</strong>
+            <ul>
+                <li>✅ Sécurité renforcée (bcrypt, anti-brute-force, tokens)</li>
+                <li>✅ Activation/désactivation facile</li>
+                <li>✅ Connexion persistante "Remember me"</li>
+                <li>✅ Gestion des rôles utilisateurs</li>
+                <li>✅ Traçabilité complète</li>
+                <li>✅ Auto-création des tables</li>
+                <li>✅ Interface moderne et responsive</li>
+            </ul>
+        </div>
+
+        <p style="text-align: center; margin-top: 40px; color: #718096;">
+            <strong>Version 1.0</strong> | Documentation système d'authentification<br>
+            Annuaire des Maires de France
+        </p>
+    </main>
+
+    <!-- Back to top button -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script>
+        // Highlight code blocks
+        hljs.highlightAll();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Update active menu item
+                    document.querySelectorAll('.nav-menu .nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+
+        // Update active menu item on scroll
+        const sections = document.querySelectorAll('h2[id]');
+        const menuLinks = document.querySelectorAll('.nav-menu .nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker-compose up:*)",
+      "Bash(docker-compose exec:*)",
+      "Bash(docker-compose ps:*)",
+      "Bash(docker exec mysql_db bash -c \"mysqldump -uroot -proot TEST | mysql -uroot -proot annuairesMairesDeFrance\")",
+      "Bash(docker exec:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nOptimisation et nettoyage du code - Suppression debug\n\n- Suppression de tous les console.log (14 occurrences)\n- Suppression de tous les console.error (11 occurrences)  \n- Suppression de error_log PHP (1 occurrence)\n- Total : 26 lignes de code de debug supprimées\n- Ajout bouton export Excel avec icône 📊\n- Amélioration filtre communes traitées avec contexte département\n- Ajout rapport d''analyse code complet (RAPPORT_ANALYSE_CODE.md)\n- Code 100% production-ready sans debug\n- Score qualité : 7.2/10\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)",
+      "Bash(ls -la \"c:\\DEV POWERSHELL\\DOCKER\\www\\Annuaire\\ressources\\images\"\" 2>/dev/null || dir \"c:DEV POWERSHELLDOCKERwwwAnnuaireressourcesimages\"\")",
+      "Bash(grep:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

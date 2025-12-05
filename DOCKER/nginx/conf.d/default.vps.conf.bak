@@ -1,0 +1,75 @@
+server {
+    listen 80;
+    server_name youpiare.fr www.youpiare.fr;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+        allow all;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name youpiare.fr www.youpiare.fr;
+    root /var/www/html/Annuaire;
+    index login.php index.php index.html;
+
+    ssl_certificate /etc/letsencrypt/live/youpiare.fr/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/youpiare.fr/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+        allow all;
+        try_files $uri =404;
+    }
+
+    location / {
+        try_files $uri $uri/ /login.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass php:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+
+server {
+    listen 80;
+    server_name localhost 37.59.123.9;
+    root /var/www/html;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass php:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}

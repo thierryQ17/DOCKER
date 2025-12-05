@@ -1,0 +1,119 @@
+{
+    "environnement": "dev",
+    "filtreHabitants": 1000,
+    "defaultPage": {
+        "1": {
+            "type": "Admin Général",
+            "desktop": "gestionUtilisateurs.php",
+            "mobile": "gestionUtilisateurs.php"
+        },
+        "2": {
+            "type": "Admin",
+            "desktop": "gestionUtilisateurs.php",
+            "mobile": "gestionUtilisateurs.php"
+        },
+        "3": {
+            "type": "Référent",
+            "desktop": "gestionUtilisateurs.php",
+            "mobile": "gestionUtilisateurs.php"
+        },
+        "4": {
+            "type": "Membre",
+            "desktop": "maires.php",
+            "mobile": "maires_responsive.php"
+        }
+    },
+    "sections": [
+        {
+            "titre": "Navigation",
+            "menus": [
+                {
+                    "page": "maires_responsive.php",
+                    "label": "Maires",
+                    "icon": "bi-map",
+                    "roles": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ]
+                },
+                {
+                    "page": "regions.php",
+                    "label": "Regions",
+                    "icon": "bi-geo-alt",
+                    "roles": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ]
+                },
+                {
+                    "page": "circonscriptions.php",
+                    "label": "Carte de FRANCE",
+                    "icon": "france-flag",
+                    "roles": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ]
+                },
+                {
+                    "page": "aide.php",
+                    "label": "Aide",
+                    "icon": "bi-question-circle",
+                    "roles": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ]
+                }
+            ]
+        },
+        {
+            "titre": "Administration",
+            "menus": [
+                {
+                    "page": "gestionUtilisateurs.php",
+                    "label": "Gestion Utilisateurs",
+                    "icon": "bi-people",
+                    "roles": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                {
+                    "page": "rapport_referent.php",
+                    "label": "Rapport Référents",
+                    "icon": "bi-graph-up-arrow",
+                    "roles": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                {
+                    "page": "rapport_Admin.php",
+                    "label": "Rapport Admin",
+                    "icon": "bi-diagram-3",
+                    "roles": [
+                        1,
+                        2
+                    ]
+                },
+                {
+                    "page": "logs.php",
+                    "label": "Logs d'activité",
+                    "icon": "bi-journal-text",
+                    "roles": [
+                        1
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,1703 @@
+/* ============================================
+   STYLES MOBILE-FIRST RESPONSIVE
+   Optimisé pour consultation sur téléphone
+   ============================================ */
+
+/* Variables CSS pour cohérence - Couleurs identiques à maires.php */
+:root {
+    --primary-color: #17a2b8;
+    --primary-dark: #138496;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --light-bg: #e0f7f4;
+    --light-bg-secondary: #c8e9e4;
+    --border-color: #dee2e6;
+    --text-muted: #6c757d;
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    --shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    --shadow-lg: 0 1rem 3rem rgba(0,0,0,0.175);
+    --navbar-height: 56px;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+}
+
+/* Mode iframe - masquer/afficher éléments */
+.iframe-hide {
+    display: flex !important;
+}
+
+.iframe-show {
+    display: none !important;
+}
+
+body.in-iframe .iframe-hide {
+    display: none !important;
+}
+
+body.in-iframe .iframe-show {
+    display: flex !important;
+}
+
+body.in-iframe {
+    padding-top: 0 !important;
+}
+
+body.in-iframe .main-content {
+    padding-top: 0 !important;
+}
+
+body.in-iframe .search-header-info {
+    top: 0 !important;
+}
+
+/* Bouton menu flottant - MASQUÉ (remplacé par btn-menu-inline) */
+.btn-menu-floating {
+    display: none !important;
+}
+
+/* Bouton menu inline dans le header sticky */
+.btn-menu-inline {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 6px;
+    margin-left: 0;
+    flex-shrink: 0;
+}
+
+.btn-menu-inline:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-menu-inline i {
+    font-size: 14px;
+}
+
+/* Reset et base */
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7f4 0%, #c8e9e4 100%);
+    overflow-x: hidden;
+    padding-top: var(--navbar-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Amélioration des touches tactiles */
+button, a, input, select, textarea, .clickable {
+    /* min-height: 44px; */
+    /* min-width: 44px; */
+    touch-action: manipulation;
+}
+
+/* Navbar personnalisée */
+.navbar {
+    height: var(--navbar-height);
+    z-index: 1040;
+    transition: all 0.3s ease;
+}
+
+.navbar.navbar-compact {
+    height: 48px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand-logo {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand-logo img {
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.navbar.navbar-compact .navbar-brand-logo img {
+    height: 32px !important;
+}
+
+.navbar-brand {
+    font-size: 1.1rem;
+    white-space: nowrap;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.3s ease;
+}
+
+.navbar.navbar-compact .navbar-brand {
+    font-size: 1rem;
+}
+
+.navbar-toggler {
+    order: 2;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+/* Bouton déconnexion mini dans navbar */
+.btn-logout-mini {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(40, 167, 69, 0.85);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+    opacity: 0.85;
+    margin-left: auto;
+}
+
+.btn-logout-mini:hover {
+    background: rgba(40, 167, 69, 1);
+    color: white;
+    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);
+}
+
+.btn-logout-mini:active {
+    transform: scale(0.95);
+}
+
+.btn-logout-mini i {
+    transition: transform 0.3s ease;
+}
+
+.btn-logout-mini:hover i {
+    transform: translateX(2px);
+}
+
+/* Bouton déconnexion avec nom utilisateur dans navbar */
+.btn-logout-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(40, 167, 69, 0.9);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+}
+
+.btn-logout-nav:hover {
+    background: rgba(40, 167, 69, 1);
+    color: white;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-logout-nav:active {
+    /* no transform */
+}
+
+.btn-logout-nav .user-name-nav {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: white;
+    font-size: 10px;
+}
+
+.btn-logout-nav i {
+    font-size: 12px;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.btn-logout-nav:hover i {
+    transform: translateX(3px);
+}
+
+/* Bouton Rapport Référents dans navbar */
+.btn-rapport-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgba(220, 53, 69, 0.9);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+    position: absolute;
+    right: 145px;
+    top: 7px;
+}
+
+.btn-rapport-nav:hover {
+    background: rgba(220, 53, 69, 1);
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+    transform: scale(1.02);
+}
+
+.btn-rapport-nav i {
+    font-size: 12px;
+    color: white;
+}
+
+/* Responsive pour mobile - Bouton Rapport */
+@media (max-width: 768px) {
+    .btn-rapport-nav {
+        right: 130px;
+        padding: 3px 8px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-rapport-nav {
+        right: 105px;
+        padding: 3px 6px;
+        font-size: 9px;
+    }
+
+    .btn-rapport-nav span {
+        display: none !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .btn-rapport-nav {
+        right: 85px;
+    }
+}
+
+/* Responsive pour mobile */
+@media (max-width: 480px) {
+    .btn-logout-nav {
+        padding: 3px 6px;
+        gap: 3px;
+        font-size: 9px;
+    }
+
+    .btn-logout-nav .user-name-nav {
+        max-width: 60px;
+        font-size: 9px;
+    }
+
+    .user-profile-container {
+        right: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .btn-logout-nav .user-name-nav {
+        display: none;
+    }
+
+    .btn-logout-nav {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+    }
+
+    .user-profile-container {
+        right: 10px;
+    }
+}
+
+/* ============================================
+   POPUP PROFIL UTILISATEUR
+   Affiche les infos au survol (desktop) ou tap (mobile)
+   ============================================ */
+
+.user-profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Permettre à la popup de déborder de la navbar */
+.navbar,
+.navbar .container-fluid {
+    overflow: visible !important;
+}
+
+.user-profile-popup {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    width: 240px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    z-index: 99999;
+    pointer-events: none;
+}
+
+/* Affichage via JS */
+.user-profile-popup.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Header de la popup */
+.popup-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+.popup-avatar {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.popup-user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.popup-user-name {
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.popup-user-email {
+    font-size: 11px;
+    opacity: 0.85;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Corps de la popup */
+.popup-body {
+    padding: 8px 12px;
+    background: #f8f9fa;
+}
+
+.popup-info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+    color: #495057;
+}
+
+.popup-info-row:not(:last-child) {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.popup-info-row i {
+    width: 20px;
+    color: #17a2b8;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Pied de la popup */
+.popup-footer {
+    padding: 8px 12px;
+    background: white;
+    border-top: 1px solid #e9ecef;
+    border-radius: 0 0 12px 12px;
+}
+
+.popup-logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.popup-logout-btn:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.popup-logout-btn:active {
+    transform: translateY(0);
+}
+
+.popup-logout-btn i {
+    font-size: 12px;
+}
+
+/* Responsive mobile */
+@media (max-width: 480px) {
+    .user-profile-popup {
+        width: 220px;
+        right: -10px;
+    }
+}
+
+#searchToggle {
+    min-width: 44px;
+    min-height: 44px;
+    transition: all 0.3s ease;
+}
+
+.navbar.navbar-compact #searchToggle {
+    min-width: 40px;
+    min-height: 40px;
+}
+
+#searchToggle:focus {
+    box-shadow: none;
+}
+
+/* Offcanvas Sidebar */
+.offcanvas {
+    max-width: 85vw;
+    border: none;
+}
+
+/* Header moderne du menu */
+.offcanvas-header-modern {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    padding: 12px 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 50px;
+}
+
+.offcanvas-header-modern .offcanvas-title {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Supprimé - plus utilisé */
+
+.btn-close-modern {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-close-modern:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+}
+
+.btn-close-modern i {
+    font-size: 16px;
+}
+
+.offcanvas-logo {
+    flex: 1;
+}
+
+.offcanvas-logo img {
+    max-width: 160px;
+    height: auto;
+    filter: brightness(1.1);
+}
+
+.offcanvas-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: transparent;
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.offcanvas-user .user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.offcanvas-user .user-name {
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.offcanvas-user .user-email {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Accordion dans le menu - Style moderne */
+.offcanvas .accordion {
+    background: transparent;
+}
+
+.offcanvas .accordion-item {
+    border: none;
+    background: transparent;
+    margin-bottom: 2px;
+}
+
+.accordion-button {
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    background: #f8f9fa;
+    border-radius: 8px !important;
+    margin: 4px 10px;
+    width: calc(100% - 20px);
+    border: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.accordion-button > span:first-child {
+    flex: 1;
+    text-align: left;
+}
+
+.accordion-button .badge {
+    margin-left: auto;
+    margin-right: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, rgba(23, 162, 184, 0.15) 0%, rgba(19, 132, 150, 0.1) 100%);
+    color: var(--primary-dark);
+    box-shadow: 0 2px 8px rgba(23, 162, 184, 0.15);
+}
+
+.accordion-button:hover {
+    background: rgba(23, 162, 184, 0.1);
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.accordion-button::after {
+    width: 16px;
+    height: 16px;
+    background-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.accordion-body {
+    padding: 0;
+    background: transparent;
+}
+
+.accordion-collapse {
+    margin: 0 10px 8px;
+}
+
+/* Liste des départements - Style moderne */
+.list-group-flush {
+    background: transparent;
+}
+
+.list-group-item {
+    border: none;
+    padding: 10px 16px;
+    margin: 2px 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.list-group-item:hover {
+    background: rgba(23, 162, 184, 0.08);
+    transform: translateX(4px);
+}
+
+.list-group-item:active {
+    background: rgba(23, 162, 184, 0.15);
+    transform: translateX(4px) scale(0.98);
+}
+
+.list-group-item .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+}
+
+/* Section filtre communes traitées */
+.offcanvas-body > .p-3.bg-light {
+    background: #f8f9fa !important;
+    margin: 10px;
+    border-radius: 10px;
+    border: none !important;
+}
+
+.offcanvas-body .form-check-label {
+    font-size: 13px;
+    color: #495057;
+}
+
+.offcanvas-body .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* DOM-TOM style spécial */
+.accordion-button.bg-info-subtle {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.15) 0%, rgba(23, 162, 184, 0.1) 100%) !important;
+}
+
+.accordion-button.bg-info-subtle:not(.collapsed) {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.25) 0%, rgba(23, 162, 184, 0.2) 100%) !important;
+}
+
+/* Panneau de recherche */
+.search-panel {
+    position: fixed;
+    top: var(--navbar-height);
+    left: -100%;
+    width: 85vw;
+    max-width: 350px;
+    height: calc(100vh - var(--navbar-height));
+    background: white;
+    box-shadow: var(--shadow-lg);
+    z-index: 1039;
+    transition: left var(--transition-normal);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.search-panel.active {
+    left: 0;
+}
+
+/* Boutons dans le panneau de recherche */
+.search-panel .btn-primary {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+    border: none !important;
+}
+
+.search-panel .btn-outline-primary {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+.search-panel .btn-outline-primary:hover {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+    color: white !important;
+}
+
+.search-overlay {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    width: 100%;
+    height: calc(100vh - var(--navbar-height));
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1038;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-normal);
+}
+
+.search-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Contenu principal */
+.main-content {
+    min-height: calc(100vh - var(--navbar-height));
+    padding-bottom: 0;
+}
+
+/* En-tête de recherche */
+.search-header-info {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    z-index: 1020;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: none;
+    margin: 0;
+    transition: max-height 0.3s ease-out;
+}
+
+.search-header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    width: 100%;
+    cursor: pointer;
+}
+
+.search-header-content i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.search-header-content i.bi-chevron-up,
+.search-header-content i.bi-chevron-down {
+    transition: transform 0.2s ease;
+}
+
+.search-header-text {
+    flex: 1;
+    line-height: 1.3;
+}
+
+#resultsContainer {
+    padding: 0;
+    margin: 0;
+}
+
+.stats-header {
+    border-radius: 0 0 1rem 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Cartes de maires (remplace le tableau) */
+.maire-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--primary-color);
+    transition: var(--transition-fast);
+    cursor: pointer;
+    position: relative;
+}
+
+.maire-card:active {
+    transform: scale(0.98);
+    box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+}
+
+.maire-card.demarche-active {
+    border-left-color: var(--success-color);
+    background: linear-gradient(to right, rgba(40, 167, 69, 0.03), white);
+}
+
+.maire-card.parrainage-obtenu {
+    background: linear-gradient(to right, rgba(40, 167, 69, 0.1), white);
+}
+
+.maire-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.maire-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin: 0;
+    flex: 1;
+}
+
+.maire-card-badge {
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+}
+
+.maire-card-body {
+    font-size: 0.9rem;
+}
+
+.maire-card-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.4rem;
+    color: var(--text-muted);
+}
+
+.maire-card-info i {
+    width: 20px;
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.maire-card-footer {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.maire-card-btn {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: var(--primary-color);
+    transition: var(--transition-fast);
+}
+
+.maire-card-btn:active {
+    transform: scale(0.95);
+    background: var(--primary-color);
+    color: white;
+}
+
+.maire-card-btn i {
+    font-size: 1rem;
+}
+
+/* Checkbox personnalisé pour démarchage */
+.demarche-check {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+}
+
+/* État vide */
+.empty-state {
+    padding: 3rem 1rem;
+}
+
+.empty-state i {
+    opacity: 0.3;
+}
+
+/* Loading spinner */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 0;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
+/* Bouton flottant Export */
+.btn-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    z-index: 1030;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-normal);
+}
+
+.btn-float:active {
+    transform: scale(0.9);
+}
+
+.btn-float i {
+    line-height: 1;
+}
+
+/* Modal Maire FULLSCREEN (Sticky toute hauteur) */
+#maireModal .modal-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+}
+
+#maireModal .modal-content {
+    border-radius: 0;
+    border: none;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#maireModal .modal-header {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#maireModal .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#maireModal .modal-footer {
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #dee2e6;
+    z-index: 10;
+}
+
+#maireModal.fade .modal-dialog {
+    transform: translateY(100%);
+    transition: transform 0.3s ease-out;
+}
+
+#maireModal.show .modal-dialog {
+    transform: translateY(0);
+}
+
+/* Modal Filtres (Bottom Sheet) - garde le style original */
+@media (max-width: 575.98px) {
+    #filtresModal .modal-dialog-bottom {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        max-width: 100%;
+    }
+
+    #filtresModal .modal-dialog-bottom .modal-content {
+        border-radius: 1rem 1rem 0 0;
+        border: none;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    #filtresModal.fade .modal-dialog-bottom {
+        transform: translateY(100%);
+    }
+
+    #filtresModal.show .modal-dialog-bottom {
+        transform: translateY(0);
+    }
+}
+
+/* Contenu du modal */
+.modal-maire-grid {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.modal-maire-item {
+    padding: 0.75rem;
+    background: var(--light-bg);
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+.modal-maire-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.modal-maire-label i {
+    margin-right: 0.5rem;
+}
+
+.modal-maire-value {
+    font-size: 1rem;
+    color: #333;
+    word-break: break-word;
+}
+
+.modal-maire-value.empty {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.modal-maire-value a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.modal-maire-value a:active {
+    text-decoration: underline;
+}
+
+/* Formulaire de démarchage dans modal */
+.demarche-form {
+    background: var(--light-bg);
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+}
+
+.demarche-form-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.demarche-form-title i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.demarche-form .form-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.demarche-form .form-control,
+.demarche-form .form-select {
+    font-size: 0.9rem;
+}
+
+/* Pagination mobile */
+.pagination-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem 0.5rem;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1030;
+    border-top: 1px solid var(--primary-color);
+}
+
+.pagination-mobile .btn {
+    min-width: 50px;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.7rem;
+    line-height: 1.1;
+}
+.pagination-mobile .page-info {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    min-width: 40px;
+    text-align: left;
+}
+
+/* Filtres en-tête (si utilisés) */
+.filter-header {
+    position: sticky;
+    top: var(--navbar-height);
+    background: white;
+    z-index: 1020;
+    padding: 0.75rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.filter-pills {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.5rem;
+}
+
+.filter-pills::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.filter-pill i {
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+/* Optimisations pour petits écrans */
+@media (max-width: 374px) {
+    .navbar-brand {
+        font-size: 0.95rem;
+    }
+
+    .maire-card {
+        padding: 0.75rem;
+    }
+
+    .maire-card-title {
+        font-size: 1rem;
+    }
+
+    .btn-float {
+        width: 48px;
+        height: 48px;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .btn-float i {
+        font-size: 1.2rem !important;
+    }
+}
+
+/* Tablettes et écrans moyens */
+@media (min-width: 576px) {
+    .main-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .maire-card {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .stats-header {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+    .offcanvas {
+        max-width: 400px;
+    }
+
+    .search-panel {
+        max-width: 400px;
+    }
+
+    #resultsContainer {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .maire-card {
+        max-width: 100%;
+    }
+}
+
+/* Grands écrans */
+@media (min-width: 992px) {
+    /* Navbar reste fixe sur grands écrans */
+    body {
+        padding-top: var(--navbar-height);
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .main-content {
+        padding-top: 1rem;
+    }
+
+    .stats-header {
+        border-radius: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #resultsContainer {
+        max-width: 1000px;
+    }
+
+    .search-panel {
+        top: 0;
+        height: 100vh;
+    }
+
+    .search-overlay {
+        top: 0;
+        height: 100vh;
+    }
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.maire-card {
+    animation: slideInUp 0.3s ease backwards;
+}
+
+.maire-card:nth-child(1) { animation-delay: 0.05s; }
+.maire-card:nth-child(2) { animation-delay: 0.1s; }
+.maire-card:nth-child(3) { animation-delay: 0.15s; }
+.maire-card:nth-child(4) { animation-delay: 0.2s; }
+.maire-card:nth-child(5) { animation-delay: 0.25s; }
+
+/* Mode sombre (si support navigateur) */
+@media (prefers-color-scheme: dark) {
+    /* Optionnel : ajouter support mode sombre */
+}
+
+/* Accessibilité */
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Performance: will-change sur éléments animés */
+.maire-card,
+.btn-float,
+.search-panel,
+.search-overlay,
+.offcanvas {
+    will-change: transform;
+}
+
+/* Désactiver will-change après animation */
+.maire-card.animated,
+.search-panel.loaded,
+.offcanvas.loaded {
+    will-change: auto;
+}
+
+/* Smooth scroll natif */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Safe area pour encoche iPhone */
+@supports (padding: max(0px)) {
+    body {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+
+    .navbar,
+    .offcanvas,
+    .search-panel {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+
+    .btn-float {
+        right: max(20px, calc(20px + env(safe-area-inset-right)));
+        bottom: max(20px, calc(20px + env(safe-area-inset-bottom)));
+    }
+}
+
+/* ============================================
+   MODAL FILTRES MODERNE
+   ============================================ */
+
+.filter-modal-modern {
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.filter-header-modern {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    padding: 8px 12px !important;
+    border: none !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-toolbar {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.filter-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.filter-btn:active {
+    transform: scale(0.95);
+}
+
+.filter-btn-reset {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.filter-btn-reset:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.filter-btn-list {
+    background: rgba(255, 255, 255, 0.9);
+    color: #17a2b8;
+}
+
+.filter-btn-list:hover {
+    background: white;
+}
+
+.filter-btn-check {
+    background: #28a745;
+    color: white;
+}
+
+.filter-btn-check:hover {
+    background: #218838;
+}
+
+.filter-btn-export {
+    background: #198754;
+    color: white;
+}
+
+.filter-btn-export:hover {
+    background: #157347;
+}
+
+.filter-btn-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.filter-btn-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.filter-body-modern {
+    padding: 8px 12px !important;
+    background: #f8f9fa;
+}
+
+.filter-combo-container {
+    margin-bottom: 6px;
+}
+
+.filter-select-modern {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    background: white;
+    transition: all 0.2s ease;
+    height: auto;
+}
+
+.filter-select-modern:focus {
+    border-color: #17a2b8;
+    box-shadow: 0 0 0 2px rgba(23, 162, 184, 0.1);
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    background: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.filter-row:hover {
+    border-color: #17a2b8;
+}
+
+.filter-row:focus-within {
+    border-color: #17a2b8;
+    box-shadow: 0 0 0 2px rgba(23, 162, 184, 0.1);
+}
+
+.filter-label {
+    min-width: 70px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.filter-label i {
+    font-size: 0.8rem;
+    color: #17a2b8;
+}
+
+.filter-input-modern {
+    border: none !important;
+    padding: 4px 6px !important;
+    font-size: 0.78rem !important;
+    background: transparent !important;
+    flex: 1;
+    height: auto !important;
+}
+
+.filter-input-modern:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.filter-input-modern::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.filter-footer-modern {
+    padding: 8px 12px !important;
+    background: white;
+    border-top: 1px solid #e2e8f0 !important;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-filter-cancel {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #6c757d;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-filter-cancel:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.btn-filter-apply {
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: none;
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-filter-apply:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(23, 162, 184, 0.3);
+}
+
+.btn-filter-apply:active {
+    transform: translateY(0);
+}
+
+/* Boutons d'action rapide discrets en bas du modal filtres */
+.filter-quick-actions-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn-quick-discrete {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    background: #f8f9fa;
+    color: #6c757d;
+    font-weight: 500;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-quick-discrete i {
+    font-size: 0.9rem;
+    color: #868e96;
+}
+
+.btn-quick-discrete:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    color: #495057;
+}
+
+.btn-quick-discrete:hover i {
+    color: #495057;
+}
+
+.btn-quick-discrete:active {
+    background: #dee2e6;
+}

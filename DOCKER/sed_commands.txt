@@ -1,0 +1,10 @@
+s/ajax: 'getDepartements'/action: 'getDepartements'/g
+s/ajax: 'getMaires'/action: 'getMaires'/g
+s/ajax: 'getMaireDetails'/action: 'getMaireDetails'/g
+s/ajax: 'getDemarchage'/action: 'getDemarchage'/g
+s/ajax: 'getStatsDemarchage'/action: 'getStatsDemarchage'/g
+s/ajax: 'autocompleteAdvanced'/action: 'autocompleteAdvanced'/g
+s/maires\.php?ajax=/api.php?action=/g
+s|fetch('maires\.php?|fetch('api.php?|g
+s|fetch(`maires\.php?|fetch(`api.php?|g
+s|formData\.append('ajax',|formData.append('action',|g

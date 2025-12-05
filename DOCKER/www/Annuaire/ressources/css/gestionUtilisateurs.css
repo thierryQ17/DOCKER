@@ -1,0 +1,1292 @@
+/**
+ * Styles pour la page Gestion des Utilisateurs
+ * Fichier extrait de gestionUtilisateurs.php
+ */
+
+:root {
+    --primary-color: #17a2b8;
+    --primary-dark: #138496;
+    --admin-color: #dc3545;
+    --referent-color: #fd7e14;
+    --membre-color: #28a745;
+    --super-admin-color: #6f42c1;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f7fa;
+    min-height: 100vh;
+}
+
+.navbar {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Bouton retour rond */
+.btn-back-round {
+    position: fixed;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-back-round:hover {
+    background: rgba(255,255,255,0.35);
+    color: white;
+    transform: scale(1.1);
+}
+
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Dashboard Cards */
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.stats-card .icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.stats-card.users .icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.stats-card.departments .icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.stats-card.cantons .icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.stats-card.active .icon {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+.stats-card .number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.stats-card .label {
+    font-size: 14px;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.stats-card .details {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 12px;
+    color: #718096;
+}
+
+.stats-card .details .badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    margin-right: 5px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.stats-card .details .badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stats-card .details .badge.active {
+    box-shadow: 0 0 0 2px white, 0 0 0 4px currentColor;
+    font-weight: 700;
+}
+
+/* Modale utilisateur */
+.modal-dialog {
+    max-width: 750px;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    padding: 15px 20px;
+    border-bottom: none;
+}
+
+.modal-header .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+.modal-body .nav-tabs {
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 15px;
+}
+
+.modal-body .nav-link {
+    border: none;
+    color: #718096;
+    padding: 8px 15px;
+    font-weight: 500;
+    font-size: 13px;
+    position: relative;
+    transition: all 0.2s;
+    background: transparent;
+}
+
+.modal-body .nav-link:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 6px 6px 0 0;
+}
+
+.modal-body .nav-link.active {
+    color: #667eea;
+    background: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-body .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #667eea;
+}
+
+.modal-body .tab-content {
+    background: white;
+    padding: 15px;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+.modal-body .form-label {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.modal-body .form-control,
+.modal-body .form-select {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.modal-body small.text-muted {
+    font-size: 11px;
+    color: #718096;
+}
+
+.modal-body small.text-danger {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.modal-body .row.g-3 {
+    row-gap: 12px !important;
+}
+
+.modal-body .form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.modal-body .form-control.is-invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.input-group .btn-outline-secondary {
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    transition: all 0.2s;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.input-group .btn-outline-secondary:active {
+    background: #e2e8f0;
+}
+
+.input-group .form-control {
+    border-radius: 6px 0 0 6px;
+}
+
+.modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+}
+
+.modal-footer .btn {
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.modal-footer .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+}
+
+.modal-footer .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.modal-footer .btn-secondary {
+    background: white;
+    border: 2px solid #e2e8f0;
+    color: #718096;
+}
+
+.modal-footer .btn-secondary:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+#menuTree, #cantonTree {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+/* Icones Check/Uncheck stylees */
+.icon-check-all {
+    color: #4a90e2 !important;
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 1.15rem !important;
+    transition: all 0.2s ease;
+    opacity: 0.75;
+}
+
+.icon-check-all:hover {
+    transform: scale(1.2);
+    opacity: 1;
+    color: #2e7bc4 !important;
+}
+
+.icon-uncheck-all {
+    color: #6c757d !important;
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 1.15rem !important;
+    transition: all 0.2s ease;
+    opacity: 0.75;
+}
+
+.icon-uncheck-all:hover {
+    transform: scale(1.2);
+    opacity: 1;
+    color: #495057 !important;
+}
+
+/* Onglets personnalises */
+.custom-tabs {
+    background: white;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-top: 30px;
+}
+
+.custom-tabs .nav-tabs {
+    border-bottom: 2px solid #e2e8f0;
+    padding: 0 20px;
+}
+
+.custom-tabs .nav-link {
+    border: none;
+    color: #718096;
+    padding: 15px 25px;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.custom-tabs .nav-link:hover {
+    color: var(--primary-color);
+    background: transparent;
+}
+
+.custom-tabs .nav-link.active {
+    color: var(--primary-color);
+    background: transparent;
+    border: none;
+}
+
+.custom-tabs .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary-color);
+}
+
+.custom-tabs .nav-link i {
+    margin-right: 8px;
+}
+
+.custom-tabs .tab-content {
+    padding: 30px;
+}
+
+/* Tableau utilisateurs */
+.users-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.users-table table {
+    margin-bottom: 0;
+}
+
+.users-table th {
+    background: #f7fafc;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.users-table td {
+    padding: 12px 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.users-table tbody tr:hover {
+    background-color: #99ccff !important;
+}
+
+.badge-role {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.badge-super-admin {
+    background: rgba(111, 66, 193, 0.15);
+    color: var(--super-admin-color);
+}
+
+.badge-admin {
+    background: var(--admin-color);
+    color: #fff;
+}
+
+.badge-referent {
+    background: rgba(253, 126, 20, 0.15);
+    color: var(--referent-color);
+}
+
+.badge-membre {
+    background: rgba(40, 167, 69, 0.15);
+    color: var(--membre-color);
+}
+
+/* Actions rapides */
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.quick-actions .btn {
+    flex: 1;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Iframe container */
+.iframe-container {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.iframe-container iframe {
+    width: 100%;
+    height: 800px;
+    border: none;
+}
+
+/* Filtres et recherche */
+.filters-bar {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding-left: 40px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+}
+
+/* Arborescence Utilisateurs par region */
+.region-tree-section {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.region-tree-section .section-title {
+    font-weight: 600;
+    color: #2d3748;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.tree-container {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.tree-node {
+    margin-left: 0;
+}
+
+.tree-node .node-header {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 2px;
+}
+
+.tree-node .node-header:hover {
+    background-color: #f1f5f9;
+}
+
+.tree-node .node-toggle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    color: #718096;
+    transition: transform 0.2s;
+}
+
+.tree-node .node-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.tree-node .node-icon {
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.tree-node .node-label {
+    flex: 1;
+    font-size: 13px;
+    color: #2d3748;
+}
+
+.tree-node .node-count {
+    font-size: 11px;
+    color: #718096;
+    background: #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.tree-node .node-children {
+    margin-left: 25px;
+    display: none;
+}
+
+.tree-node .node-children.expanded {
+    display: block;
+}
+
+/* Niveau region */
+.tree-node.region-node > .node-header {
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    border-left: 3px solid #667eea;
+}
+
+.tree-node.region-node > .node-header .node-icon {
+    color: #667eea;
+}
+
+/* Niveau departement */
+.tree-node.dept-node > .node-header {
+    background: #f8fafc;
+    border-left: 3px solid #4facfe;
+}
+
+.tree-node.dept-node > .node-header .node-icon {
+    color: #4facfe;
+}
+
+/* Niveau canton */
+.tree-node.canton-node > .node-header {
+    background: #fffdf5;
+    border-left: 3px solid #f6ad55;
+}
+
+.tree-node.canton-node > .node-header .node-icon {
+    color: #f6ad55;
+}
+
+.tree-node.canton-node > .node-header .node-label {
+    font-weight: bold;
+}
+
+/* Utilisateur dans l'arborescence */
+.tree-user {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    margin: 2px 0 2px 25px;
+    border-radius: 4px;
+    background: #f7fafc;
+    font-size: 12px;
+}
+
+.tree-user .user-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.tree-user.referent .user-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.tree-user .user-name {
+    flex: 1;
+    color: #2d3748;
+}
+
+.tree-user .user-email {
+    color: #718096;
+    font-size: 11px;
+}
+
+/* Niveau utilisateur (noeud principal) */
+.tree-node.user-node > .node-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-left: 3px solid #4a5568;
+    font-weight: 500;
+}
+
+.tree-node.user-node > .node-header:hover {
+    background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+}
+
+.user-icon-small {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    margin-right: 8px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.user-icon-small:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.user-icon-small.referent {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.user-icon-small.membre {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.user-email-inline {
+    color: #718096;
+    font-size: 11px;
+    margin-left: auto;
+    font-weight: normal;
+}
+
+/* Niveau region/departement combine */
+.tree-node.region-dept-node > .node-header {
+    background: #f8fafc;
+    border-left: 3px solid #4facfe;
+}
+
+.tree-node.region-dept-node > .node-header .node-icon {
+    color: #4facfe;
+}
+
+/* Feuilles (elements sans enfants) */
+.tree-leaf {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    margin: 2px 0 2px 25px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.tree-leaf.dept-leaf {
+    background: #f0f9ff;
+    border-left: 2px solid #4facfe;
+}
+
+.tree-leaf.dept-leaf .node-icon {
+    color: #4facfe;
+    margin-right: 8px;
+}
+
+.tree-leaf.canton-leaf {
+    background: #fffdf5;
+    border-left: 2px solid #f6ad55;
+}
+
+.tree-leaf.canton-leaf .node-icon {
+    color: #f6ad55;
+    margin-right: 8px;
+}
+
+.tree-leaf.canton-leaf .node-label {
+    font-weight: bold;
+}
+
+.tree-leaf.membre-leaf {
+    background: #f0fff4;
+    border-left: 2px solid #48bb78;
+}
+
+.user-icon-tiny {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: bold;
+    color: white;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.user-icon-tiny.membre {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+/* Nom de referent cliquable */
+.clickable-referent {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
+}
+
+.clickable-referent:hover {
+    color: #0d6efd;
+    text-decoration-style: solid;
+}
+
+/* Bouton retour pour vue detail referent */
+.referent-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.referent-detail-header .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.referent-detail-header .back-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.referent-detail-header .referent-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+/* Conteneur grille pour les cartes referents */
+.referents-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .referents-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cartes referents dans la modale region */
+.referent-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.referent-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.referent-card-header .user-icon-medium {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    flex-shrink: 0;
+}
+
+.referent-card-header .referent-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.referent-card-header .referent-email {
+    font-size: 13px;
+    color: #666;
+}
+
+.card-expand-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.card-expand-buttons button {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px 6px;
+    cursor: pointer;
+    color: #666;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.card-expand-buttons button:hover {
+    background: #f0f0f0;
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.card-expand-buttons .btn-loupe {
+    color: #ed8936;
+    border-color: #ed8936;
+}
+
+.card-expand-buttons .btn-loupe:hover {
+    background: #fff5eb;
+    color: #c05621;
+    border-color: #c05621;
+}
+
+#allReferentsModalBody,
+#regionReferentsModalBody,
+#referentDetailModalBody,
+#allMembresModalBody {
+    position: relative;
+}
+
+.referent-card-depts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.referent-card-depts .dept-badge {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.referent-card-cantons {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #e0e0e0;
+}
+
+.referent-card-cantons .canton-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.referent-card-cantons .canton-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.referent-card-cantons .canton-badge {
+    background: #f5f5f5;
+    color: #555;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+.region-name-clickable {
+    cursor: pointer;
+}
+
+.region-name-clickable:hover {
+    text-decoration: underline;
+    color: #0d6efd;
+}
+
+/* Arbre dans la carte referent (modale) */
+.referent-card-tree {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e9ecef;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.referent-card-tree .tree-node {
+    margin-left: 0;
+}
+
+.referent-card-tree .tree-node .tree-node {
+    margin-left: 20px;
+}
+
+.referent-card-tree .tree-leaf {
+    margin-left: 20px;
+}
+
+.referent-card-tree .node-header {
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.referent-card-tree .node-header:hover {
+    background-color: #f0f0f0;
+}
+
+.referent-card-tree .dept-node > .node-header {
+    background-color: #e3f2fd;
+}
+
+.referent-card-tree .dept-node > .node-header:hover {
+    background-color: #bbdefb;
+}
+
+.referent-card-tree .canton-node > .node-header {
+    background-color: #f1f8e9;
+}
+
+.referent-card-tree .canton-node > .node-header:hover {
+    background-color: #dcedc8;
+}
+
+.referent-card-tree .membre-leaf {
+    padding: 4px 8px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.referent-card-tree .node-toggle {
+    cursor: pointer;
+    margin-right: 5px;
+    color: #718096;
+    transition: transform 0.2s;
+}
+
+.referent-card-tree .node-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.referent-card-tree .node-children {
+    margin-left: 25px;
+    display: none;
+}
+
+.referent-card-tree .node-children.expanded {
+    display: block;
+}
+
+.referent-card-tree .node-icon {
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.referent-card-tree .node-label {
+    flex: 1;
+    font-size: 13px;
+    color: #2d3748;
+}
+
+.referent-card-tree .node-count {
+    font-size: 11px;
+    color: #718096;
+    background: #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+}
+
+/* Animation spin pour le chargement */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 10px;
+    }
+
+    .stats-card {
+        margin-bottom: 15px;
+    }
+
+    .custom-tabs .nav-link {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .quick-actions {
+        flex-direction: column;
+    }
+}
+
+/* Styles pour l'onglet "Mes accès" - Cantons avec checkboxes */
+.dept-section {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.dept-section:last-child {
+    border-bottom: none;
+}
+
+.dept-header {
+    background: #f8f9fa;
+    transition: background 0.2s;
+}
+
+.dept-header:hover {
+    background: #e9ecef;
+}
+
+.dept-chevron {
+    transition: transform 0.2s;
+    font-size: 12px;
+}
+
+.dept-cantons {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.canton-checkbox {
+    cursor: pointer;
+}
+
+.canton-checkbox:checked + .form-check-label {
+    font-weight: 600;
+    color: #198754;
+}
+
+.form-check.py-1:hover {
+    background: #f0fff4;
+}
+
+.btn-xs {
+    padding: 2px 6px;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+#myaccess .card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Formulaire compact - label et champ sur même ligne */
+.compact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.compact-form .form-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.compact-form .form-label-inline {
+    width: 110px;
+    min-width: 110px;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 12px;
+    margin-bottom: 0;
+    text-align: right;
+}
+
+.compact-form .form-control,
+.compact-form .form-select,
+.compact-form textarea {
+    flex: 1;
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+}
+
+.compact-form .form-control:focus,
+.compact-form .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+}
+
+.compact-form .form-control-sm,
+.compact-form .form-select-sm {
+    height: 32px;
+}
+
+.compact-form textarea.form-control-sm {
+    height: auto;
+    min-height: 50px;
+}
+
+/* Animation pour le champ département */
+#departementRow {
+    transition: all 0.3s ease;
+}
+
+/* Autocomplétion département */
+.dept-autocomplete {
+    position: relative;
+}
+
+.dept-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 250px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1060;
+}
+
+.dept-region {
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #6366f1;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+}
+
+.dept-group {
+    padding: 2px 0;
+}
+
+.dept-item {
+    padding: 8px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.dept-item:hover {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.dept-no-result {
+    padding: 12px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+}
