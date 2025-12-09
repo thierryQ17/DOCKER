@@ -5,9 +5,9 @@ cd "C:\DEV POWERSHELL\DOCKER\www"
 scp -r Annuaire/*.php Annuaire/*.css Annuaire/*.html Annuaire/ressources Qiou17@37.59.123.9:~/projects/annuaire-maires/www/Annuaire/
 
 ****** on exclu le répertoire data avec csv, json xlsx
-cd "C:\DEV POWERSHELL\DOCKER\www"
-Get-ChildItem -Path Annuaire -Recurse | Where-Object { -not $_.PSIsContainer -and $_.FullName -notlike "*\Annuaire\data\*" } | ForEach-Object {
-    $dest = $_.FullName -replace [regex]::Escape("C:\DEV POWERSHELL\DOCKER\www\"), ""
+cd "C:\DEV POWERSHELL\!!!Q17\DOCKER"
+Get-ChildItem -Path www\Annuaire -Recurse | Where-Object { -not $_.PSIsContainer -and $_.FullName -notlike "*\Annuaire\data\*" } | ForEach-Object {
+    $dest = ($_.FullName -replace [regex]::Escape("C:\DEV POWERSHELL\!!!Q17\DOCKER\www\"), "") -replace "\\", "/"
     scp $_.FullName "Qiou17@37.59.123.9:~/projects/annuaire-maires/www/$dest"
 }
 

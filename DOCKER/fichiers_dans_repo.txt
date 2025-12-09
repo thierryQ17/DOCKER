@@ -1,0 +1,165 @@
+================================================================================
+LISTE DES 592 FICHIERS ACTUELLEMENT DANS LE DEPOT GIT
+================================================================================
+
+Ces fichiers sont deja pousses sur GitHub (ou le seront au prochain push).
+
+--------------------------------------------------------------------------------
+FICHIERS DE CONFIGURATION ET DOCUMENTATION (racine)
+--------------------------------------------------------------------------------
+DOCKER/.claude/settings.local.json
+DOCKER/.env.example
+DOCKER/API_DOCUMENTATION.md
+DOCKER/Dockerfile.nginx
+DOCKER/Dockerfile.php
+DOCKER/RAPPORT_ANALYSE_CODE.md
+DOCKER/README.md
+DOCKER/docker-compose-simple.yml
+DOCKER/docker-compose.prod.yml
+DOCKER/docker-compose.yml
+DOCKER/deploiement-annuaire.bat
+
+--------------------------------------------------------------------------------
+SCRIPTS SQL
+--------------------------------------------------------------------------------
+DOCKER/add_parrainage_obtenu.sql
+DOCKER/create_demarchage_table.sql
+DOCKER/modify_rdv_multiple.sql
+DOCKER/mysql/init/02_regions.sql
+DOCKER/mysql/init/03_departements.sql
+DOCKER/mysql/init/04_regions_departements_mapping.sql
+DOCKER/mysql/init/04_regions_osm.sql
+DOCKER/mysql/init/05_circonscriptions.sql
+DOCKER/mysql/init/06_maires.sql (14.37 MB)
+DOCKER/mysql/init/98_t_canton.sql
+DOCKER/mysql/init/99_cantons_geojson.sql
+DOCKER/mysql/init/99_t_toutesLesInfos.sql (13.92 MB)
+DOCKER/sql/add_statut_demarchage.sql
+DOCKER/sql/remove_contact_telephonique.sql
+
+--------------------------------------------------------------------------------
+SCRIPTS SHELL/PYTHON/POWERSHELL
+--------------------------------------------------------------------------------
+DOCKER/analyse_maires_non_inseres.sh
+DOCKER/generate_circonscriptions_fk_sql.sh
+DOCKER/generate_departements_sql.sh
+DOCKER/generate_maires_sql.py
+DOCKER/generate_maires_sql.sh
+DOCKER/generate_regions_circo_dept_maires_sql_awk.sh
+DOCKER/generate_regions_sql.sh
+DOCKER/generate_sql_awk.sh
+DOCKER/generate_t_mairies_maires.sh
+DOCKER/import_cantons.sh
+DOCKER/import_cantons_geojson.sh
+DOCKER/import_mairies_maires.sh
+DOCKER/import_toutesLesInfos.sh
+DOCKER/download_base64_image.ps1
+DOCKER/rename_cantons.ps1
+DOCKER/update_ajax_calls.py
+DOCKER/update_passwords.bat
+
+--------------------------------------------------------------------------------
+DOCUMENTATION VPS
+--------------------------------------------------------------------------------
+DOCKER/docs/DEMARCHAGE_REFONTE.md
+DOCKER/docs/SCHEMA_RELATIONNEL_PROPOSE.md
+DOCKER/docs/vps-deployment/00-ROADMAP.md
+DOCKER/docs/vps-deployment/01-connexion-securisation.md
+DOCKER/docs/vps-deployment/02-installation-docker.md
+DOCKER/docs/vps-deployment/03-configuration-git.md
+DOCKER/docs/vps-deployment/04-structure-projet.md
+DOCKER/docs/vps-deployment/05-workflow-deploiement.md
+DOCKER/docs/vps-deployment/06-configuration-firewall.md
+DOCKER/docs/vps-deployment/07-automatisation.md
+DOCKER/docs/vps-deployment/08-monitoring-maintenance.md
+DOCKER/docs/vps-deployment/09-troubleshooting.md
+DOCKER/docs/vps-deployment/README.md
+DOCKER/docs/vps-deployment/RECAP-COMMANDES-VPS.md
+
+--------------------------------------------------------------------------------
+APPLICATION PHP (www/Annuaire)
+--------------------------------------------------------------------------------
+DOCKER/www/Annuaire/accueil.php
+DOCKER/www/Annuaire/aide.php
+DOCKER/www/Annuaire/api.php
+DOCKER/www/Annuaire/api_circonscriptions.php
+DOCKER/www/Annuaire/api_parrainages.php
+DOCKER/www/Annuaire/api_regions.php
+DOCKER/www/Annuaire/arborescence.php
+DOCKER/www/Annuaire/arborescence_asynchrone.php
+DOCKER/www/Annuaire/auth_middleware.php
+DOCKER/www/Annuaire/changePassword.php
+DOCKER/www/Annuaire/circonscriptions.php
+DOCKER/www/Annuaire/circonscriptions_modale.php
+DOCKER/www/Annuaire/classes/AppAuth.php
+DOCKER/www/Annuaire/classes/Logger.php
+DOCKER/www/Annuaire/config/auth_config.php
+DOCKER/www/Annuaire/config/menus.json
+DOCKER/www/Annuaire/gestionDesDroits_parCantons.php
+DOCKER/www/Annuaire/gestionDesDroits_pourMenu.php
+DOCKER/www/Annuaire/gestionUtilisateurs.php
+DOCKER/www/Annuaire/index.php
+DOCKER/www/Annuaire/login.php
+DOCKER/www/Annuaire/logout.php
+DOCKER/www/Annuaire/logs.php
+DOCKER/www/Annuaire/maires.php
+DOCKER/www/Annuaire/maires_arborescence.php
+DOCKER/www/Annuaire/maires_responsive.php
+DOCKER/www/Annuaire/parrainages.php
+DOCKER/www/Annuaire/populate-arborescence.php
+DOCKER/www/Annuaire/rapport_Admin.php
+DOCKER/www/Annuaire/rapport_referent.php
+DOCKER/www/Annuaire/regions.php
+
+--------------------------------------------------------------------------------
+FICHIERS CSS/JS
+--------------------------------------------------------------------------------
+DOCKER/www/Annuaire/ressources/css/gestionUtilisateurs.css
+DOCKER/www/Annuaire/ressources/css/styles-circonscriptions.css
+DOCKER/www/Annuaire/ressources/css/styles-maires-responsive.css
+DOCKER/www/Annuaire/ressources/css/styles-maires.css
+DOCKER/www/Annuaire/ressources/js/gestionUtilisateurs.js
+DOCKER/www/Annuaire/ressources/js/gestionUtilisateurs_modals.js
+DOCKER/www/Annuaire/ressources/js/gestionUtilisateurs_part2.js
+DOCKER/www/Annuaire/ressources/js/scripts-maires-responsive.js
+DOCKER/www/Annuaire/ressources/js/scripts-maires-wrapped.js
+DOCKER/www/Annuaire/ressources/js/scripts-maires.js
+
+--------------------------------------------------------------------------------
+DONNEES CSV/XLSX (deja dans le repo - ~130 MB total)
+--------------------------------------------------------------------------------
+DOCKER/www/Annuaire/data/_old/Table_de_correspondance_circo_legislatives2017-1.csv (1.7 MB)
+DOCKER/www/Annuaire/data/_old/Table_de_correspondance_circo_legislatives2017-1.xlsx (1.6 MB)
+DOCKER/www/Annuaire/data/_old/circo_composition.xlsx (1.51 MB)
+DOCKER/www/Annuaire/data/_old/communes-france-2025.xlsx (10.14 MB)
+DOCKER/www/Annuaire/data/_old/globalCirco.csv
+DOCKER/www/Annuaire/data/_old/regions_circo_dept_maires.csv (13.52 MB)
+DOCKER/www/Annuaire/data/base de travail/1-mairieCommunes.csv (7.27 MB)
+DOCKER/www/Annuaire/data/base de travail/2-maires.csv (3.45 MB)
+DOCKER/www/Annuaire/data/base de travail/3-bureauxDeVote-circonscriptions.csv (2.02 MB)
+DOCKER/www/Annuaire/data/base de travail/4-touteLaPopulationFrancaise.csv (2.85 MB)
+DOCKER/www/Annuaire/data/base de travail/5-toutesLesCommunesDeFranceAvecMaires.csv (12.08 MB)
+DOCKER/www/Annuaire/data/base de travail/6-toutesLesCommunesDeFranceAvecMairesAvecCirco.csv (12.12 MB)
+DOCKER/www/Annuaire/data/base de travail/INSEE_Population/*.xlsx (101 fichiers)
+DOCKER/www/Annuaire/data/parrainages_2017-2022.csv (2.05 MB)
+
+--------------------------------------------------------------------------------
+IMAGES PNG/JPG/SVG (~215 MB total)
+--------------------------------------------------------------------------------
+DOCKER/www/Annuaire/ressources/images/cartesCirconscriptionCantons/*.png (191 fichiers)
+DOCKER/www/Annuaire/ressources/images/cartesCirconscriptionCantons/cantons/*.png
+DOCKER/www/Annuaire/ressources/images/cartesCirconscriptionCantons/*.svg (20 fichiers)
+DOCKER/www/Annuaire/ressources/images/cartesDepartements/*.jpg (101 fichiers)
+DOCKER/www/Annuaire/ressources/images/logoUPR.png
+DOCKER/www/Annuaire/ressources/images/France_departementale.svg
+
+================================================================================
+RESUME
+================================================================================
+Total: 592 fichiers dans le depot
+Taille estimee: ~350 MB (sans le fichier JSON de 218 MB exclu)
+
+FICHIERS EXCLUS PAR .gitignore (a ajouter):
+- www/Annuaire/data/_old/telephone eMail et autre.json (218 MB)
+- www/Annuaire/data/_old/ (dossier entier)
+- www/Annuaire/data/base de travail/ (dossier entier)

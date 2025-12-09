@@ -50,7 +50,7 @@
                     ]
                 },
                 {
-                    "page": "circonscriptions.php",
+                    "page": "carteDeFrance_modale.php",
                     "label": "Carte de FRANCE",
                     "icon": "france-flag",
                     "roles": [

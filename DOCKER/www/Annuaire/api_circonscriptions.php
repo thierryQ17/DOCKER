@@ -306,6 +306,97 @@ switch ($action) {
         echo ']}';
         break;
 
+    case 'search':
+        $query = $_GET['q'] ?? '';
+
+        if (strlen($query) < 2) {
+            echo json_encode(['success' => true, 'results' => []]);
+            exit;
+        }
+
+        $searchTerm = '%' . $query . '%';
+        $results = [];
+
+        // Recherche dans les régions
+        $stmt = $pdo->prepare("
+            SELECT 'region' as type, nom_region as label, code_region as code, NULL as parent_code, NULL as parent_label
+            FROM regions
+            WHERE nom_region LIKE :q
+            ORDER BY nom_region
+            LIMIT 10
+        ");
+        $stmt->execute(['q' => $searchTerm]);
+        $results = array_merge($results, $stmt->fetchAll(PDO::FETCH_ASSOC));
+
+        // Recherche dans les départements
+        $stmt = $pdo->prepare("
+            SELECT 'departement' as type,
+                   CONCAT(numero_departement, ' - ', nom_departement) as label,
+                   numero_departement as code,
+                   region as parent_label,
+                   NULL as parent_code
+            FROM departements
+            WHERE nom_departement LIKE :q OR numero_departement LIKE :q
+            ORDER BY numero_departement
+            LIMIT 10
+        ");
+        $stmt->execute(['q' => $searchTerm]);
+        $results = array_merge($results, $stmt->fetchAll(PDO::FETCH_ASSOC));
+
+        // Recherche dans les circonscriptions
+        $stmt = $pdo->prepare("
+            SELECT 'circonscription' as type,
+                   cc.circonscription as label,
+                   cc.numero_departement as code,
+                   CONCAT(d.numero_departement, ' - ', d.nom_departement) as parent_label,
+                   d.numero_departement as parent_code
+            FROM circonscriptions_Cantons cc
+            JOIN departements d ON cc.numero_departement = d.numero_departement
+            WHERE cc.circonscription LIKE :q
+            GROUP BY cc.circonscription, cc.numero_departement, d.nom_departement
+            ORDER BY cc.circonscription
+            LIMIT 10
+        ");
+        $stmt->execute(['q' => $searchTerm]);
+        $results = array_merge($results, $stmt->fetchAll(PDO::FETCH_ASSOC));
+
+        // Recherche dans les cantons
+        $stmt = $pdo->prepare("
+            SELECT 'canton' as type,
+                   cc.canton as label,
+                   cc.numero_departement as code,
+                   CONCAT(d.numero_departement, ' - ', d.nom_departement) as parent_label,
+                   d.numero_departement as parent_code
+            FROM circonscriptions_Cantons cc
+            JOIN departements d ON cc.numero_departement = d.numero_departement
+            WHERE cc.canton LIKE :q
+            GROUP BY cc.canton, cc.numero_departement, d.nom_departement
+            ORDER BY cc.canton
+            LIMIT 10
+        ");
+        $stmt->execute(['q' => $searchTerm]);
+        $results = array_merge($results, $stmt->fetchAll(PDO::FETCH_ASSOC));
+
+        // Recherche dans les communes
+        $stmt = $pdo->prepare("
+            SELECT 'commune' as type,
+                   m.nomCommune as label,
+                   m.codeDept as code,
+                   CONCAT(d.numero_departement, ' - ', d.nom_departement) as parent_label,
+                   d.numero_departement as parent_code,
+                   m.nomCanton as canton
+            FROM t_mairies m
+            JOIN departements d ON m.codeDept = d.numero_departement
+            WHERE m.nomCommune LIKE :q
+            ORDER BY m.nomCommune
+            LIMIT 20
+        ");
+        $stmt->execute(['q' => $searchTerm]);
+        $results = array_merge($results, $stmt->fetchAll(PDO::FETCH_ASSOC));
+
+        echo json_encode(['success' => true, 'results' => $results]);
+        break;
+
     default:
         echo json_encode(['error' => 'Action inconnue']);
 }

@@ -1,0 +1,785 @@
+﻿{
+    "DateExport":  "2025-12-09 12:58:17",
+    "Total":  97,
+    "Referents":  70,
+    "Admins":  27,
+    "ImagesNonTrouvees":  3,
+    "Donnees":  [
+                    {
+                        "Nom":  "ASSELINEAU",
+                        "Prenom":  "François",
+                        "Departement":  "Président",
+                        "Email":  "",
+                        "Image":  "ressources/images/responsablesUPR/Francois.ASSELINEAU.png",
+                        "Role":  5
+                    },
+                    {
+                        "Nom":  "NART",
+                        "Prenom":  "Benjamin",
+                        "Departement":  "Secrétaire général",
+                        "Email":  "",
+                        "Image":  "ressources/images/responsablesUPR/Benjamin.NART.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  " ALÇUYET",
+                        "Prenom":  "Alexandre",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "alexandrealcuyet@gmail.com",
+                        "Image":  "",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "ARCHENY",
+                        "Prenom":  "Jean-Philippe",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "jean-philippe.archeny@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Jean-Philippe.ARCHENY.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "BLACHE",
+                        "Prenom":  "Geneviève",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "genevieve.blache@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Genevieve.BLACHE.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "BOYER",
+                        "Prenom":  "Nicolas",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "nicolas.boyer@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Nicolas.BOYER.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "CALI",
+                        "Prenom":  "Patrice",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "",
+                        "Image":  "ressources/images/responsablesUPR/Patrice.CALI.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "COCHETON",
+                        "Prenom":  "Laurent",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "laurent.cocheton@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Laurent.COCHETON.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "DE VISMES",
+                        "Prenom":  "Dimitri",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "dimitri.de-vismes@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Dimitri.DE.VISMES.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "DUBOIS",
+                        "Prenom":  "Sébastien",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "sebastien.dubois@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Sebastien.DUBOIS.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "FABRE",
+                        "Prenom":  "Sébastien",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "sebastien.fabre@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Sebastien.FABRE.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "HERMIER",
+                        "Prenom":  "Muriel",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "muriel.hermier@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Muriel.HERMIER.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "LASSENAY",
+                        "Prenom":  "Catherine",
+                        "Departement":  "Trésorière – UPR",
+                        "Email":  "catherine.gargasson@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Catherine.LASSENAY.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "LECLERCQ",
+                        "Prenom":  "Rémi",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "remi.leclercq@upr.fr",
+                        "Image":  "",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "LIMOGE",
+                        "Prenom":  "Anne",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "anne.limoge@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Anne.LIMOGE.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "Nelly PATÉ",
+                        "Prenom":  "",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "nelly.pate@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Nelly.PATE.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "POIRET",
+                        "Prenom":  "Vincent",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "vincent.poiret@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Vincent.POIRET.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "PRIN",
+                        "Prenom":  "Guillaume",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "guillaume.prin@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Guillaume.PRIN.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "RASSON",
+                        "Prenom":  "Séverine",
+                        "Departement":  "",
+                        "Email":  "severine.rasson@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Severine.RASSON.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "SAHIDET",
+                        "Prenom":  "Halima",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "halima.sahidet@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Halima.SAHIDET.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "TERVER",
+                        "Prenom":  "Nicolas",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "nicolas.terver@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Nicolas.TERVER.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "VUIBERT",
+                        "Prenom":  "Laurent",
+                        "Departement":  "Membre du bureau politique",
+                        "Email":  "",
+                        "Image":  "ressources/images/responsablesUPR/Laurent.VUIBERT.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "DE VISMES",
+                        "Prenom":  "Dimitri",
+                        "Departement":  "Europe du Nord",
+                        "Email":  "dimitri.de-vismes@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Dimitri.DE.VISMES.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "DOCTRINAL",
+                        "Prenom":  "Jeoffrey",
+                        "Departement":  "02 : Aisne",
+                        "Email":  "delegation_02@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/02_Jeoffrey.DOCTRINAL.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LAGUILLIEZ",
+                        "Prenom":  "Eric",
+                        "Departement":  "03 : Allier",
+                        "Email":  "delegation_03@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/03_Eric.LAGUILLIEZ.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "GUILHAUME",
+                        "Prenom":  "Bernard",
+                        "Departement":  "05 : Hautes-Alpes",
+                        "Email":  "delegation_05@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/05_Bernard.GUILHAUME.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "COURAUDON",
+                        "Prenom":  "Hugo",
+                        "Departement":  "06 : Alpes-Maritimes",
+                        "Email":  "delegation_06@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/06_Hugo.COURAUDON.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DARTAYET",
+                        "Prenom":  "Ludovic",
+                        "Departement":  "07 : Ardèche",
+                        "Email":  "delegation_07@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/07_Ludovic.DARTAYET.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DURET",
+                        "Prenom":  "Christian",
+                        "Departement":  "08 : Ardennes",
+                        "Email":  "delegation_08@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/08_Christian.DURET.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LUPANO",
+                        "Prenom":  "Walter",
+                        "Departement":  "11 : Aude",
+                        "Email":  "delegation_11@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/11_Walter.LUPANO.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BOYER",
+                        "Prenom":  "Nicolas",
+                        "Departement":  "12 : Aveyron",
+                        "Email":  "delegation_12@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/12_Nicolas.BOYER.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "SAHIDET",
+                        "Prenom":  "Halima",
+                        "Departement":  "13 : Bouches-du-Rhône",
+                        "Email":  "delegation_13@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/13_Halima.SAHIDET.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "GERVAIS",
+                        "Prenom":  "Simon",
+                        "Departement":  "14 : Calvados",
+                        "Email":  "delegation_14@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/14_Simon.GERVAIS.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BOURGOIS",
+                        "Prenom":  "Christophe",
+                        "Departement":  "17 : Charente-Maritime",
+                        "Email":  "delegation_17@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/17_Christophe.BOURGOIS.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "PETITPERE",
+                        "Prenom":  "Loïc",
+                        "Departement":  "18 : Cher",
+                        "Email":  "delegation_18@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/18_Loic.PETITPERE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "COLLOMB",
+                        "Prenom":  "Jacques",
+                        "Departement":  "20 : Corse",
+                        "Email":  "delegation_20@upr.fr",
+                        "Image":  "",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LE ROY",
+                        "Prenom":  "Anthony",
+                        "Departement":  "22 : Côtes-d\u0027Armor",
+                        "Email":  "delegation_22@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/22_Anthony.LE.ROY.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "Luc DESFAUGÈRES",
+                        "Prenom":  "",
+                        "Departement":  "23 : Creuse",
+                        "Email":  "delegation_23@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/23_Luc.DESFAUGERES.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LIARD",
+                        "Prenom":  "François-Xavier",
+                        "Departement":  "24 : Dordogne",
+                        "Email":  "delegation_24@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/24_Francois-Xavier.LIARD.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "GACHET",
+                        "Prenom":  "Jean-François",
+                        "Departement":  "26 : Drôme",
+                        "Email":  "delegation_26@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/26_Jean-Francois.GACHET.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "ROUILLON",
+                        "Prenom":  "Stéphanie",
+                        "Departement":  "27 : Eure",
+                        "Email":  "delegation_27@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/27_Stephanie.ROUILLON.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DURAND",
+                        "Prenom":  "David",
+                        "Departement":  "28 : Eure-et-Loir",
+                        "Email":  "delegation_28@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/28_David.DURAND.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "GOURVENEC",
+                        "Prenom":  "Jean-François",
+                        "Departement":  "29 : Finistère",
+                        "Email":  "delegation_29@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/29_Jean-Francois.GOURVENEC.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LE ROUX",
+                        "Prenom":  "Pascal",
+                        "Departement":  "30 : Gard",
+                        "Email":  "delegation_30@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/30_Pascal.LE.ROUX.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "FABRE",
+                        "Prenom":  "Sébastien",
+                        "Departement":  "31 : Haute-Garonne",
+                        "Email":  "delegation_31@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/31_Sebastien.FABRE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "Thierry BARNABÉ",
+                        "Prenom":  "",
+                        "Departement":  "32 : Gers",
+                        "Email":  "delegation_32@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/32_Thierry.BARNABE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "RUIS",
+                        "Prenom":  "Marie-Line",
+                        "Departement":  "33 : Gironde",
+                        "Email":  "delegation_33@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/33_Marie-Line.RUIS.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "Nelly PATÉ",
+                        "Prenom":  "",
+                        "Departement":  "34 : Herault",
+                        "Email":  "delegation_34@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/34_Nelly.PATE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LECOCQ",
+                        "Prenom":  "Michel",
+                        "Departement":  "35 : Ille-et-Vilaine",
+                        "Email":  "delegation_35@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/35_Michel.LECOCQ.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DAMAS",
+                        "Prenom":  "Philippe",
+                        "Departement":  "37 : Indre-et-Loire",
+                        "Email":  "",
+                        "Image":  "ressources/images/responsablesUPR/37_Philippe.DAMAS.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "VOLLE",
+                        "Prenom":  "Clément",
+                        "Departement":  "38 : Isere",
+                        "Email":  "delegation_38@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/38_Clement.VOLLE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DUCARME",
+                        "Prenom":  "Jacques",
+                        "Departement":  "39 : Jura",
+                        "Email":  "delegation_39@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/39_Jacques.DUCARME.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "Olivier CHRÉTIEN",
+                        "Prenom":  "",
+                        "Departement":  "42 : Loire",
+                        "Email":  "delegation_42@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/42_Olivier.CHRETIEN.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "POSTAL",
+                        "Prenom":  "Raphaël",
+                        "Departement":  "43 : Haute-Loire",
+                        "Email":  "delegation_43@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/43_Raphael.POSTAL.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DUFOUR",
+                        "Prenom":  "Denis",
+                        "Departement":  "49 : Maine-et-Loire",
+                        "Email":  "delegation_49@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/49_Denis.DUFOUR.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LEPELTIER",
+                        "Prenom":  "Benoit",
+                        "Departement":  "50 : Manche",
+                        "Email":  "delegation_50@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/50_Benoit.LEPELTIER.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "PRIN",
+                        "Prenom":  "Guillaume",
+                        "Departement":  "51 : Marne",
+                        "Email":  "delegation_51@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/51_Guillaume.PRIN.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "MICLOT",
+                        "Prenom":  "Benjamin",
+                        "Departement":  "54 : Meurthe-et-Moselle",
+                        "Email":  "delegation_54@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/54_Benjamin.MICLOT.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "GIESSINGER",
+                        "Prenom":  "Simon",
+                        "Departement":  "57 : Moselle",
+                        "Email":  "delegation_57@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/57_Simon.GIESSINGER.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "ODIER DE",
+                        "Prenom":  "Bruno CÉNAT L\u0027HERM",
+                        "Departement":  "58 : Nievre",
+                        "Email":  "delegation_58@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/58_Bruno.ODIER.CENAT.DE.LHERM.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "GIGANTE",
+                        "Prenom":  "Marco Vito",
+                        "Departement":  "59 : Nord",
+                        "Email":  "delegation_59@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/59_Marco.Vito.GIGANTE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BUSSON",
+                        "Prenom":  "Valerie",
+                        "Departement":  "60 : Oise",
+                        "Email":  "delegation_60@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/60_Valerie.BUSSON.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DURVIE",
+                        "Prenom":  "Jacques",
+                        "Departement":  "61 : Orne",
+                        "Email":  "delegation_61@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/61_Jacques.DURVIE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DELAVISSE",
+                        "Prenom":  "Virgile",
+                        "Departement":  "62 : Pas-de-Calais",
+                        "Email":  "",
+                        "Image":  "ressources/images/responsablesUPR/62_Virgile.DELAVISSE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "PERRET",
+                        "Prenom":  "Bernard",
+                        "Departement":  "63 : Puy-de-Dome",
+                        "Email":  "delegation_63@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/63_Bernard.PERRET.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "VERDOUX",
+                        "Prenom":  "Laurent",
+                        "Departement":  "65 : Hautes-Pyrenees",
+                        "Email":  "delegation_65@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/65_Laurent.VERDOUX.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DJERROUD",
+                        "Prenom":  "Laurence",
+                        "Departement":  "66 : Pyrenees-Orientales",
+                        "Email":  "delegation_66@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/66_Laurence.DJERROUD.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "AESCHELMANN",
+                        "Prenom":  "Jean Claude",
+                        "Departement":  "67 : Bas-Rhin",
+                        "Email":  "delegation_67@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/67_Jean.Claude.AESCHELMANN.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "NYOM KIEFFER",
+                        "Prenom":  "David",
+                        "Departement":  "68 : Haut-Rhin",
+                        "Email":  "delegation_68@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/68_David.NYOM.KIEFFER.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "PELINGRE",
+                        "Prenom":  "Olivier",
+                        "Departement":  "69 : Rhône",
+                        "Email":  "delegation_69@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/69_Olivier.PELINGRE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "CHARLIER",
+                        "Prenom":  "Marie-Annick",
+                        "Departement":  "72 : Sarthe",
+                        "Email":  "delegation_72@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/72_Marie-Annick.CHARLIER.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "Fabrice GUÉBEY",
+                        "Prenom":  "",
+                        "Departement":  "73 : Savoie",
+                        "Email":  "delegation_73@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/73_Fabrice.GUEBEY.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DELLA VEDOVA",
+                        "Prenom":  "Jean-Yves",
+                        "Departement":  "74 : Haute-Savoie",
+                        "Email":  "delegation_74@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/74_Jean-Yves.DELLA.VEDOVA.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LIMOGE",
+                        "Prenom":  "Yves",
+                        "Departement":  "Paris-rive-gauche",
+                        "Email":  "paris.rive.gauche@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Yves.LIMOGE.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "GARNIER",
+                        "Prenom":  "Gérard",
+                        "Departement":  "Paris-rive-droite",
+                        "Email":  "paris.rive.droite@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Gerard.GARNIER.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "BURIN",
+                        "Prenom":  "François-Xavier",
+                        "Departement":  "76 : Seine-Maritime",
+                        "Email":  "delegation_76@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/76_Francois-Xavier.BURIN.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BEN ABDESSELEM",
+                        "Prenom":  "Adnane",
+                        "Departement":  "77 : Seine-et-Marne",
+                        "Email":  "delegation_77@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/77_Adnane.BEN.ABDESSELEM.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BOUIRI",
+                        "Prenom":  "Jean-Michel",
+                        "Departement":  "78 : Yvelines",
+                        "Email":  "delegation_78@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/78_Jean-Michel.BOUIRI.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "ABI-NADER",
+                        "Prenom":  "Joseph",
+                        "Departement":  "79 : Deux-Sevres",
+                        "Email":  "delegation_79@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/79_Joseph.ABI-NADER.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BELLETTRE",
+                        "Prenom":  "Arnaud",
+                        "Departement":  "80 : Somme",
+                        "Email":  "delegation_80@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/80_Arnaud.BELLETTRE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "RINEAU",
+                        "Prenom":  "William",
+                        "Departement":  "82 : Tarn-et-Garonne",
+                        "Email":  "delegation_82@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/82_William.RINEAU.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BAUER",
+                        "Prenom":  "Nicolas",
+                        "Departement":  "83 : Var",
+                        "Email":  "delegation_83@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/83_Nicolas.BAUER.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "HERMIER",
+                        "Prenom":  "Muriel",
+                        "Departement":  "84 : Vaucluse",
+                        "Email":  "delegation_84@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/84_Muriel.HERMIER.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "REMAUD",
+                        "Prenom":  "Paul",
+                        "Departement":  "85 : Vendee",
+                        "Email":  "delegation_85@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/85_Paul.REMAUD.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "SAVALL",
+                        "Prenom":  "Armand",
+                        "Departement":  "86 : Vienne",
+                        "Email":  "delegation_86@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/86_Armand.SAVALL.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "SZUSTAKIEWICZ",
+                        "Prenom":  "Eva",
+                        "Departement":  "87 : Haute-Vienne",
+                        "Email":  "delegation_87@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/87_Eva.SZUSTAKIEWICZ.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BASIN",
+                        "Prenom":  "Christian",
+                        "Departement":  "89 : Yonne",
+                        "Email":  "delegation_89@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/89_Christian.BASIN.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "LUZET",
+                        "Prenom":  "Sylvain",
+                        "Departement":  "91 : Essonne",
+                        "Email":  "delegation_91@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/91_Sylvain.LUZET.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "MORLOT",
+                        "Prenom":  "Arnaud",
+                        "Departement":  "92 : Hauts-de-Seine",
+                        "Email":  "delegation_92@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/92_Arnaud.MORLOT.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DOUVILLE",
+                        "Prenom":  "Arnaud",
+                        "Departement":  "94 : Val-de-Marne",
+                        "Email":  "delegation_94@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/94_Arnaud.DOUVILLE.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "PARIGOT",
+                        "Prenom":  "Marc",
+                        "Departement":  "95 : Val-d\u0027Oise",
+                        "Email":  "delegation_95@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/95_Marc.PARIGOT.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "DUBOIS",
+                        "Prenom":  "Sébastien",
+                        "Departement":  "972 : Martinique",
+                        "Email":  "delegation_972@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/972_Sebastien.DUBOIS.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "RENON",
+                        "Prenom":  "Christian",
+                        "Departement":  "973 : Guyane",
+                        "Email":  "delegation_973@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/973_Christian.RENON.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "BINET",
+                        "Prenom":  "Florian",
+                        "Departement":  "Réunion-nord",
+                        "Email":  "delegation_974@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Florian.BINET.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "BINET",
+                        "Prenom":  "Florian",
+                        "Departement":  "Réunion-sud",
+                        "Email":  "delegation_974@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/Florian.BINET.png",
+                        "Role":  2
+                    },
+                    {
+                        "Nom":  "BIHANNIC",
+                        "Prenom":  "Catherine",
+                        "Departement":  "976 : Mayotte",
+                        "Email":  "delegation_976@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/976_Catherine.BIHANNIC.png",
+                        "Role":  3
+                    },
+                    {
+                        "Nom":  "WINTER",
+                        "Prenom":  "Charly",
+                        "Departement":  "988 : Nouvelle-Calédonie",
+                        "Email":  "delegation_988@upr.fr",
+                        "Image":  "ressources/images/responsablesUPR/988_Charly.WINTER.png",
+                        "Role":  3
+                    }
+                ]
+}

@@ -9,7 +9,30 @@ let currentUserId = null;
 let currentRoleFilter = null;
 let originalCommentaires = ''; // Stocke les commentaires originaux sans le mot de passe
 
+// Types d'utilisateurs chargés dynamiquement depuis la base de données
+let userTypes = {};
+
 // Note: connectedUser est defini dans le PHP inline car il contient des donnees dynamiques
+
+// Charger les types d'utilisateurs depuis l'API
+async function loadUserTypes() {
+    try {
+        const response = await fetch('api.php?action=getTypeUtilisateurs');
+        const data = await response.json();
+        if (data.success) {
+            userTypes = data.types;
+        }
+    } catch (error) {
+        console.error('Erreur chargement types utilisateurs:', error);
+        // Fallback par défaut si erreur
+        userTypes = {
+            1: { label: 'Super Admin', class: 'badge-role-1' },
+            2: { label: 'Admin', class: 'badge-role-2' },
+            3: { label: 'Referent', class: 'badge-role-3' },
+            4: { label: 'Membre', class: 'badge-role-4' }
+        };
+    }
+}
 
 // Charger les utilisateurs
 async function loadUsers() {
@@ -41,12 +64,8 @@ function renderUsersTable(filteredData = null) {
         return;
     }
 
-    const roleNames = {
-        1: { label: 'Super Admin', class: 'badge-super-admin' },
-        2: { label: 'Admin', class: 'badge-admin' },
-        3: { label: 'Referent', class: 'badge-referent' },
-        4: { label: 'Membre', class: 'badge-membre' }
-    };
+    // Utiliser les types chargés dynamiquement
+    const roleNames = userTypes;
 
     const sortedData = [...data].sort((a, b) => {
         const prenomA = (a.prenom || '').toLowerCase();
@@ -154,13 +173,9 @@ function filterUsers() {
     const searchTerms = search.toLowerCase().split(/\s+/).filter(term => term.length > 0);
 
     const filtered = dataToFilter.filter(user => {
-        const roleNames = {
-            1: 'super admin',
-            2: 'admin',
-            3: 'referent',
-            4: 'membre'
-        };
-        const userRole = roleNames[user.typeUtilisateur_id] || '';
+        // Utiliser les types chargés dynamiquement pour la recherche
+        const typeInfo = userTypes[user.typeUtilisateur_id];
+        const userRole = typeInfo ? typeInfo.label.toLowerCase() : '';
         const depts = user.departements ? user.departements.replace(/<br>/g, ' ').toLowerCase() : '';
         const cantons = user.cantons ? user.cantons.replace(/<br>/g, ' ').toLowerCase() : '';
         const userStatus = user.actif == 1 ? 'actif' : 'inactif';
@@ -201,6 +216,7 @@ async function addUser() {
     currentUserId = null;
     originalCommentaires = ''; // Réinitialiser les commentaires originaux
     document.getElementById('userModalTitle').innerHTML = '<i class="bi bi-person-plus me-2"></i>Nouvel utilisateur';
+    document.getElementById('userModalRoleBadge').style.display = 'none'; // Masquer la pastille pour un nouvel utilisateur
     document.getElementById('userForm').reset();
 
     document.getElementById('userPassword').value = '';
@@ -213,6 +229,9 @@ async function addUser() {
     document.getElementById('copyPasswordBtn').disabled = true;
     document.getElementById('passwordComplexity').value = 'high';
     document.getElementById('userCommentaires').value = '';
+
+    // Réinitialiser la photo
+    updateUserPhoto('');
 
     document.getElementById('menuTree').innerHTML = '<p class="text-muted">Selectionnez les departements auxquels l\'utilisateur aura acces</p>';
     document.getElementById('cantonTree').innerHTML = '<p class="text-muted">Selectionnez les cantons auxquels l\'utilisateur aura acces</p>';
@@ -701,6 +720,17 @@ async function editUser(id) {
     const nom = (user.nom || '').toUpperCase();
     const titre = prenom && nom ? `Utilisateur : ${prenom} ${nom}` : 'Modifier l\'utilisateur';
     document.getElementById('userModalTitle').innerHTML = `<i class="bi bi-pencil me-2"></i>${titre}`;
+
+    // Afficher la pastille du rôle dans l'en-tête
+    const roleBadge = document.getElementById('userModalRoleBadge');
+    const typeInfo = userTypes[user.typeUtilisateur_id];
+    if (typeInfo) {
+        roleBadge.textContent = typeInfo.label;
+        roleBadge.className = 'badge-role ms-2 ' + typeInfo.class;
+        roleBadge.style.display = 'inline-block';
+    } else {
+        roleBadge.style.display = 'none';
+    }
     document.getElementById('userName').value = user.nom || '';
     document.getElementById('userFirstName').value = user.prenom || '';
     document.getElementById('userEmail').value = user.email || '';
@@ -710,6 +740,9 @@ async function editUser(id) {
     document.getElementById('userStatus').value = (user.actif !== undefined && user.actif !== null) ? user.actif : '1';
     document.getElementById('userCommentaires').value = user.commentaires || '';
     originalCommentaires = user.commentaires || ''; // Stocker les commentaires originaux
+
+    // Charger la photo de l'utilisateur
+    updateUserPhoto(user.image || '');
 
     // Charger le département si c'est un référent
     if (typeof setDepartementValue === 'function') {
@@ -738,6 +771,25 @@ async function editUser(id) {
         userModal = new bootstrap.Modal(document.getElementById('userModal'));
     }
     userModal.show();
+}
+
+// Mettre à jour l'affichage de la photo utilisateur
+function updateUserPhoto(imagePath) {
+    const preview = document.getElementById('userPhotoPreview');
+    const placeholder = document.getElementById('userPhotoPlaceholder');
+    const imageInput = document.getElementById('userImage');
+
+    if (imagePath && imagePath.trim() !== '') {
+        preview.src = imagePath;
+        preview.style.display = 'block';
+        placeholder.style.display = 'none';
+        if (imageInput) imageInput.value = imagePath;
+    } else {
+        preview.src = '';
+        preview.style.display = 'none';
+        placeholder.style.display = 'flex';
+        if (imageInput) imageInput.value = '';
+    }
 }
 
 async function deleteUser(id) {
@@ -1472,5 +1524,8 @@ function toggleDepartementField() {
     }
 }
 
-// Initialisation
-loadUsers();
+// Initialisation - Charger les types puis les utilisateurs
+(async function init() {
+    await loadUserTypes();
+    loadUsers();
+})();

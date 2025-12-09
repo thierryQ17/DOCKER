@@ -243,6 +243,11 @@ switch ($action) {
         purgeLogs($pdo);
         break;
 
+    // ===== TYPES UTILISATEURS =====
+    case 'getTypeUtilisateurs':
+        getTypeUtilisateurs($pdo);
+        break;
+
     default:
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Invalid action']);
@@ -1715,6 +1720,7 @@ function getAllUtilisateurs($pdo) {
                 u.departement_id,
                 u.actif,
                 u.commentaires,
+                u.image,
                 u.date_creation,
                 u.date_modification
             FROM utilisateurs u
@@ -3506,6 +3512,41 @@ function purgeLogs($pdo) {
             'days' => $days
         ]);
 
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+/**
+ * Récupérer tous les types d'utilisateurs
+ */
+function getTypeUtilisateurs($pdo) {
+    try {
+        $stmt = $pdo->query("SELECT id, nom, acronym FROM typeUtilisateur ORDER BY id");
+        $types = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Mapping des classes CSS par défaut pour les types connus
+        $classMapping = [
+            1 => 'badge-super-admin',
+            2 => 'badge-admin',
+            3 => 'badge-referent',
+            4 => 'badge-membre',
+            5 => 'badge-president'
+        ];
+
+        // Construire un mapping id => données pour faciliter l'utilisation côté JS
+        $typesMap = [];
+        foreach ($types as $type) {
+            $typesMap[$type['id']] = [
+                'label' => $type['nom'],
+                'acronym' => $type['acronym'] ?? '',
+                'class' => $classMapping[$type['id']] ?? 'badge-role-' . $type['id']
+            ];
+        }
+
+        echo json_encode(['success' => true, 'types' => $typesMap]);
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);

@@ -17,6 +17,24 @@ try {
     die("Erreur de connexion : " . $e->getMessage());
 }
 
+// Charger les types d'utilisateurs depuis la base de données
+try {
+    $stmtTypes = $pdo->query("SELECT id, nom FROM typeUtilisateur ORDER BY id");
+    $typeLabels = $stmtTypes->fetchAll(PDO::FETCH_KEY_PAIR);
+} catch (PDOException $e) {
+    $typeLabels = [];
+}
+
+// Fallback si la table est vide ou erreur
+if (empty($typeLabels)) {
+    $typeLabels = [
+        1 => 'Super Admin',
+        2 => 'Admin',
+        3 => 'Référent',
+        4 => 'Membre'
+    ];
+}
+
 // Nouveau mot de passe
 $newPassword = 'upr';
 $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
@@ -95,7 +113,6 @@ try {
                 ? "<span class='badge bg-success'>Actif</span>"
                 : "<span class='badge bg-secondary'>Inactif</span>";
 
-            $typeLabels = [1 => 'Super Admin', 2 => 'Admin', 3 => 'Référent', 4 => 'Membre'];
             $typeBadge = "<span class='badge bg-primary'>" . htmlspecialchars($typeLabels[$user['typeUtilisateur_id']] ?? 'Type ' . $user['typeUtilisateur_id']) . "</span>";
 
             echo "<div class='user-row'>

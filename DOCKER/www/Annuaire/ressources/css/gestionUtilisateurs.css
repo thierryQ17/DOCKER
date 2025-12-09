@@ -476,6 +476,13 @@ body {
     color: var(--membre-color);
 }
 
+.badge-president {
+    background: linear-gradient(135deg, #ffd700 0%, #ffec80 100%);
+    color: #8B6914;
+    font-weight: 600;
+    border: 1px solid #d4af37;
+}
+
 /* Actions rapides */
 .quick-actions {
     display: flex;
@@ -1289,4 +1296,50 @@ body {
     text-align: center;
     color: #94a3b8;
     font-size: 13px;
+}
+
+/* Encadré photo utilisateur */
+.user-photo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-photo-box {
+    width: 120px;
+    height: 140px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+}
+
+.user-photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    text-align: center;
+    padding: 10px;
+}
+
+.user-photo-placeholder i {
+    font-size: 48px;
+    margin-bottom: 5px;
+}
+
+.user-photo-placeholder span {
+    font-size: 11px;
+    line-height: 1.2;
 }

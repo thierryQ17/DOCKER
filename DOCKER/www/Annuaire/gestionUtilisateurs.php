@@ -42,13 +42,22 @@ if ($currentUserType == 4) {
     exit;
 }
 
-// Définir les labels des rôles
-$roleLabels = [
-    1 => 'Super Admin',
-    2 => 'Admin',
-    3 => 'Référent',
-    4 => 'Membre'
-];
+// Charger les types d'utilisateurs depuis la base de données
+$stmtTypes = $pdo->query("SELECT id, nom FROM typeUtilisateur ORDER BY id");
+$userTypes = $stmtTypes->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Fallback si la table est vide
+if (empty($userTypes)) {
+    $userTypes = [
+        1 => 'Super Admin',
+        2 => 'Admin',
+        3 => 'Référent',
+        4 => 'Membre'
+    ];
+}
+
+// Pour compatibilité avec l'ancien code
+$roleLabels = $userTypes;
 
 // Pour les référents, récupérer leurs départements autorisés (IDs)
 $referentAllowedDepts = [];
@@ -610,6 +619,7 @@ $allDepartements = $pdo->query("
                     <h5 class="modal-title" id="userModalTitle">
                         <i class="bi bi-person-plus me-2"></i>Nouvel utilisateur
                     </h5>
+                    <span class="badge-role ms-2" id="userModalRoleBadge" style="display: none;"></span>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -642,63 +652,76 @@ $allDepartements = $pdo->query("
                         <!-- Onglet Informations -->
                         <div class="tab-pane fade show active" id="info" role="tabpanel">
                             <form id="userForm">
-                                <div class="compact-form">
-                                    <div class="form-row">
-                                        <label class="form-label-inline">Prénom</label>
-                                        <input type="text" class="form-control form-control-sm" id="userFirstName" required>
-                                    </div>
-                                    <div class="form-row">
-                                        <label class="form-label-inline">Nom</label>
-                                        <input type="text" class="form-control form-control-sm" id="userName" required>
-                                    </div>
-                                    <div class="form-row">
-                                        <label class="form-label-inline">Email</label>
-                                        <input type="email" class="form-control form-control-sm" id="userEmail" required>
-                                    </div>
-                                    <div class="form-row">
-                                        <label class="form-label-inline">Téléphone</label>
-                                        <input type="tel" class="form-control form-control-sm" id="userTelephone" placeholder="Ex: 06 12 34 56 78">
-                                    </div>
-                                    <div class="form-row">
-                                        <label class="form-label-inline">Pseudo</label>
-                                        <input type="text" class="form-control form-control-sm" id="userPseudo" required>
-                                    </div>
-                                    <div class="form-row">
-                                        <label class="form-label-inline">Type</label>
-                                        <select class="form-select form-select-sm" id="userType" required onchange="toggleDepartementField()">
-                                            <?php if ($currentUserType == 1): // Super Admin peut créer tous les types ?>
-                                            <option value="">Sélectionner...</option>
-                                            <option value="1">Super Admin</option>
-                                            <option value="2">Admin</option>
-                                            <option value="3">Référent</option>
-                                            <option value="4">Membre</option>
-                                            <?php elseif ($currentUserType == 2): // Admin peut créer référents et membres ?>
-                                            <option value="">Sélectionner...</option>
-                                            <option value="3">Référent</option>
-                                            <option value="4">Membre</option>
-                                            <?php elseif ($currentUserType == 3): // Référent peut créer uniquement des membres ?>
-                                            <option value="4" selected>Membre</option>
-                                            <?php endif; ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-row" id="departementRow" style="display: none;">
-                                        <label class="form-label-inline">Département <span class="text-danger">*</span></label>
-                                        <div class="dept-autocomplete" style="flex: 1; position: relative;">
-                                            <input type="text" class="form-control form-control-sm" id="deptSearch" placeholder="Tapez pour rechercher..." autocomplete="off">
-                                            <input type="hidden" id="userDepartement">
-                                            <div id="deptDropdown" class="dept-dropdown"></div>
+                                <div class="d-flex gap-3">
+                                    <!-- Formulaire à gauche -->
+                                    <div class="compact-form flex-grow-1">
+                                        <div class="form-row">
+                                            <label class="form-label-inline">Prénom</label>
+                                            <input type="text" class="form-control form-control-sm" id="userFirstName" required>
+                                        </div>
+                                        <div class="form-row">
+                                            <label class="form-label-inline">Nom</label>
+                                            <input type="text" class="form-control form-control-sm" id="userName" required>
+                                        </div>
+                                        <div class="form-row">
+                                            <label class="form-label-inline">Email</label>
+                                            <input type="email" class="form-control form-control-sm" id="userEmail" required>
+                                        </div>
+                                        <div class="form-row">
+                                            <label class="form-label-inline">Téléphone</label>
+                                            <input type="tel" class="form-control form-control-sm" id="userTelephone" placeholder="Ex: 06 12 34 56 78">
+                                        </div>
+                                        <div class="form-row">
+                                            <label class="form-label-inline">Pseudo</label>
+                                            <input type="text" class="form-control form-control-sm" id="userPseudo" required>
+                                        </div>
+                                        <div class="form-row">
+                                            <label class="form-label-inline">Type</label>
+                                            <select class="form-select form-select-sm" id="userType" required onchange="toggleDepartementField()">
+                                                <?php if ($currentUserType == 1): // Super Admin peut créer tous les types ?>
+                                                <option value="">Sélectionner...</option>
+                                                <?php foreach ($userTypes as $typeId => $typeName): ?>
+                                                <option value="<?= $typeId ?>"><?= htmlspecialchars($typeName) ?></option>
+                                                <?php endforeach; ?>
+                                                <?php elseif ($currentUserType == 2): // Admin peut créer référents et membres ?>
+                                                <option value="">Sélectionner...</option>
+                                                <option value="3"><?= htmlspecialchars($userTypes[3] ?? 'Référent') ?></option>
+                                                <option value="4"><?= htmlspecialchars($userTypes[4] ?? 'Membre') ?></option>
+                                                <?php elseif ($currentUserType == 3): // Référent peut créer uniquement des membres ?>
+                                                <option value="4" selected><?= htmlspecialchars($userTypes[4] ?? 'Membre') ?></option>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-row" id="departementRow" style="display: none;">
+                                            <label class="form-label-inline">Département <span class="text-danger">*</span></label>
+                                            <div class="dept-autocomplete" style="flex: 1; position: relative;">
+                                                <input type="text" class="form-control form-control-sm" id="deptSearch" placeholder="Tapez pour rechercher..." autocomplete="off">
+                                                <input type="hidden" id="userDepartement">
+                                                <div id="deptDropdown" class="dept-dropdown"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label class="form-label-inline">Statut</label>
+                                            <select class="form-select form-select-sm" id="userStatus" required>
+                                                <option value="1">Actif</option>
+                                                <option value="0">Inactif</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-row">
+                                            <label class="form-label-inline" style="align-self: flex-start; padding-top: 6px;">Commentaires</label>
+                                            <textarea class="form-control form-control-sm" id="userCommentaires" rows="2" placeholder="Informations complémentaires..."></textarea>
                                         </div>
                                     </div>
-                                    <div class="form-row">
-                                        <label class="form-label-inline">Statut</label>
-                                        <select class="form-select form-select-sm" id="userStatus" required>
-                                            <option value="1">Actif</option>
-                                            <option value="0">Inactif</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-row">
-                                        <label class="form-label-inline" style="align-self: flex-start; padding-top: 6px;">Commentaires</label>
-                                        <textarea class="form-control form-control-sm" id="userCommentaires" rows="2" placeholder="Informations complémentaires..."></textarea>
+                                    <!-- Photo à droite -->
+                                    <div class="user-photo-container" style="flex-shrink: 0;">
+                                        <div class="user-photo-box" id="userPhotoBox">
+                                            <img src="" alt="Photo" id="userPhotoPreview" style="display: none;">
+                                            <div class="user-photo-placeholder" id="userPhotoPlaceholder">
+                                                <i class="bi bi-person-circle"></i>
+                                                <span>Pas de photo</span>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="userImage">
                                     </div>
                                 </div>
                             </form>

@@ -9,6 +9,24 @@ require_once __DIR__ . '/auth_middleware.php';
 $currentUserType = $_SESSION['user_type'] ?? 0;
 $currentUserId = $_SESSION['user_id'] ?? 0;
 
+// Charger les types d'utilisateurs depuis la base de données
+try {
+    $stmtTypes = $pdo->query("SELECT id, nom FROM typeUtilisateur ORDER BY id");
+    $userTypeLabels = $stmtTypes->fetchAll(PDO::FETCH_KEY_PAIR);
+} catch (PDOException $e) {
+    $userTypeLabels = [];
+}
+
+// Fallback si la table est vide ou erreur
+if (empty($userTypeLabels)) {
+    $userTypeLabels = [
+        1 => 'Admin Général',
+        2 => 'Admin',
+        3 => 'Référent',
+        4 => 'Membre'
+    ];
+}
+
 // Pour les référents (3) et membres (4), récupérer leurs départements autorisés
 $userAllowedDepts = [];
 $userAllowedDeptNumbers = [];
@@ -212,10 +230,7 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
                     <div class="popup-body">
                         <div class="popup-info-row">
                             <i class="bi bi-shield-check"></i>
-                            <span><?php
-                                $types = [1 => 'Admin Général', 2 => 'Admin', 3 => 'Référent', 4 => 'Membre'];
-                                echo $types[$navUser['type'] ?? 4] ?? 'Membre';
-                            ?></span>
+                            <span><?= htmlspecialchars($userTypeLabels[$navUser['type'] ?? 4] ?? 'Membre') ?></span>
                         </div>
                         <?php if (!empty($navUser['telephone'])): ?>
                         <div class="popup-info-row">

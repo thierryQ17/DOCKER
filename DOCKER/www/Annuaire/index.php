@@ -6,6 +6,31 @@ require_once __DIR__ . '/auth_middleware.php';
 $currentUser = $auth->getUser();
 $userType = $currentUser['type'] ?? 4;
 
+// Charger les types d'utilisateurs depuis la base de données
+$host = 'mysql';
+$dbname = 'annuairesMairesDeFrance';
+$username = 'testuser';
+$password = 'testpass';
+
+try {
+    $pdoTypes = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $pdoTypes->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmtTypes = $pdoTypes->query("SELECT id, nom FROM typeUtilisateur ORDER BY id");
+    $userTypeLabels = $stmtTypes->fetchAll(PDO::FETCH_KEY_PAIR);
+} catch (PDOException $e) {
+    $userTypeLabels = [];
+}
+
+// Fallback si la table est vide ou erreur
+if (empty($userTypeLabels)) {
+    $userTypeLabels = [
+        1 => 'Admin Général',
+        2 => 'Admin',
+        3 => 'Référent',
+        4 => 'Membre'
+    ];
+}
+
 // Charger la configuration des menus
 $menuConfig = json_decode(file_get_contents(__DIR__ . '/config/menus.json'), true);
 
@@ -18,7 +43,7 @@ $defaultPages = $menuConfig['defaultPage'][(string)$userType] ?? $menuConfig['de
 
 // Pour les membres (type 4), afficher avec en-tête mais sans menu hamburger
 if ($userType == 4):
-    $userTypeLabel = 'Membre';
+    $userTypeLabel = $userTypeLabels[$userType] ?? 'Membre';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -503,7 +528,7 @@ if ($userType == 4):
         function openFullscreenMap() {
             const modal = document.getElementById('fullscreenModal');
             const iframe = document.getElementById('fullscreenIframe');
-            if (iframe) iframe.src = 'circonscriptions_modale.php';
+            if (iframe) iframe.src = 'carteDeFrance_modale.php';
             if (modal) modal.classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -579,13 +604,7 @@ endif;
 
 // Pour les autres types d'utilisateurs (Admin, Référent, etc.) - afficher un menu hamburger
 
-// Déterminer le libellé du type d'utilisateur
-$userTypeLabels = [
-    1 => 'Admin Général',
-    2 => 'Admin',
-    3 => 'Référent',
-    4 => 'Membre'
-];
+// Déterminer le libellé du type d'utilisateur (déjà chargé depuis la BDD en haut du fichier)
 $userTypeLabel = $userTypeLabels[$userType] ?? 'Utilisateur';
 ?>
 <!DOCTYPE html>
@@ -1442,7 +1461,7 @@ $userTypeLabel = $userTypeLabels[$userType] ?? 'Utilisateur';
             closeSidebar();
             const modal = document.getElementById('fullscreenModal');
             const iframe = document.getElementById('fullscreenIframe');
-            if (iframe) iframe.src = 'circonscriptions_modale.php';
+            if (iframe) iframe.src = 'carteDeFrance_modale.php';
             if (modal) modal.classList.add('show');
             document.body.style.overflow = 'hidden';
         }

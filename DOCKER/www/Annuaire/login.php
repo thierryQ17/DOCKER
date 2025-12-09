@@ -58,7 +58,7 @@ $typesUtilisateurs = [];
 try {
     $stmt = $pdo->query("
         SELECT id, nom
-        FROM typesUtilisateurs
+        FROM typeUtilisateur
         ORDER BY id ASC
     ");
     $typesUtilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);

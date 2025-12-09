@@ -7,12 +7,30 @@ require_once __DIR__ . '/auth_middleware.php';
 $currentUser = $auth->getUser();
 $userType = $currentUser['type'] ?? 4;
 
-$userTypeLabels = [
-    1 => 'Super Admin',
-    2 => 'Admin',
-    3 => 'Référent',
-    4 => 'Membre'
-];
+// Charger les types d'utilisateurs depuis la base de données
+$host = 'mysql';
+$dbname = 'annuairesMairesDeFrance';
+$username = 'testuser';
+$password = 'testpass';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmtTypes = $pdo->query("SELECT id, nom FROM typeUtilisateur ORDER BY id");
+    $userTypeLabels = $stmtTypes->fetchAll(PDO::FETCH_KEY_PAIR);
+} catch (PDOException $e) {
+    $userTypeLabels = [];
+}
+
+// Fallback si la table est vide ou erreur
+if (empty($userTypeLabels)) {
+    $userTypeLabels = [
+        1 => 'Super Admin',
+        2 => 'Admin',
+        3 => 'Référent',
+        4 => 'Membre'
+    ];
+}
 $userTypeLabel = $userTypeLabels[$userType] ?? 'Utilisateur';
 ?>
 <!DOCTYPE html>
