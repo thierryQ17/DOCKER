@@ -49,7 +49,7 @@ $userTypes = $stmtTypes->fetchAll(PDO::FETCH_KEY_PAIR);
 // Fallback si la table est vide
 if (empty($userTypes)) {
     $userTypes = [
-        1 => 'Super Admin',
+        1 => 'Super DUPOND',
         2 => 'Admin',
         3 => 'Référent',
         4 => 'Membre'
@@ -64,7 +64,7 @@ $referentAllowedDepts = [];
 if ($currentUserType == 3) {
     $stmtDepts = $pdo->prepare("
         SELECT DISTINCT departement_id
-        FROM gestionDroits
+        FROM gestionAccesDepartements
         WHERE utilisateur_id = ?
     ");
     $stmtDepts->execute([$currentUserId]);
@@ -80,7 +80,8 @@ if ($currentUserType == 1) {
             COUNT(CASE WHEN typeUtilisateur_id = 1 THEN 1 END) as super_admin,
             COUNT(CASE WHEN typeUtilisateur_id = 2 THEN 1 END) as admin,
             COUNT(CASE WHEN typeUtilisateur_id = 3 THEN 1 END) as referent,
-            COUNT(CASE WHEN typeUtilisateur_id = 4 THEN 1 END) as membre
+            COUNT(CASE WHEN typeUtilisateur_id = 4 THEN 1 END) as membre,
+            COUNT(CASE WHEN typeUtilisateur_id = 5 THEN 1 END) as president
         FROM utilisateurs
     ")->fetch(PDO::FETCH_ASSOC);
 } elseif ($currentUserType == 2) {
@@ -91,14 +92,15 @@ if ($currentUserType == 1) {
             0 as super_admin,
             0 as admin,
             COUNT(CASE WHEN typeUtilisateur_id = 3 THEN 1 END) as referent,
-            COUNT(CASE WHEN typeUtilisateur_id = 4 THEN 1 END) as membre
+            COUNT(CASE WHEN typeUtilisateur_id = 4 THEN 1 END) as membre,
+            0 as president
         FROM utilisateurs
         WHERE typeUtilisateur_id IN (3, 4)
     ")->fetch(PDO::FETCH_ASSOC);
 } elseif ($currentUserType == 3) {
     // Référent : voit uniquement les membres (4) de ses départements
     $stmtReferentDepts = $pdo->prepare("
-        SELECT DISTINCT departement_id FROM gestionDroits WHERE utilisateur_id = ?
+        SELECT DISTINCT departement_id FROM gestionAccesDepartements WHERE utilisateur_id = ?
     ");
     $stmtReferentDepts->execute([$currentUserId]);
     $referentDepts = $stmtReferentDepts->fetchAll(PDO::FETCH_COLUMN);
@@ -111,36 +113,37 @@ if ($currentUserType == 1) {
                 0 as super_admin,
                 0 as admin,
                 0 as referent,
-                COUNT(DISTINCT u.id) as membre
+                COUNT(DISTINCT u.id) as membre,
+                0 as president
             FROM utilisateurs u
             WHERE u.typeUtilisateur_id = 4
             AND u.id IN (
                 SELECT DISTINCT utilisateur_id
-                FROM gestionDroits
+                FROM gestionAccesDepartements
                 WHERE departement_id IN ($placeholders)
             )
         ");
         $stmtStats->execute($referentDepts);
         $statsUtilisateurs = $stmtStats->fetch(PDO::FETCH_ASSOC);
     } else {
-        $statsUtilisateurs = ['total' => 0, 'super_admin' => 0, 'admin' => 0, 'referent' => 0, 'membre' => 0];
+        $statsUtilisateurs = ['total' => 0, 'super_admin' => 0, 'admin' => 0, 'referent' => 0, 'membre' => 0, 'president' => 0];
     }
 } else {
-    $statsUtilisateurs = ['total' => 0, 'super_admin' => 0, 'admin' => 0, 'referent' => 0, 'membre' => 0];
+    $statsUtilisateurs = ['total' => 0, 'super_admin' => 0, 'admin' => 0, 'referent' => 0, 'membre' => 0, 'president' => 0];
 }
 
 $statsDroits = $pdo->query("
     SELECT
         COUNT(DISTINCT departement_id) as nb_departements,
         COUNT(DISTINCT utilisateur_id) as nb_utilisateurs_avec_droits
-    FROM gestionDroits
+    FROM gestionAccesDepartements
 ")->fetch(PDO::FETCH_ASSOC);
 
 $statsDroitsCantons = $pdo->query("
     SELECT
         COUNT(DISTINCT canton) as nb_cantons,
         COUNT(DISTINCT utilisateur_id) as nb_responsables
-    FROM gestionDroitsCantons
+    FROM gestionAccesCantons
     WHERE utilisateur_id IS NOT NULL
 ")->fetch(PDO::FETCH_ASSOC);
 
@@ -151,7 +154,7 @@ $myCantons = [];
 // Départements de l'utilisateur connecté (consultation)
 $stmtMyDepts = $pdo->prepare("
     SELECT DISTINCT d.numero_departement, d.nom_departement, d.region
-    FROM gestionDroits gd
+    FROM gestionAccesDepartements gd
     JOIN departements d ON gd.departement_id = d.id
     WHERE gd.utilisateur_id = ?
     ORDER BY d.region ASC, d.numero_departement ASC
@@ -162,7 +165,7 @@ $myDepartements = $stmtMyDepts->fetchAll(PDO::FETCH_ASSOC);
 // Cantons sélectionnés par l'utilisateur connecté
 $stmtMyCantons = $pdo->prepare("
     SELECT DISTINCT canton, numero_departement
-    FROM gestionDroitsCantons
+    FROM gestionAccesCantons
     WHERE utilisateur_id = ?
 ");
 $stmtMyCantons->execute([$currentUserId]);
@@ -192,6 +195,7 @@ $allDepartements = $pdo->query("
         CASE WHEN numero_departement LIKE '97%' OR numero_departement LIKE '98%' THEN 1 ELSE 0 END,
         numero_departement ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -231,7 +235,8 @@ $allDepartements = $pdo->query("
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                             <?php if ($currentUserType == 1): // Super Admin voit tous les badges ?>
-                            <span class="badge badge-super-admin" onclick="filterByRole(1)" id="badge-role-1" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Super Admin: <?= $statsUtilisateurs['super_admin'] ?></span>
+                            <span class="badge badge-president" onclick="filterByRole(5)" id="badge-role-5" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Président: <?= $statsUtilisateurs['president'] ?></span>
+                            <span class="badge badge-super-admin" onclick="filterByRole(1)" id="badge-role-1" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Super DUPOND: <?= $statsUtilisateurs['super_admin'] ?></span>
                             <span class="badge badge-admin" onclick="filterByRole(2)" id="badge-role-2" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Admin: <?= $statsUtilisateurs['admin'] ?></span>
                             <span class="badge badge-referent" onclick="filterByRole(3)" id="badge-role-3" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Référent: <?= $statsUtilisateurs['referent'] ?></span>
                             <span class="badge badge-membre" onclick="filterByRole(4)" id="badge-role-4" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Membre: <?= $statsUtilisateurs['membre'] ?></span>
@@ -1132,27 +1137,21 @@ $allDepartements = $pdo->query("
     function renderDeptDropdown(filter = '') {
         const search = filter.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         let html = '';
-        let currentRegion = '';
 
         const filtered = allDepartements.filter(d => {
             const num = d.numero_departement.toLowerCase();
             const nom = d.nom_departement.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            const region = d.region.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            return num.includes(search) || nom.includes(search) || region.includes(search);
+            const displayFormat = (nom + ' (' + num + ')').toLowerCase();
+            return num.includes(search) || nom.includes(search) || displayFormat.includes(search);
         });
 
         if (filtered.length === 0) {
             html = '<div class="dept-no-result">Aucun résultat</div>';
         } else {
+            // Liste compacte sans regroupement par région
             filtered.forEach(d => {
-                if (currentRegion !== d.region) {
-                    if (currentRegion !== '') html += '</div>';
-                    currentRegion = d.region;
-                    html += `<div class="dept-region">${d.region}</div><div class="dept-group">`;
-                }
-                html += `<div class="dept-item" data-id="${d.id}" data-text="${d.numero_departement} - ${d.nom_departement}">${d.numero_departement} - ${d.nom_departement}</div>`;
+                html += `<div class="dept-item" data-id="${d.id}" data-text="${d.nom_departement} (${d.numero_departement})"><span class="dept-num">${d.numero_departement}</span><span class="dept-name">${d.nom_departement}</span></div>`;
             });
-            if (currentRegion !== '') html += '</div>';
         }
 
         deptDropdown.innerHTML = html;
@@ -1183,7 +1182,7 @@ $allDepartements = $pdo->query("
         if (id) {
             const dept = allDepartements.find(d => d.id == id);
             if (dept) {
-                deptSearch.value = dept.numero_departement + ' - ' + dept.nom_departement;
+                deptSearch.value = dept.nom_departement + ' (' + dept.numero_departement + ')';
             }
         } else {
             deptSearch.value = '';

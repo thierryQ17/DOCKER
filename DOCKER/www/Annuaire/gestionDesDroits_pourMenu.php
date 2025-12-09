@@ -20,7 +20,7 @@ try {
     die("Erreur de connexion : " . $e->getMessage());
 }
 
-// La table gestionDroits utilise une structure relationnelle
+// La table gestionAccesDepartements utilise une structure relationnelle
 // Structure: id, departement_id (FK), utilisateur_id (FK), typeUtilisateur_id (FK)
 
 // Compter le nombre d'éléments par type (statistiques)
@@ -38,7 +38,7 @@ $statsRoles = $pdo->query("
         COUNT(DISTINCT CASE WHEN g.typeUtilisateur_id = 2 THEN CONCAT(g.departement_id, '-', g.utilisateur_id) END) as nb_admin,
         COUNT(DISTINCT CASE WHEN g.typeUtilisateur_id = 3 THEN CONCAT(g.departement_id, '-', g.utilisateur_id) END) as nb_referent,
         COUNT(DISTINCT CASE WHEN g.typeUtilisateur_id = 4 THEN CONCAT(g.departement_id, '-', g.utilisateur_id) END) as nb_membre
-    FROM gestionDroits g
+    FROM gestionAccesDepartements g
 ")->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>

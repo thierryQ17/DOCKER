@@ -178,6 +178,13 @@ body {
 .modal-body {
     padding: 20px;
     background: #f8f9fa;
+    overflow: visible !important;
+}
+
+/* Forcer overflow visible sur modal-dialog pour le dropdown */
+#userModal .modal-dialog,
+#userModal .modal-content {
+    overflow: visible;
 }
 
 .modal-body .nav-tabs {
@@ -223,6 +230,7 @@ body {
     padding: 15px;
     border-radius: 0 0 6px 6px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: visible;
 }
 
 
@@ -481,6 +489,54 @@ body {
     color: #8B6914;
     font-weight: 600;
     border: 1px solid #d4af37;
+}
+
+/* Badge rôle dans l'en-tête de la modale */
+#userModalRoleBadge {
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+#userModalRoleBadge.badge-super-admin {
+    background: linear-gradient(135deg, #6f42c1 0%, #9b6dff 100%);
+    color: #fff;
+    border: 2px solid #5a32a3;
+}
+
+#userModalRoleBadge.badge-admin {
+    background: linear-gradient(135deg, #17a2b8 0%, #4fc3dc 100%);
+    color: #fff;
+    border: 2px solid #138496;
+}
+
+#userModalRoleBadge.badge-referent {
+    background: linear-gradient(135deg, #fd7e14 0%, #ffb366 100%);
+    color: #fff;
+    border: 2px solid #e06b00;
+}
+
+#userModalRoleBadge.badge-membre {
+    background: linear-gradient(135deg, #28a745 0%, #5dd879 100%);
+    color: #fff;
+    border: 2px solid #1e7e34;
+}
+
+#userModalRoleBadge.badge-president {
+    background: linear-gradient(135deg, #ffd700 0%, #ffec80 100%);
+    color: #8B6914;
+    border: 2px solid #d4af37;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.5);
+}
+
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
 }
 
 /* Actions rapides */
@@ -1192,12 +1248,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    overflow: visible;
 }
 
 .compact-form .form-row {
     display: flex;
     align-items: center;
     gap: 10px;
+    overflow: visible;
 }
 
 .compact-form .form-label-inline {
@@ -1259,31 +1317,42 @@ body {
     border-top: none;
     border-radius: 0 0 6px 6px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 1060;
+    z-index: 9999;
 }
 
-.dept-region {
-    padding: 6px 10px;
-    font-size: 11px;
-    font-weight: 700;
-    color: #6366f1;
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    position: sticky;
-    top: 0;
+/* Assurer que le tab-pane permet l'overflow */
+.tab-pane {
+    overflow: visible;
 }
 
-.dept-group {
-    padding: 2px 0;
+/* Assurer que les containers du formulaire permettent l'overflow du dropdown */
+.tab-pane .d-flex {
+    overflow: visible;
 }
 
 .dept-item {
-    padding: 8px 12px;
-    font-size: 13px;
+    padding: 5px 10px;
+    font-size: 12px;
     cursor: pointer;
     transition: background 0.15s;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+}
+
+.dept-item .dept-num {
+    min-width: 35px;
+    font-weight: 600;
+    color: #6366f1;
+    margin-right: 8px;
+}
+
+.dept-item .dept-name {
+    flex: 1;
+}
+
+.dept-item:last-child {
+    border-bottom: none;
 }
 
 .dept-item:hover {
@@ -1291,11 +1360,15 @@ body {
     color: #4f46e5;
 }
 
+.dept-item:hover .dept-num {
+    color: #4f46e5;
+}
+
 .dept-no-result {
-    padding: 12px;
+    padding: 10px;
     text-align: center;
     color: #94a3b8;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 /* Encadré photo utilisateur */

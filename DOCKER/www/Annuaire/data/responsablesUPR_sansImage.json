@@ -1,0 +1,487 @@
+[
+    {
+        "nom": "François ASSELINEAU",
+        "departement": "Président",
+        "email": ""
+    },
+    {
+        "nom": "Benjamin NART",
+        "departement": "Secrétaire général",
+        "email": ""
+    },
+    {
+        "nom": "Alexandre ALÇUYET",
+        "departement": "Membre du bureau politique",
+        "email": "alexandrealcuyet@gmail.com"
+    },
+    {
+        "nom": "Jean-Philippe ARCHENY",
+        "departement": "Membre du bureau politique",
+        "email": "jean-philippe.archeny@upr.fr"
+    },
+    {
+        "nom": "Geneviève BLACHE",
+        "departement": "Membre du bureau politique",
+        "email": "genevieve.blache@upr.fr"
+    },
+    {
+        "nom": "Nicolas BOYER",
+        "departement": "Membre du bureau politique",
+        "email": "nicolas.boyer@upr.fr"
+    },
+    {
+        "nom": "Patrice CALI",
+        "departement": "Membre du bureau politique",
+        "email": ""
+    },
+    {
+        "nom": "Laurent COCHETON",
+        "departement": "Membre du bureau politique",
+        "email": "laurent.cocheton@upr.fr"
+    },
+    {
+        "nom": "Dimitri DE VISMES",
+        "departement": "Membre du bureau politique",
+        "email": "dimitri.de-vismes@upr.fr"
+    },
+    {
+        "nom": "Sébastien DUBOIS",
+        "departement": "Membre du bureau politique",
+        "email": "sebastien.dubois@upr.fr"
+    },
+    {
+        "nom": "Sébastien FABRE",
+        "departement": "Membre du bureau politique",
+        "email": "sebastien.fabre@upr.fr"
+    },
+    {
+        "nom": "Muriel HERMIER",
+        "departement": "Membre du bureau politique",
+        "email": "muriel.hermier@upr.fr"
+    },
+    {
+        "nom": "Catherine LASSENAY",
+        "departement": "Trésorière – UPR",
+        "email": "catherine.gargasson@upr.fr"
+    },
+    {
+        "nom": "Rémi LECLERCQ",
+        "departement": "Membre du bureau politique",
+        "email": "remi.leclercq@upr.fr"
+    },
+    {
+        "nom": "Anne LIMOGE",
+        "departement": "Membre du bureau politique",
+        "email": "anne.limoge@upr.fr"
+    },
+    {
+        "nom": "Nelly PATÉ",
+        "departement": "Membre du bureau politique",
+        "email": "nelly.pate@upr.fr"
+    },
+    {
+        "nom": "Vincent POIRET",
+        "departement": "Membre du bureau politique",
+        "email": "vincent.poiret@upr.fr"
+    },
+    {
+        "nom": "Guillaume PRIN",
+        "departement": "Membre du bureau politique",
+        "email": "guillaume.prin@upr.fr"
+    },
+    {
+        "nom": "Séverine RASSON",
+        "departement": "",
+        "email": "severine.rasson@upr.fr"
+    },
+    {
+        "nom": "Halima SAHIDET",
+        "departement": "Membre du bureau politique",
+        "email": "halima.sahidet@upr.fr"
+    },
+    {
+        "nom": "Nicolas TERVER",
+        "departement": "Membre du bureau politique",
+        "email": "nicolas.terver@upr.fr"
+    },
+    {
+        "nom": "Laurent VUIBERT",
+        "departement": "Membre du bureau politique",
+        "email": ""
+    },
+    {
+        "nom": "Dimitri DE VISMES",
+        "departement": "Europe du Nord",
+        "email": "dimitri.de-vismes@upr.fr"
+    },
+    {
+        "nom": "Jeoffrey DOCTRINAL",
+        "departement": "02 : Aisne",
+        "email": "delegation_02@upr.fr"
+    },
+    {
+        "nom": "Eric LAGUILLIEZ",
+        "departement": "03 : Allier",
+        "email": "delegation_03@upr.fr"
+    },
+    {
+        "nom": "Bernard GUILHAUME",
+        "departement": "05 : Hautes-Alpes",
+        "email": "delegation_05@upr.fr"
+    },
+    {
+        "nom": "Hugo COURAUDON",
+        "departement": "06 : Alpes-Maritimes",
+        "email": "delegation_06@upr.fr"
+    },
+    {
+        "nom": "Ludovic DARTAYET",
+        "departement": "07 : Ardèche",
+        "email": "delegation_07@upr.fr"
+    },
+    {
+        "nom": "Christian DURET",
+        "departement": "08 : Ardennes",
+        "email": "delegation_08@upr.fr"
+    },
+    {
+        "nom": "Walter LUPANO",
+        "departement": "11 : Aude",
+        "email": "delegation_11@upr.fr"
+    },
+    {
+        "nom": "Nicolas BOYER",
+        "departement": "12 : Aveyron",
+        "email": "delegation_12@upr.fr"
+    },
+    {
+        "nom": "Halima SAHIDET",
+        "departement": "13 : Bouches-du-Rhône",
+        "email": "delegation_13@upr.fr"
+    },
+    {
+        "nom": "Simon GERVAIS",
+        "departement": "14 : Calvados",
+        "email": "delegation_14@upr.fr"
+    },
+    {
+        "nom": "Christophe BOURGOIS",
+        "departement": "17 : Charente-Maritime",
+        "email": "delegation_17@upr.fr"
+    },
+    {
+        "nom": "Loïc PETITPERE",
+        "departement": "18 : Cher",
+        "email": "delegation_18@upr.fr"
+    },
+    {
+        "nom": "Jacques COLLOMB",
+        "departement": "20 : Corse",
+        "email": "delegation_20@upr.fr"
+    },
+    {
+        "nom": "Anthony LE ROY",
+        "departement": "22 : Côtes-d'Armor",
+        "email": "delegation_22@upr.fr"
+    },
+    {
+        "nom": "Luc DESFAUGÈRES",
+        "departement": "23 : Creuse",
+        "email": "delegation_23@upr.fr"
+    },
+    {
+        "nom": "François-Xavier LIARD",
+        "departement": "24 : Dordogne",
+        "email": "delegation_24@upr.fr"
+    },
+    {
+        "nom": "Jean-François GACHET",
+        "departement": "26 : Drôme",
+        "email": "delegation_26@upr.fr"
+    },
+    {
+        "nom": "Stéphanie ROUILLON",
+        "departement": "27 : Eure",
+        "email": "delegation_27@upr.fr"
+    },
+    {
+        "nom": "David DURAND",
+        "departement": "28 : Eure-et-Loir",
+        "email": "delegation_28@upr.fr"
+    },
+    {
+        "nom": "Jean-François GOURVENEC",
+        "departement": "29 : Finistère",
+        "email": "delegation_29@upr.fr"
+    },
+    {
+        "nom": "Pascal LE ROUX",
+        "departement": "30 : Gard",
+        "email": "delegation_30@upr.fr"
+    },
+    {
+        "nom": "Sébastien FABRE",
+        "departement": "31 : Haute-Garonne",
+        "email": "delegation_31@upr.fr"
+    },
+    {
+        "nom": "Thierry BARNABÉ",
+        "departement": "32 : Gers",
+        "email": "delegation_32@upr.fr"
+    },
+    {
+        "nom": "Marie-Line RUIS",
+        "departement": "33 : Gironde",
+        "email": "delegation_33@upr.fr"
+    },
+    {
+        "nom": "Nelly PATÉ",
+        "departement": "34 : Herault",
+        "email": "delegation_34@upr.fr"
+    },
+    {
+        "nom": "Michel LECOCQ",
+        "departement": "35 : Ille-et-Vilaine",
+        "email": "delegation_35@upr.fr"
+    },
+    {
+        "nom": "Philippe DAMAS",
+        "departement": "37 : Indre-et-Loire",
+        "email": ""
+    },
+    {
+        "nom": "Clément VOLLE",
+        "departement": "38 : Isere",
+        "email": "delegation_38@upr.fr"
+    },
+    {
+        "nom": "Jacques DUCARME",
+        "departement": "39 : Jura",
+        "email": "delegation_39@upr.fr"
+    },
+    {
+        "nom": "Olivier CHRÉTIEN",
+        "departement": "42 : Loire",
+        "email": "delegation_42@upr.fr"
+    },
+    {
+        "nom": "Raphaël POSTAL",
+        "departement": "43 : Haute-Loire",
+        "email": "delegation_43@upr.fr"
+    },
+    {
+        "nom": "Denis DUFOUR",
+        "departement": "49 : Maine-et-Loire",
+        "email": "delegation_49@upr.fr"
+    },
+    {
+        "nom": "Benoit LEPELTIER",
+        "departement": "50 : Manche",
+        "email": "delegation_50@upr.fr"
+    },
+    {
+        "nom": "Guillaume PRIN",
+        "departement": "51 : Marne",
+        "email": "delegation_51@upr.fr"
+    },
+    {
+        "nom": "Benjamin MICLOT",
+        "departement": "54 : Meurthe-et-Moselle",
+        "email": "delegation_54@upr.fr"
+    },
+    {
+        "nom": "Simon GIESSINGER",
+        "departement": "57 : Moselle",
+        "email": "delegation_57@upr.fr"
+    },
+    {
+        "nom": "Bruno ODIER CÉNAT DE L'HERM",
+        "departement": "58 : Nievre",
+        "email": "delegation_58@upr.fr"
+    },
+    {
+        "nom": "Marco Vito GIGANTE",
+        "departement": "59 : Nord",
+        "email": "delegation_59@upr.fr"
+    },
+    {
+        "nom": "Valerie BUSSON",
+        "departement": "60 : Oise",
+        "email": "delegation_60@upr.fr"
+    },
+    {
+        "nom": "Jacques DURVIE",
+        "departement": "61 : Orne",
+        "email": "delegation_61@upr.fr"
+    },
+    {
+        "nom": "Virgile DELAVISSE",
+        "departement": "62 : Pas-de-Calais",
+        "email": ""
+    },
+    {
+        "nom": "Bernard PERRET",
+        "departement": "63 : Puy-de-Dome",
+        "email": "delegation_63@upr.fr"
+    },
+    {
+        "nom": "Laurent VERDOUX",
+        "departement": "65 : Hautes-Pyrenees",
+        "email": "delegation_65@upr.fr"
+    },
+    {
+        "nom": "Laurence DJERROUD",
+        "departement": "66 : Pyrenees-Orientales",
+        "email": "delegation_66@upr.fr"
+    },
+    {
+        "nom": "Jean Claude AESCHELMANN",
+        "departement": "67 : Bas-Rhin",
+        "email": "delegation_67@upr.fr"
+    },
+    {
+        "nom": "David NYOM KIEFFER",
+        "departement": "68 : Haut-Rhin",
+        "email": "delegation_68@upr.fr"
+    },
+    {
+        "nom": "Olivier PELINGRE",
+        "departement": "69 : Rhône",
+        "email": "delegation_69@upr.fr"
+    },
+    {
+        "nom": "Marie-Annick CHARLIER",
+        "departement": "72 : Sarthe",
+        "email": "delegation_72@upr.fr"
+    },
+    {
+        "nom": "Fabrice GUÉBEY",
+        "departement": "73 : Savoie",
+        "email": "delegation_73@upr.fr"
+    },
+    {
+        "nom": "Jean-Yves DELLA VEDOVA",
+        "departement": "74 : Haute-Savoie",
+        "email": "delegation_74@upr.fr"
+    },
+    {
+        "nom": "Yves LIMOGE",
+        "departement": "Paris-rive-gauche",
+        "email": "paris.rive.gauche@upr.fr"
+    },
+    {
+        "nom": "Gérard GARNIER",
+        "departement": "Paris-rive-droite",
+        "email": "paris.rive.droite@upr.fr"
+    },
+    {
+        "nom": "François-Xavier BURIN",
+        "departement": "76 : Seine-Maritime",
+        "email": "delegation_76@upr.fr"
+    },
+    {
+        "nom": "Adnane BEN ABDESSELEM",
+        "departement": "77 : Seine-et-Marne",
+        "email": "delegation_77@upr.fr"
+    },
+    {
+        "nom": "Jean-Michel BOUIRI",
+        "departement": "78 : Yvelines",
+        "email": "delegation_78@upr.fr"
+    },
+    {
+        "nom": "Joseph ABI-NADER",
+        "departement": "79 : Deux-Sevres",
+        "email": "delegation_79@upr.fr"
+    },
+    {
+        "nom": "Arnaud BELLETTRE",
+        "departement": "80 : Somme",
+        "email": "delegation_80@upr.fr"
+    },
+    {
+        "nom": "William RINEAU",
+        "departement": "82 : Tarn-et-Garonne",
+        "email": "delegation_82@upr.fr"
+    },
+    {
+        "nom": "Nicolas BAUER",
+        "departement": "83 : Var",
+        "email": "delegation_83@upr.fr"
+    },
+    {
+        "nom": "Muriel HERMIER",
+        "departement": "84 : Vaucluse",
+        "email": "delegation_84@upr.fr"
+    },
+    {
+        "nom": "Paul REMAUD",
+        "departement": "85 : Vendee",
+        "email": "delegation_85@upr.fr"
+    },
+    {
+        "nom": "Armand SAVALL",
+        "departement": "86 : Vienne",
+        "email": "delegation_86@upr.fr"
+    },
+    {
+        "nom": "Eva SZUSTAKIEWICZ",
+        "departement": "87 : Haute-Vienne",
+        "email": "delegation_87@upr.fr"
+    },
+    {
+        "nom": "Christian BASIN",
+        "departement": "89 : Yonne",
+        "email": "delegation_89@upr.fr"
+    },
+    {
+        "nom": "Sylvain LUZET",
+        "departement": "91 : Essonne",
+        "email": "delegation_91@upr.fr"
+    },
+    {
+        "nom": "Arnaud MORLOT",
+        "departement": "92 : Hauts-de-Seine",
+        "email": "delegation_92@upr.fr"
+    },
+    {
+        "nom": "Arnaud DOUVILLE",
+        "departement": "94 : Val-de-Marne",
+        "email": "delegation_94@upr.fr"
+    },
+    {
+        "nom": "Marc PARIGOT",
+        "departement": "95 : Val-d'Oise",
+        "email": "delegation_95@upr.fr"
+    },
+    {
+        "nom": "Sébastien DUBOIS",
+        "departement": "972 : Martinique",
+        "email": "delegation_972@upr.fr"
+    },
+    {
+        "nom": "Christian RENON",
+        "departement": "973 : Guyane",
+        "email": "delegation_973@upr.fr"
+    },
+    {
+        "nom": "Florian BINET",
+        "departement": "Réunion-nord",
+        "email": "delegation_974@upr.fr"
+    },
+    {
+        "nom": "Florian BINET",
+        "departement": "Réunion-sud",
+        "email": "delegation_974@upr.fr"
+    },
+    {
+        "nom": "Catherine BIHANNIC",
+        "departement": "976 : Mayotte",
+        "email": "delegation_976@upr.fr"
+    },
+    {
+        "nom": "Charly WINTER",
+        "departement": "988 : Nouvelle-Calédonie",
+        "email": "delegation_988@upr.fr"
+    }
+]

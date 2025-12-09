@@ -33,7 +33,7 @@ $stats = $pdo->query("
 // Compter les responsables assignés
 $statsResponsables = $pdo->query("
     SELECT COUNT(DISTINCT canton) as nb_cantons_avec_responsable
-    FROM gestionDroitsCantons
+    FROM gestionAccesCantons
     WHERE utilisateur_id IS NOT NULL
 ")->fetch(PDO::FETCH_ASSOC);
 ?>

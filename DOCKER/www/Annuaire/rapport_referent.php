@@ -21,7 +21,7 @@ $userAllowedDeptNumbers = [];
 if ($currentUserType == 3) {
     $stmtDepts = $pdo->prepare("
         SELECT DISTINCT d.numero_departement
-        FROM gestionDroits gd
+        FROM gestionAccesDepartements gd
         JOIN departements d ON gd.departement_id = d.id
         WHERE gd.utilisateur_id = ?
     ");

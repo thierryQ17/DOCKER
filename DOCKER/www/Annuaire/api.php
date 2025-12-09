@@ -1484,13 +1484,13 @@ function saveGestionDroits($pdo) {
         $userIds = array_filter(array_map('trim', preg_split('/[,;]/', $utilisateurIds)));
 
         // Supprimer les anciennes entrées pour ce département/type
-        $stmtDelete = $pdo->prepare("DELETE FROM gestionDroits WHERE departement_id = ? AND typeUtilisateur_id = ?");
+        $stmtDelete = $pdo->prepare("DELETE FROM gestionAccesDepartements WHERE departement_id = ? AND typeUtilisateur_id = ?");
         $stmtDelete->execute([$departementId, $typeUtilisateurId]);
 
         // Insérer les nouvelles entrées
         if (!empty($userIds)) {
             $stmtInsert = $pdo->prepare("
-                INSERT INTO gestionDroits (departement_id, utilisateur_id, typeUtilisateur_id)
+                INSERT INTO gestionAccesDepartements (departement_id, utilisateur_id, typeUtilisateur_id)
                 VALUES (?, ?, ?)
             ");
             foreach ($userIds as $userId) {
@@ -1531,7 +1531,7 @@ function getGestionDroits($pdo) {
                 d.numero_departement,
                 d.nom_departement,
                 d.region
-            FROM gestionDroits g
+            FROM gestionAccesDepartements g
             JOIN departements d ON g.departement_id = d.id
             JOIN utilisateurs u ON g.utilisateur_id = u.id
         ";
@@ -1685,7 +1685,7 @@ function getAllUtilisateurs($pdo) {
             // D'abord récupérer les départements du référent
             $stmtDepts = $pdo->prepare("
                 SELECT DISTINCT departement_id
-                FROM gestionDroits
+                FROM gestionAccesDepartements
                 WHERE utilisateur_id = ?
             ");
             $stmtDepts->execute([$currentUserId]);
@@ -1702,7 +1702,7 @@ function getAllUtilisateurs($pdo) {
             $whereClause = "WHERE u.typeUtilisateur_id = 4
                            AND u.id IN (
                                SELECT DISTINCT utilisateur_id
-                               FROM gestionDroits
+                               FROM gestionAccesDepartements
                                WHERE departement_id IN ($placeholders)
                            )";
             $params = $referentDepts;
@@ -1736,11 +1736,11 @@ function getAllUtilisateurs($pdo) {
         foreach ($utilisateurs as &$user) {
             // Récupérer les départements (Menu)
             $stmtDepts = $pdo->prepare("
-                SELECT DISTINCT d.nom_departement
-                FROM gestionDroits gd
+                SELECT DISTINCT CONCAT(d.nom_departement, ' (', d.numero_departement, ')') as dept_display
+                FROM gestionAccesDepartements gd
                 JOIN departements d ON gd.departement_id = d.id
                 WHERE gd.utilisateur_id = ?
-                ORDER BY d.nom_departement
+                ORDER BY dept_display
             ");
             $stmtDepts->execute([$user['id']]);
             $depts = $stmtDepts->fetchAll(PDO::FETCH_COLUMN);
@@ -1750,7 +1750,7 @@ function getAllUtilisateurs($pdo) {
             // Récupérer les cantons
             $stmtCantons = $pdo->prepare("
                 SELECT DISTINCT canton
-                FROM gestionDroitsCantons
+                FROM gestionAccesCantons
                 WHERE utilisateur_id = ?
                 ORDER BY canton
             ");
@@ -1979,7 +1979,7 @@ function getGestionDroitsCantons($pdo) {
 
     try {
         // Vérifier si la table existe
-        $tableExists = $pdo->query("SHOW TABLES LIKE 'gestionDroitsCantons'")->rowCount() > 0;
+        $tableExists = $pdo->query("SHOW TABLES LIKE 'gestionAccesCantons'")->rowCount() > 0;
 
         if (!$tableExists) {
             // La table n'existe pas encore, retourner une liste vide
@@ -1995,7 +1995,7 @@ function getGestionDroitsCantons($pdo) {
                 g.utilisateur_id,
                 u.prenom,
                 u.nom
-            FROM gestionDroitsCantons g
+            FROM gestionAccesCantons g
             LEFT JOIN utilisateurs u ON g.utilisateur_id = u.id
             WHERE 1=1
         ";
@@ -2074,7 +2074,7 @@ function saveGestionDroitsCanton($pdo) {
     try {
         // Créer la table si elle n'existe pas
         $pdo->exec("
-            CREATE TABLE IF NOT EXISTS gestionDroitsCantons (
+            CREATE TABLE IF NOT EXISTS gestionAccesCantons (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 numero_departement VARCHAR(10) NOT NULL,
                 canton VARCHAR(255) NOT NULL,
@@ -2090,13 +2090,13 @@ function saveGestionDroitsCanton($pdo) {
         $userIds = array_filter(array_map('trim', preg_split('/[,;]/', $utilisateurIds)));
 
         // Supprimer les anciennes entrées pour ce canton
-        $stmtDelete = $pdo->prepare("DELETE FROM gestionDroitsCantons WHERE numero_departement = ? AND canton = ?");
+        $stmtDelete = $pdo->prepare("DELETE FROM gestionAccesCantons WHERE numero_departement = ? AND canton = ?");
         $stmtDelete->execute([$numeroDepartement, $canton]);
 
         // Insérer les nouvelles entrées
         if (!empty($userIds)) {
             $stmtInsert = $pdo->prepare("
-                INSERT INTO gestionDroitsCantons (numero_departement, canton, utilisateur_id)
+                INSERT INTO gestionAccesCantons (numero_departement, canton, utilisateur_id)
                 VALUES (?, ?, ?)
             ");
             foreach ($userIds as $userId) {
@@ -2192,7 +2192,7 @@ function getUserDroits($pdo) {
         // Récupérer les IDs de départements (table departements) auxquels l'utilisateur a accès
         $stmt = $pdo->prepare("
             SELECT DISTINCT departement_id
-            FROM gestionDroits
+            FROM gestionAccesDepartements
             WHERE utilisateur_id = ?
         ");
         $stmt->execute([$userId]);
@@ -2246,7 +2246,7 @@ function getUserCantons($pdo) {
 
     try {
         // Vérifier si la table existe
-        $tableExists = $pdo->query("SHOW TABLES LIKE 'gestionDroitsCantons'")->rowCount() > 0;
+        $tableExists = $pdo->query("SHOW TABLES LIKE 'gestionAccesCantons'")->rowCount() > 0;
 
         if (!$tableExists) {
             echo json_encode(['success' => true, 'cantons' => []]);
@@ -2258,7 +2258,7 @@ function getUserCantons($pdo) {
             SELECT DISTINCT
                 numero_departement,
                 canton
-            FROM gestionDroitsCantons
+            FROM gestionAccesCantons
             WHERE utilisateur_id = ?
             ORDER BY numero_departement ASC, canton ASC
         ");
@@ -2520,7 +2520,7 @@ function saveUserDroits($pdo) {
         // Récupérer les numéros des départements actuels pour comparaison
         $stmtOldDepts = $pdo->prepare("
             SELECT d.numero_departement
-            FROM gestionDroits gd
+            FROM gestionAccesDepartements gd
             JOIN departements d ON gd.departement_id = d.id
             WHERE gd.utilisateur_id = ?
         ");
@@ -2544,20 +2544,20 @@ function saveUserDroits($pdo) {
             $placeholders = str_repeat('?,', count($removedDeptNumbers) - 1) . '?';
             $params = array_merge([$userId], $removedDeptNumbers);
             $stmtDeleteCantons = $pdo->prepare("
-                DELETE FROM gestionDroitsCantons
+                DELETE FROM gestionAccesCantons
                 WHERE utilisateur_id = ? AND numero_departement IN ($placeholders)
             ");
             $stmtDeleteCantons->execute($params);
         }
 
         // Supprimer les anciens droits départements
-        $stmt = $pdo->prepare("DELETE FROM gestionDroits WHERE utilisateur_id = ?");
+        $stmt = $pdo->prepare("DELETE FROM gestionAccesDepartements WHERE utilisateur_id = ?");
         $stmt->execute([$userId]);
 
         // Insérer les nouveaux droits
         if (!empty($departements)) {
             $stmt = $pdo->prepare("
-                INSERT INTO gestionDroits (utilisateur_id, departement_id, typeUtilisateur_id)
+                INSERT INTO gestionAccesDepartements (utilisateur_id, departement_id, typeUtilisateur_id)
                 VALUES (?, ?, ?)
             ");
 
@@ -2568,7 +2568,7 @@ function saveUserDroits($pdo) {
 
         // Si aucun département n'est sélectionné, supprimer tous les cantons
         if (empty($departements)) {
-            $stmtDeleteAllCantons = $pdo->prepare("DELETE FROM gestionDroitsCantons WHERE utilisateur_id = ?");
+            $stmtDeleteAllCantons = $pdo->prepare("DELETE FROM gestionAccesCantons WHERE utilisateur_id = ?");
             $stmtDeleteAllCantons->execute([$userId]);
         }
 
@@ -2610,7 +2610,7 @@ function saveUserCantons($pdo) {
 
         // Créer la table si elle n'existe pas
         $pdo->exec("
-            CREATE TABLE IF NOT EXISTS gestionDroitsCantons (
+            CREATE TABLE IF NOT EXISTS gestionAccesCantons (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 utilisateur_id INT NOT NULL,
                 numero_departement VARCHAR(3) NOT NULL,
@@ -2621,13 +2621,13 @@ function saveUserCantons($pdo) {
         ");
 
         // Supprimer les anciens droits
-        $stmt = $pdo->prepare("DELETE FROM gestionDroitsCantons WHERE utilisateur_id = ?");
+        $stmt = $pdo->prepare("DELETE FROM gestionAccesCantons WHERE utilisateur_id = ?");
         $stmt->execute([$userId]);
 
         // Insérer les nouveaux droits
         if (!empty($cantons)) {
             $stmt = $pdo->prepare("
-                INSERT INTO gestionDroitsCantons (utilisateur_id, numero_departement, canton)
+                INSERT INTO gestionAccesCantons (utilisateur_id, numero_departement, canton)
                 VALUES (?, ?, ?)
             ");
 
@@ -2659,7 +2659,7 @@ function saveUserCantons($pdo) {
 }
 
 /**
- * Supprimer un utilisateur (avec cascade sur gestionDroits et gestionDroitsCantons)
+ * Supprimer un utilisateur (avec cascade sur gestionAccesDepartements et gestionAccesCantons)
  */
 function deleteUtilisateur($pdo) {
     header('Content-Type: application/json');
@@ -2679,11 +2679,11 @@ function deleteUtilisateur($pdo) {
         $userInfo = $stmtInfo->fetch(PDO::FETCH_ASSOC);
 
         // Supprimer les droits par cantons
-        $stmt = $pdo->prepare("DELETE FROM gestionDroitsCantons WHERE utilisateur_id = ?");
+        $stmt = $pdo->prepare("DELETE FROM gestionAccesCantons WHERE utilisateur_id = ?");
         $stmt->execute([$id]);
 
         // Supprimer les droits par départements
-        $stmt = $pdo->prepare("DELETE FROM gestionDroits WHERE utilisateur_id = ?");
+        $stmt = $pdo->prepare("DELETE FROM gestionAccesDepartements WHERE utilisateur_id = ?");
         $stmt->execute([$id]);
 
         // Supprimer l'utilisateur
@@ -2747,7 +2747,7 @@ function getUtilisateursParRegion($pdo) {
                     d.nom_departement as departement_nom,
                     d.numero_departement as departement_numero
                 FROM utilisateurs u
-                INNER JOIN gestionDroits gd ON u.id = gd.utilisateur_id
+                INNER JOIN gestionAccesDepartements gd ON u.id = gd.utilisateur_id
                 INNER JOIN departements d ON gd.departement_id = d.id
                 WHERE u.typeUtilisateur_id = 3
                 AND u.actif = 1
@@ -2765,7 +2765,7 @@ function getUtilisateursParRegion($pdo) {
                     m.prenom as membre_prenom,
                     m.adresseMail as membre_email,
                     m.typeUtilisateur_id as type_utilisateur
-                FROM gestionDroitsCantons gdc
+                FROM gestionAccesCantons gdc
                 INNER JOIN utilisateurs m ON gdc.utilisateur_id = m.id
                 WHERE m.typeUtilisateur_id IN (3, 4)
                 AND m.actif = 1
@@ -2812,7 +2812,7 @@ function getUtilisateursParRegion($pdo) {
                     d.numero_departement as departement_numero,
                     gdc.canton
                 FROM utilisateurs u
-                INNER JOIN gestionDroitsCantons gdc ON u.id = gdc.utilisateur_id
+                INNER JOIN gestionAccesCantons gdc ON u.id = gdc.utilisateur_id
                 INNER JOIN departements d ON gdc.numero_departement COLLATE utf8mb4_unicode_ci = d.numero_departement
                 WHERE u.typeUtilisateur_id = 4
                 AND u.actif = 1
@@ -2825,7 +2825,7 @@ function getUtilisateursParRegion($pdo) {
             // Récupérer les départements du référent
             $stmtDepts = $pdo->prepare("
                 SELECT DISTINCT d.numero_departement
-                FROM gestionDroits gd
+                FROM gestionAccesDepartements gd
                 INNER JOIN departements d ON gd.departement_id = d.id
                 WHERE gd.utilisateur_id = ?
             ");
@@ -2845,7 +2845,7 @@ function getUtilisateursParRegion($pdo) {
                         d.numero_departement as departement_numero,
                         gdc.canton
                     FROM utilisateurs u
-                    INNER JOIN gestionDroitsCantons gdc ON u.id = gdc.utilisateur_id
+                    INNER JOIN gestionAccesCantons gdc ON u.id = gdc.utilisateur_id
                     INNER JOIN departements d ON gdc.numero_departement COLLATE utf8mb4_unicode_ci = d.numero_departement
                     WHERE u.typeUtilisateur_id = 4
                     AND u.actif = 1
@@ -2897,13 +2897,13 @@ function saveMyCantons($pdo) {
         $pdo->beginTransaction();
 
         // Supprimer tous les cantons existants de l'utilisateur
-        $stmtDelete = $pdo->prepare("DELETE FROM gestionDroitsCantons WHERE utilisateur_id = ?");
+        $stmtDelete = $pdo->prepare("DELETE FROM gestionAccesCantons WHERE utilisateur_id = ?");
         $stmtDelete->execute([$currentUserId]);
 
         // Insérer les nouveaux cantons sélectionnés
         if (!empty($cantons)) {
             $stmtInsert = $pdo->prepare("
-                INSERT INTO gestionDroitsCantons (numero_departement, canton, utilisateur_id)
+                INSERT INTO gestionAccesCantons (numero_departement, canton, utilisateur_id)
                 VALUES (?, ?, ?)
             ");
 
@@ -2974,7 +2974,7 @@ function getStatsReferents($pdo) {
                 d.numero_departement,
                 d.nom_departement
             FROM utilisateurs u
-            JOIN gestionDroits gd ON u.id = gd.utilisateur_id
+            JOIN gestionAccesDepartements gd ON u.id = gd.utilisateur_id
             JOIN departements d ON gd.departement_id = d.id
             WHERE u.typeUtilisateur_id IN (3, 4)
             ORDER BY d.numero_departement, u.typeUtilisateur_id, u.nom, u.prenom
@@ -3025,7 +3025,7 @@ function getStatsReferents($pdo) {
             // Récupérer les cantons du référent pour ce département
             $stmtCantons = $pdo->prepare("
                 SELECT canton
-                FROM gestionDroitsCantons
+                FROM gestionAccesCantons
                 WHERE utilisateur_id = ? AND numero_departement = ?
             ");
             $stmtCantons->execute([$ref['utilisateur_id'], $numDept]);

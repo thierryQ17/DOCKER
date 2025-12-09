@@ -32,7 +32,7 @@ if ($currentUserType == 3 || $currentUserType == 4) {
     // Récupérer les IDs et numéros des départements autorisés
     $stmtDepts = $pdo->prepare("
         SELECT DISTINCT d.id, d.numero_departement
-        FROM gestionDroits gd
+        FROM gestionAccesDepartements gd
         JOIN departements d ON gd.departement_id = d.id
         WHERE gd.utilisateur_id = ?
     ");
@@ -52,7 +52,7 @@ $userWritableCantons = [];
 if ($currentUserType == 3 || $currentUserType == 4) {
     $stmtCantons = $pdo->prepare("
         SELECT DISTINCT canton
-        FROM gestionDroitsCantons
+        FROM gestionAccesCantons
         WHERE utilisateur_id = ?
     ");
     $stmtCantons->execute([$currentUserId]);
