@@ -61,15 +61,19 @@ if ($currentUserType == 3 || $currentUserType == 4) {
     $userWritableCantons = $stmtCantons->fetchAll(PDO::FETCH_COLUMN);
 }
 
-// Récupérer la région du premier département autorisé (pour auto-déplier le menu)
+// Récupérer la région du premier département autorisé (pour auto-déplier le menu) via arborescence
 $userFirstDeptRegion = null;
 $userFirstDeptNumero = null;
 $userFirstDeptNom = null;
 if (!empty($userAllowedDeptNumbers)) {
     $stmtFirstDept = $pdo->prepare("
-        SELECT DISTINCT region, numero_departement, nom_departement
-        FROM maires
-        WHERE numero_departement = ?
+        SELECT
+            p.libelle as region,
+            a.reference_id as numero_departement,
+            SUBSTRING(a.libelle, LOCATE(' - ', a.libelle) + 3) as nom_departement
+        FROM arborescence a
+        JOIN arborescence p ON a.parent_id = p.id
+        WHERE a.type_element = 'departement' AND a.reference_id = ?
         LIMIT 1
     ");
     $stmtFirstDept->execute([$userAllowedDeptNumbers[0]]);
@@ -86,19 +90,28 @@ $deptMode = isset($_GET['dept']) ? trim($_GET['dept']) : null;
 $deptData = null;
 
 if ($deptMode) {
+    // Recherche via arborescence
     if (is_numeric($deptMode)) {
         $stmt = $pdo->prepare("
-            SELECT numero_departement, nom_departement, region
-            FROM maires
-            WHERE numero_departement = ?
+            SELECT
+                a.reference_id as numero_departement,
+                SUBSTRING(a.libelle, LOCATE(' - ', a.libelle) + 3) as nom_departement,
+                p.libelle as region
+            FROM arborescence a
+            JOIN arborescence p ON a.parent_id = p.id
+            WHERE a.type_element = 'departement' AND a.reference_id = ?
             LIMIT 1
         ");
         $stmt->execute([$deptMode]);
     } else {
         $stmt = $pdo->prepare("
-            SELECT numero_departement, nom_departement, region
-            FROM maires
-            WHERE LOWER(nom_departement) = LOWER(?)
+            SELECT
+                a.reference_id as numero_departement,
+                SUBSTRING(a.libelle, LOCATE(' - ', a.libelle) + 3) as nom_departement,
+                p.libelle as region
+            FROM arborescence a
+            JOIN arborescence p ON a.parent_id = p.id
+            WHERE a.type_element = 'departement' AND LOWER(a.libelle) LIKE CONCAT('%', LOWER(?), '%')
             LIMIT 1
         ");
         $stmt->execute([$deptMode]);
@@ -106,25 +119,31 @@ if ($deptMode) {
     $deptData = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Récupérer la liste des régions avec le nombre de maires
+// Récupérer la liste des régions avec le nombre de maires via arborescence
 // Pour les référents et membres, filtrer selon leurs départements autorisés
 if ($filterMenu && !empty($userAllowedDeptNumbers)) {
     // Créer les placeholders pour la requête IN
     $placeholders = str_repeat('?,', count($userAllowedDeptNumbers) - 1) . '?';
     $regionsStmt = $pdo->prepare("
-        SELECT region, COUNT(*) as nb_maires
-        FROM maires
-        WHERE numero_departement IN ($placeholders)
-        GROUP BY region
-        ORDER BY region ASC
+        SELECT a.libelle as region, COUNT(m.id) as nb_maires
+        FROM arborescence a
+        LEFT JOIN arborescence d ON d.parent_id = a.id AND d.type_element = 'departement'
+        LEFT JOIN maires m ON d.reference_id = m.numero_departement AND m.numero_departement IN ($placeholders)
+        WHERE a.type_element = 'region'
+        GROUP BY a.id, a.libelle
+        HAVING nb_maires > 0
+        ORDER BY a.libelle ASC
     ");
     $regionsStmt->execute($userAllowedDeptNumbers);
 } else {
     $regionsStmt = $pdo->query("
-        SELECT region, COUNT(*) as nb_maires
-        FROM maires
-        GROUP BY region
-        ORDER BY region ASC
+        SELECT a.libelle as region, COUNT(m.id) as nb_maires
+        FROM arborescence a
+        LEFT JOIN arborescence d ON d.parent_id = a.id AND d.type_element = 'departement'
+        LEFT JOIN maires m ON d.reference_id = m.numero_departement
+        WHERE a.type_element = 'region'
+        GROUP BY a.id, a.libelle
+        ORDER BY a.libelle ASC
     ");
 }
 $allRegions = $regionsStmt->fetchAll(PDO::FETCH_ASSOC);

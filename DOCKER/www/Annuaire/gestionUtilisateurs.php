@@ -172,28 +172,41 @@ $stmtMyCantons->execute([$currentUserId]);
 $myCantons = $stmtMyCantons->fetchAll(PDO::FETCH_ASSOC);
 $mySelectedCantons = array_map(fn($c) => $c['numero_departement'] . '|' . $c['canton'], $myCantons);
 
-// Tous les cantons disponibles dans les départements autorisés
+// Tous les cantons disponibles dans les départements autorisés via arborescence
 $allCantonsForMyDepts = [];
 if (!empty($myDepartements)) {
     $deptNumbers = array_column($myDepartements, 'numero_departement');
     $placeholders = implode(',', array_fill(0, count($deptNumbers), '?'));
     $stmtAllCantons = $pdo->prepare("
-        SELECT DISTINCT m.canton, m.numero_departement, m.nom_departement, m.circonscription
-        FROM maires m
-        WHERE m.numero_departement IN ($placeholders)
-        ORDER BY m.numero_departement ASC, m.canton ASC
+        SELECT DISTINCT
+            canton.libelle as canton,
+            dept.reference_id as numero_departement,
+            SUBSTRING(dept.libelle, LOCATE(' - ', dept.libelle) + 3) as nom_departement,
+            circo.libelle as circonscription
+        FROM arborescence canton
+        JOIN arborescence circo ON canton.parent_id = circo.id
+        JOIN arborescence dept ON circo.parent_id = dept.id
+        WHERE canton.type_element = 'canton' AND dept.reference_id IN ($placeholders)
+        ORDER BY dept.reference_id ASC, canton.libelle ASC
     ");
     $stmtAllCantons->execute($deptNumbers);
     $allCantonsForMyDepts = $stmtAllCantons->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Récupérer la liste des départements pour le formulaire (DOM-TOM à la fin)
+// Récupérer la liste des départements pour le formulaire via arborescence (DOM-TOM à la fin)
 $allDepartements = $pdo->query("
-    SELECT id, numero_departement, nom_departement, region
-    FROM departements
+    SELECT
+        d.id,
+        a.reference_id as numero_departement,
+        SUBSTRING(a.libelle, LOCATE(' - ', a.libelle) + 3) as nom_departement,
+        p.libelle as region
+    FROM arborescence a
+    JOIN arborescence p ON a.parent_id = p.id
+    JOIN departements d ON a.reference_id = d.numero_departement
+    WHERE a.type_element = 'departement'
     ORDER BY
-        CASE WHEN numero_departement LIKE '97%' OR numero_departement LIKE '98%' THEN 1 ELSE 0 END,
-        numero_departement ASC
+        CASE WHEN a.reference_id LIKE '97%' OR a.reference_id LIKE '98%' THEN 1 ELSE 0 END,
+        a.reference_id ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -295,10 +308,25 @@ $allDepartements = $pdo->query("
 
                     <div class="filters-bar">
                         <div class="row g-3 align-items-center">
-                            <div class="col-md-12">
+                            <div class="col-md-8" id="searchColContainer">
                                 <div class="search-box">
                                     <i class="bi bi-search"></i>
                                     <input type="text" class="form-control" id="searchUsers" placeholder="Rechercher un utilisateur...">
+                                </div>
+                            </div>
+                            <?php // Tri par département - affiché dynamiquement selon filtre rôle ?>
+                            <?php // Pour rôles 1,2,5 : toujours visible. Pour rôle 3 : visible uniquement si filtre référent actif ?>
+                            <div class="col-md-4 d-none" id="sortButtonsContainer">
+                                <div class="d-flex align-items-center justify-content-end gap-2">
+                                    <span class="text-muted small">Trier par :</span>
+                                    <div class="btn-group btn-group-sm" role="group" id="sortButtonGroup">
+                                        <button type="button" class="btn btn-outline-primary active" id="sortByName" onclick="sortUsersBy('name')" title="Trier par nom">
+                                            <i class="bi bi-sort-alpha-down"></i> Nom
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary" id="sortByDept" onclick="sortUsersBy('dept')" title="Trier par département">
+                                            <i class="bi bi-geo-alt"></i> Département
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

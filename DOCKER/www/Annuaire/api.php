@@ -1840,14 +1840,16 @@ function searchUtilisateurs($pdo) {
  */
 function getRegions($pdo) {
     try {
+        // Via arborescence
         $stmt = $pdo->query("
             SELECT
-                region,
-                COUNT(DISTINCT numero_departement) as nb_departements
-            FROM maires
-            WHERE region IS NOT NULL AND region != ''
-            GROUP BY region
-            ORDER BY region ASC
+                a.libelle as region,
+                COUNT(d.id) as nb_departements
+            FROM arborescence a
+            LEFT JOIN arborescence d ON d.parent_id = a.id AND d.type_element = 'departement'
+            WHERE a.type_element = 'region'
+            GROUP BY a.id, a.libelle
+            ORDER BY a.libelle ASC
         ");
         $regions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1873,15 +1875,18 @@ function getDepartementsByRegion($pdo) {
     }
 
     try {
+        // Via arborescence
         $stmt = $pdo->prepare("
             SELECT
-                numero_departement,
-                nom_departement,
-                COUNT(DISTINCT circonscription) as nb_circos
-            FROM maires
-            WHERE region = ?
-            GROUP BY numero_departement, nom_departement
-            ORDER BY numero_departement ASC
+                d.reference_id as numero_departement,
+                SUBSTRING(d.libelle, LOCATE(' - ', d.libelle) + 3) as nom_departement,
+                COUNT(c.id) as nb_circos
+            FROM arborescence r
+            JOIN arborescence d ON d.parent_id = r.id AND d.type_element = 'departement'
+            LEFT JOIN arborescence c ON c.parent_id = d.id AND c.type_element = 'circonscription'
+            WHERE r.type_element = 'region' AND r.libelle = ?
+            GROUP BY d.id, d.reference_id, d.libelle
+            ORDER BY d.reference_id ASC
         ");
         $stmt->execute([$region]);
         $departements = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1908,15 +1913,17 @@ function getCircosByDepartement($pdo) {
     }
 
     try {
+        // Via arborescence
         $stmt = $pdo->prepare("
             SELECT
-                circonscription,
-                COUNT(DISTINCT canton) as nb_cantons
-            FROM maires
-            WHERE numero_departement = ?
-            AND circonscription IS NOT NULL AND circonscription != ''
-            GROUP BY circonscription
-            ORDER BY CAST(circonscription AS UNSIGNED) ASC, circonscription ASC
+                c.libelle as circonscription,
+                COUNT(ca.id) as nb_cantons
+            FROM arborescence d
+            JOIN arborescence c ON c.parent_id = d.id AND c.type_element = 'circonscription'
+            LEFT JOIN arborescence ca ON ca.parent_id = c.id AND ca.type_element = 'canton'
+            WHERE d.type_element = 'departement' AND d.reference_id = ?
+            GROUP BY c.id, c.libelle
+            ORDER BY CAST(c.libelle AS UNSIGNED) ASC, c.libelle ASC
         ");
         $stmt->execute([$numeroDepartement]);
         $circos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1945,16 +1952,18 @@ function getCantonsByCirco($pdo) {
     }
 
     try {
+        // Via arborescence (nb_communes reste via maires car données spécifiques)
         $stmt = $pdo->prepare("
             SELECT
-                canton,
-                COUNT(DISTINCT ville) as nb_communes
-            FROM maires
-            WHERE numero_departement = ?
-            AND circonscription = ?
-            AND canton IS NOT NULL AND canton != ''
-            GROUP BY canton
-            ORDER BY canton ASC
+                ca.libelle as canton,
+                COUNT(DISTINCT m.ville) as nb_communes
+            FROM arborescence d
+            JOIN arborescence c ON c.parent_id = d.id AND c.type_element = 'circonscription'
+            JOIN arborescence ca ON ca.parent_id = c.id AND ca.type_element = 'canton'
+            LEFT JOIN maires m ON m.numero_departement = d.reference_id AND m.canton = ca.libelle
+            WHERE d.type_element = 'departement' AND d.reference_id = ? AND c.libelle = ?
+            GROUP BY ca.id, ca.libelle
+            ORDER BY ca.libelle ASC
         ");
         $stmt->execute([$numeroDepartement, $circo]);
         $cantons = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -64,22 +64,30 @@ $deptMode = isset($_GET['dept']) ? trim($_GET['dept']) : null;
 $deptData = null;
 
 if ($deptMode) {
-    // Rechercher le département par numéro ou par nom
+    // Rechercher le département par numéro ou par nom via arborescence
     if (is_numeric($deptMode)) {
         // Recherche par numéro (ex: "60")
         $stmt = $pdo->prepare("
-            SELECT numero_departement, nom_departement, region
-            FROM maires
-            WHERE numero_departement = ?
+            SELECT
+                a.reference_id as numero_departement,
+                SUBSTRING(a.libelle, LOCATE(' - ', a.libelle) + 3) as nom_departement,
+                p.libelle as region
+            FROM arborescence a
+            JOIN arborescence p ON a.parent_id = p.id
+            WHERE a.type_element = 'departement' AND a.reference_id = ?
             LIMIT 1
         ");
         $stmt->execute([$deptMode]);
     } else {
         // Recherche par nom (ex: "oise", "nord", etc.)
         $stmt = $pdo->prepare("
-            SELECT numero_departement, nom_departement, region
-            FROM maires
-            WHERE LOWER(nom_departement) = LOWER(?)
+            SELECT
+                a.reference_id as numero_departement,
+                SUBSTRING(a.libelle, LOCATE(' - ', a.libelle) + 3) as nom_departement,
+                p.libelle as region
+            FROM arborescence a
+            JOIN arborescence p ON a.parent_id = p.id
+            WHERE a.type_element = 'departement' AND LOWER(a.libelle) LIKE CONCAT('%', LOWER(?), '%')
             LIMIT 1
         ");
         $stmt->execute([$deptMode]);
@@ -94,25 +102,31 @@ if ($deptMode) {
 // ============================================================================
 
 
-// Récupérer la liste des régions avec le nombre de maires
+// Récupérer la liste des régions avec le nombre de maires via arborescence
 // Pour les référents et membres, filtrer selon leurs départements autorisés
 if ($filterMenu && !empty($userAllowedDeptNumbers)) {
     // Créer les placeholders pour la requête IN
     $placeholders = str_repeat('?,', count($userAllowedDeptNumbers) - 1) . '?';
     $regionsStmt = $pdo->prepare("
-        SELECT region, COUNT(*) as nb_maires
-        FROM maires
-        WHERE numero_departement IN ($placeholders)
-        GROUP BY region
-        ORDER BY region ASC
+        SELECT a.libelle as region, COUNT(m.id) as nb_maires
+        FROM arborescence a
+        LEFT JOIN arborescence d ON d.parent_id = a.id AND d.type_element = 'departement'
+        LEFT JOIN maires m ON d.reference_id = m.numero_departement AND m.numero_departement IN ($placeholders)
+        WHERE a.type_element = 'region'
+        GROUP BY a.id, a.libelle
+        HAVING nb_maires > 0
+        ORDER BY a.libelle ASC
     ");
     $regionsStmt->execute($userAllowedDeptNumbers);
 } else {
     $regionsStmt = $pdo->query("
-        SELECT region, COUNT(*) as nb_maires
-        FROM maires
-        GROUP BY region
-        ORDER BY region ASC
+        SELECT a.libelle as region, COUNT(m.id) as nb_maires
+        FROM arborescence a
+        LEFT JOIN arborescence d ON d.parent_id = a.id AND d.type_element = 'departement'
+        LEFT JOIN maires m ON d.reference_id = m.numero_departement
+        WHERE a.type_element = 'region'
+        GROUP BY a.id, a.libelle
+        ORDER BY a.libelle ASC
     ");
 }
 $allRegions = $regionsStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -155,19 +169,20 @@ if ($filterMenu && !empty($userAllowedDeptNumbers)) {
 }
 $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
 
-// Récupérer les listes pour les datalists (filtrées pour référents/membres)
+// Récupérer les listes pour les datalists via arborescence (filtrées pour référents/membres)
 if ($filterMenu && !empty($userAllowedDeptNumbers)) {
     $placeholders = str_repeat('?,', count($userAllowedDeptNumbers) - 1) . '?';
 
+    // Départements via arborescence
     $departementsListStmt = $pdo->prepare("
-        SELECT CONCAT(numero_departement, ' - ', nom_departement) as dept_display
-        FROM maires
-        WHERE numero_departement IN ($placeholders)
-        GROUP BY numero_departement, nom_departement
-        ORDER BY numero_departement ASC
+        SELECT a.libelle as dept_display
+        FROM arborescence a
+        WHERE a.type_element = 'departement' AND a.reference_id IN ($placeholders)
+        ORDER BY a.reference_id ASC
     ");
     $departementsListStmt->execute($userAllowedDeptNumbers);
 
+    // Communes restent via maires (données spécifiques)
     $communesListStmt = $pdo->prepare("
         SELECT DISTINCT ville
         FROM maires
@@ -176,33 +191,38 @@ if ($filterMenu && !empty($userAllowedDeptNumbers)) {
     ");
     $communesListStmt->execute($userAllowedDeptNumbers);
 
+    // Cantons via arborescence
     $cantonsListStmt = $pdo->prepare("
-        SELECT DISTINCT canton
-        FROM maires
-        WHERE numero_departement IN ($placeholders)
-        AND canton IS NOT NULL AND canton != ''
-        ORDER BY canton ASC
+        SELECT DISTINCT a.libelle as canton
+        FROM arborescence a
+        JOIN arborescence c ON a.parent_id = c.id
+        JOIN arborescence d ON c.parent_id = d.id
+        WHERE a.type_element = 'canton' AND d.reference_id IN ($placeholders)
+        ORDER BY a.libelle ASC
     ");
     $cantonsListStmt->execute($userAllowedDeptNumbers);
 } else {
+    // Départements via arborescence
     $departementsListStmt = $pdo->query("
-        SELECT CONCAT(numero_departement, ' - ', nom_departement) as dept_display
-        FROM maires
-        GROUP BY numero_departement, nom_departement
-        ORDER BY numero_departement ASC
+        SELECT a.libelle as dept_display
+        FROM arborescence a
+        WHERE a.type_element = 'departement'
+        ORDER BY a.reference_id ASC
     ");
 
+    // Communes restent via maires (données spécifiques)
     $communesListStmt = $pdo->query("
         SELECT DISTINCT ville
         FROM maires
         ORDER BY ville ASC
     ");
 
+    // Cantons via arborescence
     $cantonsListStmt = $pdo->query("
-        SELECT DISTINCT canton
-        FROM maires
-        WHERE canton IS NOT NULL AND canton != ''
-        ORDER BY canton ASC
+        SELECT a.libelle as canton
+        FROM arborescence a
+        WHERE a.type_element = 'canton'
+        ORDER BY a.libelle ASC
     ");
 }
 $departementsList = $departementsListStmt->fetchAll(PDO::FETCH_COLUMN);

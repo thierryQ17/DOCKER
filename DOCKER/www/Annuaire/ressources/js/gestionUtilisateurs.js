@@ -8,6 +8,7 @@ let userModal = null;
 let currentUserId = null;
 let currentRoleFilter = null;
 let originalCommentaires = ''; // Stocke les commentaires originaux sans le mot de passe
+let currentSortBy = 'name'; // Tri par defaut: 'name' ou 'dept'
 
 // Types d'utilisateurs chargés dynamiquement depuis la base de données
 let userTypes = {};
@@ -67,10 +68,30 @@ function renderUsersTable(filteredData = null) {
     // Utiliser les types chargés dynamiquement
     const roleNames = userTypes;
 
+    // Tri selon le mode selectionne
     const sortedData = [...data].sort((a, b) => {
-        const prenomA = (a.prenom || '').toLowerCase();
-        const prenomB = (b.prenom || '').toLowerCase();
-        return prenomA.localeCompare(prenomB, 'fr', { sensitivity: 'base' });
+        if (currentSortBy === 'dept') {
+            // Tri par departement (extraire le premier numero de departement)
+            const deptA = extractFirstDeptNumber(a.departements || '');
+            const deptB = extractFirstDeptNumber(b.departements || '');
+            // Comparer numeriquement si possible
+            const numA = parseInt(deptA) || 999;
+            const numB = parseInt(deptB) || 999;
+            if (numA !== numB) return numA - numB;
+            // Si meme departement, trier par nom
+            const nomA = (a.nom || '').toLowerCase();
+            const nomB = (b.nom || '').toLowerCase();
+            return nomA.localeCompare(nomB, 'fr', { sensitivity: 'base' });
+        } else {
+            // Tri par nom (prenom puis nom)
+            const prenomA = (a.prenom || '').toLowerCase();
+            const prenomB = (b.prenom || '').toLowerCase();
+            const comparePrenom = prenomA.localeCompare(prenomB, 'fr', { sensitivity: 'base' });
+            if (comparePrenom !== 0) return comparePrenom;
+            const nomA = (a.nom || '').toLowerCase();
+            const nomB = (b.nom || '').toLowerCase();
+            return nomA.localeCompare(nomB, 'fr', { sensitivity: 'base' });
+        }
     });
 
     tbody.innerHTML = sortedData.map((user, index) => {
@@ -136,6 +157,28 @@ function normalizeString(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 }
 
+// Extraire le premier numero de departement d'une chaine HTML
+function extractFirstDeptNumber(deptHtml) {
+    if (!deptHtml || deptHtml === '-') return '';
+    // Format: "Nom_Departement (XX)" - le numero est entre parentheses a la fin
+    const match = deptHtml.match(/\((\d{2,3})\)/);
+    return match ? match[1] : '';
+}
+
+// Trier les utilisateurs par critere
+function sortUsersBy(criteria) {
+    currentSortBy = criteria;
+
+    // Mettre a jour l'etat des boutons (si presents)
+    const btnName = document.getElementById('sortByName');
+    const btnDept = document.getElementById('sortByDept');
+    if (btnName) btnName.classList.toggle('active', criteria === 'name');
+    if (btnDept) btnDept.classList.toggle('active', criteria === 'dept');
+
+    // Re-afficher le tableau avec le nouveau tri
+    filterUsers();
+}
+
 // Filtrer par role
 function filterByRole(roleId) {
     if (currentRoleFilter === roleId) {
@@ -153,7 +196,37 @@ function filterByRole(roleId) {
             activeBadge.classList.add('active');
         }
     }
+
+    // Afficher/masquer les boutons de tri selon le filtre actif
+    // Pour les roles 1, 2, 5 : boutons toujours visibles
+    // Pour le role 3 (referent) : boutons visibles uniquement si filtre referent actif
+    updateSortButtonsVisibility();
+
     filterUsers();
+}
+
+// Gerer la visibilite des boutons de tri
+function updateSortButtonsVisibility() {
+    const sortContainer = document.getElementById('sortButtonsContainer');
+    const searchCol = document.getElementById('searchColContainer');
+    if (!sortContainer || !searchCol) return;
+
+    const userType = connectedUser?.type || 0;
+
+    // Boutons visibles UNIQUEMENT si :
+    // - L'utilisateur connecte est de role 1, 2 ou 5
+    // - ET le filtre "Referent" (role 3) est actif
+    const shouldShow = [1, 2, 5].includes(userType) && currentRoleFilter === 3;
+
+    if (shouldShow) {
+        sortContainer.classList.remove('d-none');
+        searchCol.classList.remove('col-md-12');
+        searchCol.classList.add('col-md-8');
+    } else {
+        sortContainer.classList.add('d-none');
+        searchCol.classList.remove('col-md-8');
+        searchCol.classList.add('col-md-12');
+    }
 }
 
 // Filtres avec recherche multi-criteres

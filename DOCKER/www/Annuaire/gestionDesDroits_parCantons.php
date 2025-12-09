@@ -20,14 +20,13 @@ try {
     die("Erreur de connexion : " . $e->getMessage());
 }
 
-// Statistiques
+// Statistiques via arborescence
 $stats = $pdo->query("
     SELECT
-        COUNT(DISTINCT region) as nb_regions,
-        COUNT(DISTINCT numero_departement) as nb_departements,
-        COUNT(DISTINCT circonscription) as nb_circos,
-        COUNT(DISTINCT canton) as nb_cantons
-    FROM maires
+        (SELECT COUNT(*) FROM arborescence WHERE type_element = 'region') as nb_regions,
+        (SELECT COUNT(*) FROM arborescence WHERE type_element = 'departement') as nb_departements,
+        (SELECT COUNT(*) FROM arborescence WHERE type_element = 'circonscription') as nb_circos,
+        (SELECT COUNT(*) FROM arborescence WHERE type_element = 'canton') as nb_cantons
 ")->fetch(PDO::FETCH_ASSOC);
 
 // Compter les responsables assignés

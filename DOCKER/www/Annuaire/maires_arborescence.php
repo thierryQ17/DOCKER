@@ -27,22 +27,30 @@ $deptMode = isset($_GET['dept']) ? trim($_GET['dept']) : null;
 $deptData = null;
 
 if ($deptMode) {
-    // Rechercher le département par numéro ou par nom
+    // Rechercher le département via arborescence
     if (is_numeric($deptMode)) {
         // Recherche par numéro (ex: "60")
         $stmt = $pdo->prepare("
-            SELECT numero_departement, nom_departement, region
-            FROM maires
-            WHERE numero_departement = ?
+            SELECT
+                a.reference_id as numero_departement,
+                SUBSTRING(a.libelle, LOCATE(' - ', a.libelle) + 3) as nom_departement,
+                p.libelle as region
+            FROM arborescence a
+            JOIN arborescence p ON a.parent_id = p.id
+            WHERE a.type_element = 'departement' AND a.reference_id = ?
             LIMIT 1
         ");
         $stmt->execute([$deptMode]);
     } else {
         // Recherche par nom (ex: "oise", "nord", etc.)
         $stmt = $pdo->prepare("
-            SELECT numero_departement, nom_departement, region
-            FROM maires
-            WHERE LOWER(nom_departement) = LOWER(?)
+            SELECT
+                a.reference_id as numero_departement,
+                SUBSTRING(a.libelle, LOCATE(' - ', a.libelle) + 3) as nom_departement,
+                p.libelle as region
+            FROM arborescence a
+            JOIN arborescence p ON a.parent_id = p.id
+            WHERE a.type_element = 'departement' AND LOWER(a.libelle) LIKE CONCAT('%', LOWER(?), '%')
             LIMIT 1
         ");
         $stmt->execute([$deptMode]);
@@ -57,12 +65,15 @@ if ($deptMode) {
 // ============================================================================
 
 
-// Récupérer la liste des régions avec le nombre de maires
+// Récupérer la liste des régions avec le nombre de maires via arborescence
 $regionsStmt = $pdo->query("
-    SELECT region, COUNT(*) as nb_maires
-    FROM maires
-    GROUP BY region
-    ORDER BY region ASC
+    SELECT a.libelle as region, COUNT(m.id) as nb_maires
+    FROM arborescence a
+    LEFT JOIN arborescence d ON d.parent_id = a.id AND d.type_element = 'departement'
+    LEFT JOIN maires m ON d.reference_id = m.numero_departement
+    WHERE a.type_element = 'region'
+    GROUP BY a.id, a.libelle
+    ORDER BY a.libelle ASC
 ");
 $allRegions = $regionsStmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -90,15 +101,16 @@ $statsStmt = $pdo->query("
 ");
 $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
 
-// Récupérer les listes pour les datalists
+// Récupérer les listes pour les datalists via arborescence
 $departementsListStmt = $pdo->query("
-    SELECT CONCAT(numero_departement, ' - ', nom_departement) as dept_display
-    FROM maires
-    GROUP BY numero_departement, nom_departement
-    ORDER BY numero_departement ASC
+    SELECT a.libelle as dept_display
+    FROM arborescence a
+    WHERE a.type_element = 'departement'
+    ORDER BY a.reference_id ASC
 ");
 $departementsList = $departementsListStmt->fetchAll(PDO::FETCH_COLUMN);
 
+// Communes restent via maires (données spécifiques)
 $communesListStmt = $pdo->query("
     SELECT DISTINCT ville
     FROM maires
@@ -106,11 +118,12 @@ $communesListStmt = $pdo->query("
 ");
 $communesList = $communesListStmt->fetchAll(PDO::FETCH_COLUMN);
 
+// Cantons via arborescence
 $cantonsListStmt = $pdo->query("
-    SELECT DISTINCT canton
-    FROM maires
-    WHERE canton IS NOT NULL AND canton != ''
-    ORDER BY canton ASC
+    SELECT a.libelle as canton
+    FROM arborescence a
+    WHERE a.type_element = 'canton'
+    ORDER BY a.libelle ASC
 ");
 $cantonsList = $cantonsListStmt->fetchAll(PDO::FETCH_COLUMN);
 ?>

@@ -28,7 +28,7 @@ try {
 // Fallback si la table est vide ou erreur
 if (empty($typeLabels)) {
     $typeLabels = [
-        1 => 'Super Admin',
+        1 => 'Super DUPOND',
         2 => 'Admin',
         3 => 'Référent',
         4 => 'Membre'
