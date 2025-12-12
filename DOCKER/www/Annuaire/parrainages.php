@@ -36,8 +36,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
     <title>Recherche Parrainages 2017-2022</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <style>
         * { box-sizing: border-box; }
 
@@ -85,116 +83,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
         }
 
         .page-header h1 i { font-size: 18px; }
-
-        /* Search card collapsible */
-        .search-card {
-            background: white;
-            border-radius: 12px;
-            margin-top: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
-
-        .search-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 15px;
-            background: #f8f9fa;
-            cursor: pointer;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .search-header:hover {
-            background: #e9ecef;
-        }
-
-        .search-header h2 {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 600;
-            color: #495057;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .search-header h2 i { color: #17a2b8; }
-
-        .search-header .toggle-icon {
-            transition: transform 0.3s ease;
-        }
-
-        .search-header.collapsed .toggle-icon {
-            transform: rotate(-90deg);
-        }
-
-        .search-body {
-            padding: 10px 15px;
-            display: block;
-        }
-
-        .search-body.collapsed {
-            display: none;
-        }
-
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .filter-group label {
-            font-size: 10px;
-            font-weight: 600;
-            color: #6c757d;
-            text-transform: uppercase;
-            white-space: nowrap;
-            margin: 0;
-        }
-
-        .form-control, .form-select {
-            border-radius: 6px;
-            border: 1px solid #dee2e6;
-            padding: 4px 8px;
-            font-size: 12px;
-            height: 30px;
-        }
-
-        .filter-group .form-control,
-        .filter-group .form-select {
-            min-width: 100px;
-        }
-
-        .btn-search {
-            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-            border: none;
-            border-radius: 6px;
-            padding: 5px 12px;
-            font-weight: 600;
-            font-size: 11px;
-            color: white;
-            height: 30px;
-        }
-
-        .btn-reset {
-            background: #e9ecef;
-            border: none;
-            border-radius: 6px;
-            padding: 5px 10px;
-            font-weight: 600;
-            font-size: 11px;
-            color: #495057;
-            height: 30px;
-        }
 
         /* Results container */
         .results-container {
@@ -521,39 +409,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
             margin-bottom: 10px;
         }
 
-        /* Select2 compact */
-        .select2-container--bootstrap-5 .select2-selection {
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            min-height: 30px;
-            padding: 0 4px;
-        }
-
-        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
-            padding: 2px 4px;
-        }
-
-        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
-            background: #17a2b8;
-            border: none;
-            color: white;
-            border-radius: 3px;
-            padding: 1px 6px;
-            font-size: 10px;
-            margin: 2px;
-        }
-
-        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
-            color: white;
-            font-size: 12px;
-            margin-right: 3px;
-        }
-
-        .select2-container--bootstrap-5 .select2-search--inline .select2-search__field {
-            font-size: 11px;
-            margin: 2px;
-        }
-
         /* Responsive */
         @media (max-width: 991px) {
             .years-container {
@@ -578,14 +433,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
 
             .page-header h1 i {
                 font-size: 18px;
-            }
-
-            .filter-row {
-                grid-template-columns: 1fr;
-            }
-
-            .search-body {
-                padding: 10px;
             }
 
             .results-container {
@@ -647,10 +494,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
                 font-size: 14px;
             }
 
-            .search-header h2 {
-                font-size: 13px;
-            }
-
             .results-header h3 {
                 font-size: 13px;
             }
@@ -669,14 +512,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
                 padding: 2px 8px;
             }
 
-            .btn-search, .btn-reset {
-                width: 100%;
-                margin-bottom: 5px;
-            }
-
-            .d-flex.gap-2 {
-                flex-direction: column;
-            }
         }
     </style>
 </head>
@@ -696,75 +531,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
             </div>
         </div>
 
-        <!-- Search form collapsible -->
-        <div class="search-card">
-            <div class="search-header collapsed" id="searchHeader" onclick="toggleSearch()">
-                <h2><i class="bi bi-funnel"></i> Filtres de recherche</h2>
-                <i class="bi bi-chevron-down toggle-icon"></i>
-            </div>
-            <div class="search-body collapsed" id="searchBody">
-                <form id="searchForm">
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label>Candidat(s)</label>
-                            <select class="form-select" id="filterCandidat" name="candidat[]" multiple>
-                                <?php foreach ($candidats as $candidat): ?>
-                                    <option value="<?= htmlspecialchars($candidat) ?>"
-                                        <?= in_array($candidat, $candidatsDefaut) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($candidat) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label>Année</label>
-                            <select class="form-select" id="filterAnnee" name="annee">
-                                <option value="">Toutes</option>
-                                <option value="2022">2022</option>
-                                <option value="2017">2017</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label>Département</label>
-                            <select class="form-select" id="filterDepartement" name="departement">
-                                <option value="">Tous</option>
-                                <?php foreach ($departements as $dept): ?>
-                                    <option value="<?= htmlspecialchars($dept) ?>"><?= htmlspecialchars($dept) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label>Nom</label>
-                            <input type="text" class="form-control" id="filterNom" name="nom" placeholder="Rechercher...">
-                        </div>
-                        <div class="filter-group">
-                            <label>Commune</label>
-                            <input type="text" class="form-control" id="filterCommune" name="commune" placeholder="Rechercher...">
-                        </div>
-                        <div class="filter-group">
-                            <label>Mandat</label>
-                            <select class="form-select" id="filterMandat" name="mandat">
-                                <option value="">Tous</option>
-                                <option value="Maire">Maire</option>
-                                <option value="Conseiller">Conseiller</option>
-                                <option value="Député">Député</option>
-                                <option value="Sénateur">Sénateur</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-search">
-                            <i class="bi bi-search"></i> Rechercher
-                        </button>
-                        <button type="button" class="btn btn-reset" id="btnReset">
-                            <i class="bi bi-arrow-counterclockwise"></i> Reset
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 
     <!-- Results -->
@@ -783,7 +549,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         // Ordre personnalisé des candidats
         const candidatOrder = {
@@ -791,13 +556,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
             'DUPONT-AIGNAN Nicolas': 2,
             'ARTHAUD Nathalie': 3
         };
-
-        function toggleSearch() {
-            const header = document.getElementById('searchHeader');
-            const body = document.getElementById('searchBody');
-            header.classList.toggle('collapsed');
-            body.classList.toggle('collapsed');
-        }
 
         function toggleNode(element) {
             const toggle = element.querySelector('.tree-toggle');
@@ -809,13 +567,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
         }
 
         $(document).ready(function() {
-            $('#filterCandidat').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Sélectionner...',
-                allowClear: true,
-                width: '100%'
-            });
-
             // Charger immédiatement les 3 candidats par défaut (2017 + 2022)
             searchParrainages();
         });
@@ -824,20 +575,10 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
             return new Intl.NumberFormat('fr-FR').format(num);
         }
 
-        $('#searchForm').on('submit', function(e) {
-            e.preventDefault();
-            searchParrainages();
-        });
-
         function searchParrainages() {
             const formData = {
                 action: 'search',
-                candidat: $('#filterCandidat').val(),
-                annee: $('#filterAnnee').val(),
-                departement: $('#filterDepartement').val(),
-                nom: $('#filterNom').val(),
-                commune: $('#filterCommune').val(),
-                mandat: $('#filterMandat').val()
+                candidat: ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN Nicolas']
             };
 
             $('#loadingOverlay').addClass('show');
@@ -1127,13 +868,6 @@ $candidatsDefaut = ['ASSELINEAU François', 'ARTHAUD Nathalie', 'DUPONT-AIGNAN N
             });
         }
 
-        $('#btnReset').on('click', function() {
-            $('#filterCandidat').val(null).trigger('change');
-            $('#filterAnnee, #filterDepartement, #filterMandat').val('');
-            $('#filterNom, #filterCommune').val('');
-            $('#treeContainer').html('<div class="empty-state"><i class="bi bi-search"></i><p>Lancez une recherche</p></div>');
-            $('#resultsCount').text('0 résultat');
-        });
     </script>
 </body>
 </html>
