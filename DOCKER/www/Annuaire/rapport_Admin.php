@@ -10,8 +10,8 @@ $currentUserNom = $_SESSION['user_nom'] ?? '';
 $currentUserName = $currentUserPrenom . ' ' . $currentUserNom;
 $currentUserInitials = strtoupper(substr($currentUserPrenom, 0, 1) . substr($currentUserNom, 0, 1));
 
-// Seuls les admins peuvent accéder (types 1 et 2)
-if ($currentUserType > 2) {
+// Seuls les admins et président peuvent accéder (types 1, 2 et 5)
+if ($currentUserType > 2 && $currentUserType != 5) {
     header('Location: index.php');
     exit;
 }

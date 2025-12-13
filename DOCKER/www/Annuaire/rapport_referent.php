@@ -10,8 +10,8 @@ $currentUserNom = $_SESSION['user_nom'] ?? '';
 $currentUserName = $currentUserPrenom . ' ' . $currentUserNom;
 $currentUserInitials = strtoupper(substr($currentUserPrenom, 0, 1) . substr($currentUserNom, 0, 1));
 
-// Seuls les admins et référents peuvent accéder
-if ($currentUserType > 3) {
+// Seuls les admins, référents et président peuvent accéder
+if ($currentUserType > 3 && $currentUserType != 5) {
     header('Location: index.php');
     exit;
 }
@@ -651,8 +651,8 @@ if ($currentUserType == 3) {
     </div>
 
     <div class="container pb-5">
-        <?php if ($currentUserType <= 2): ?>
-        <!-- Filtre par département (admin uniquement) -->
+        <?php if ($currentUserType <= 2 || $currentUserType == 5): ?>
+        <!-- Filtre par département (admin et président) -->
         <div class="filter-section">
             <div class="row align-items-center">
                 <div class="col-md-4">

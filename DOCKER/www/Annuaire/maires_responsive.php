@@ -149,7 +149,7 @@ if ($filterMenu && !empty($userAllowedDeptNumbers)) {
 $allRegions = $regionsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Séparer les DOM-TOM des régions métropolitaines
-$domtomList = ['Guadeloupe', 'Guyane', 'La-Reunion', 'Martinique', 'Mayotte'];
+$domtomList = ['Guadeloupe', 'Guyane', 'La Réunion', 'Martinique', 'Mayotte'];
 $regions = [];
 $domtom = [];
 
@@ -363,9 +363,6 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
                         <button class="filter-btn filter-btn-reset" id="btnResetFiltersMobile" title="Réinitialiser les filtres">
                             <i class="bi bi-arrow-counterclockwise"></i>
                         </button>
-                        <button class="filter-btn filter-btn-list" id="btnShowAllMobile" title="Tout afficher">
-                            <i class="bi bi-list-ul"></i>
-                        </button>
                         <button class="filter-btn filter-btn-export" id="btnExportExcelMobile" title="Exporter en Excel">
                             <i class="bi bi-file-earmark-excel"></i>
                         </button>
@@ -386,22 +383,27 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
                             <i class="bi bi-geo-alt"></i>
                             Circo
                         </label>
-                        <input type="text" class="form-control filter-input-modern" id="filterCircoMobile" placeholder="N°...">
+                        <select class="form-select filter-input-modern" id="filterCircoMobile">
+                            <option value="">-- Toutes --</option>
+                        </select>
                     </div>
                     <div class="filter-row">
                         <label class="filter-label">
                             <i class="bi bi-pin-map"></i>
                             Canton
                         </label>
-                        <input type="text" class="form-control filter-input-modern" id="filterCantonMobile" placeholder="Nom...">
+                        <select class="form-select filter-input-modern" id="filterCantonMobile">
+                            <option value="">-- Tous --</option>
+                        </select>
                     </div>
                     <div class="filter-row">
                         <label class="filter-label">
                             <i class="bi bi-building"></i>
                             Commune
                         </label>
-                        <input type="text" class="form-control filter-input-modern" id="filterCommuneMobile" placeholder="Nom...">
+                        <input type="text" class="form-control filter-input-modern" id="filterCommuneMobile" placeholder="Rechercher..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </div>
+                    <div id="communeAutocompleteMobile" style="display: none; background: white; border: 1px solid #17a2b8; border-radius: 4px; max-height: 150px; overflow-y: auto; margin-bottom: 10px;"></div>
                     <div class="filter-row">
                         <label class="filter-label">
                             <i class="bi bi-people"></i>
@@ -413,7 +415,7 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
                     <div class="filter-quick-actions-bottom">
                         <button class="btn-quick-discrete" id="btnToutesFichesMobile">
                             <i class="bi bi-list-ul"></i>
-                            <span>Toutes les fiches</span>
+                            <span>Toutes les communes</span>
                         </button>
                         <button class="btn-quick-discrete" id="btnFilterDemarchageMobile">
                             <i class="bi bi-check2-square"></i>
@@ -422,10 +424,6 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
                         <button class="btn-quick-discrete" id="btnMesCommunesMobile">
                             <i class="bi bi-geo-alt-fill"></i>
                             <span>Mes communes attitrées</span>
-                        </button>
-                        <button class="btn-quick-discrete" id="btnMesCommunes1000Mobile">
-                            <i class="bi bi-people"></i>
-                            <span>Mes communes attitrées &lt; <?= $GLOBALS['filtreHabitants'] ?> hab.</span>
                         </button>
                     </div>
                 </div>

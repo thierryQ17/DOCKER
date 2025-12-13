@@ -514,6 +514,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Champ caché pour l'email sélectionné -->
                     <input type="hidden" id="email-test" name="email" required>
 
+                    <!-- Président (type 5) -->
+                    <div class="mb-2 row align-items-center">
+                        <label for="select-type-5" class="col-4 col-form-label form-label-compact">
+                            <i class="bi bi-star-fill text-purple me-1" style="color: #9b59b6;"></i>Président
+                        </label>
+                        <div class="col-8">
+                            <select class="form-select form-select-sm user-select" id="select-type-5" data-type="5">
+                                <option value="">---</option>
+                                <?php foreach ($utilisateurs as $user): ?>
+                                    <?php if ($user['typeUtilisateur_id'] == 5): ?>
+                                <option value="<?= htmlspecialchars($user['adresseMail']) ?>">
+                                    <?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']) ?>
+                                </option>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
                     <!-- Super Admin (type 1) -->
                     <div class="mb-2 row align-items-center">
                         <label for="select-type-1" class="col-4 col-form-label form-label-compact">

@@ -646,10 +646,9 @@ async function loadCantonTree(userId) {
                 sortedCantons.forEach(canton => {
                     const isChecked = userCantons.some(uc => uc.canton === canton.canton && uc.numero_departement === dept);
                     const bgColor = isChecked ? 'background-color: #e3f2fd; border-left: 3px solid #667eea; padding-left: 8px;' : '';
-                    const circoLabel = canton.circonscription ? `${canton.circonscription} - ` : '';
                     html += `<div style="margin-bottom: 3px; ${bgColor}">`;
                     html += `<input type="checkbox" class="form-check-input me-1" id="canton_${dept}_${canton.canton.replace(/\s+/g, '_')}" data-dept="${dept}" data-canton="${canton.canton}" ${isChecked ? 'checked' : ''}>`;
-                    html += `<label class="form-check-label" for="canton_${dept}_${canton.canton.replace(/\s+/g, '_')}">${circoLabel}<strong>${canton.canton}</strong></label>`;
+                    html += `<label class="form-check-label" for="canton_${dept}_${canton.canton.replace(/\s+/g, '_')}"><strong>${canton.canton}</strong></label>`;
                     html += `</div>`;
                 });
                 html += `</div>`;
@@ -704,10 +703,9 @@ async function loadCantonTree(userId) {
                     sortedDomtomCantons.forEach(canton => {
                         const isChecked = userCantons.some(uc => uc.canton === canton.canton && uc.numero_departement === dept);
                         const bgColor = isChecked ? 'background-color: #f3e5f5; border-left: 3px solid #764ba2; padding-left: 8px;' : '';
-                        const circoLabel = canton.circonscription ? `${canton.circonscription} - ` : '';
                         html += `<div style="margin-bottom: 3px; ${bgColor}">`;
                         html += `<input type="checkbox" class="form-check-input me-1" id="canton_${dept}_${canton.canton.replace(/\s+/g, '_')}" data-dept="${dept}" data-canton="${canton.canton}" ${isChecked ? 'checked' : ''}>`;
-                        html += `<label class="form-check-label" for="canton_${dept}_${canton.canton.replace(/\s+/g, '_')}">${circoLabel}<strong>${canton.canton}</strong></label>`;
+                        html += `<label class="form-check-label" for="canton_${dept}_${canton.canton.replace(/\s+/g, '_')}"><strong>${canton.canton}</strong></label>`;
                         html += `</div>`;
                     });
                     html += `</div>`;

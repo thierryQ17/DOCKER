@@ -479,12 +479,17 @@ function getCirconscriptions($pdo) {
         $whereClause
         AND circonscription IS NOT NULL
         AND circonscription != ''
-        ORDER BY circonscription ASC
+        ORDER BY CAST(circonscription AS UNSIGNED) ASC
     ");
     $stmt->execute($params);
     $circonscriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    echo json_encode(['success' => true, 'circonscriptions' => $circonscriptions]);
+    // Convertir en format avec propriété 'numero' pour le frontend
+    $result = array_map(function($c) {
+        return ['numero' => $c];
+    }, $circonscriptions);
+
+    echo json_encode(['success' => true, 'circonscriptions' => $result]);
     exit;
 }
 
@@ -498,6 +503,7 @@ function getMaires($pdo) {
     $region = $_GET['region'] ?? '';
     $commune = $_GET['commune'] ?? '';
     $canton = $_GET['canton'] ?? '';
+    $cantons = $_GET['cantons'] ?? ''; // Liste de cantons séparés par virgule
     $circo = $_GET['circo'] ?? '';
     $nbHabitants = (int)($_GET['nbHabitants'] ?? 0);
     $page = (int)($_GET['page'] ?? 1);
@@ -543,8 +549,17 @@ function getMaires($pdo) {
         $params[] = "%$commune%";
     }
 
-    // Recherche par canton
-    if (!empty($canton)) {
+    // Recherche par plusieurs cantons (liste séparée par virgule)
+    if (!empty($cantons)) {
+        $cantonList = array_filter(array_map('trim', explode(',', $cantons)));
+        if (!empty($cantonList)) {
+            $placeholders = implode(',', array_fill(0, count($cantonList), '?'));
+            $whereClause .= " AND m.canton IN ($placeholders)";
+            $params = array_merge($params, $cantonList);
+        }
+    }
+    // Recherche par canton unique
+    elseif (!empty($canton)) {
         $whereClause .= " AND m.canton LIKE ?";
         $params[] = "%$canton%";
     }
@@ -1119,7 +1134,7 @@ function getArborescenceChildren($pdo) {
         }
 
         // Liste des régions DOM-TOM à regrouper
-        $domtomRegions = ['Guadeloupe', 'Guyane', 'La-Reunion', 'Martinique', 'Mayotte'];
+        $domtomRegions = ['Guadeloupe', 'Guyane', 'La Réunion', 'Martinique', 'Mayotte'];
 
         // Si parent_id = 0, récupérer les enfants de la racine (régions)
         if ($parentId === 0 || $parentId === null) {
@@ -1135,7 +1150,7 @@ function getArborescenceChildren($pdo) {
                     (SELECT COUNT(*) FROM arborescence c WHERE c.parent_id = a.id AND c.type_element != 'circonscription') as nb_enfants
                 FROM arborescence a
                 WHERE a.parent_id = (SELECT id FROM arborescence WHERE type_element = 'racine' LIMIT 1)
-                AND a.libelle NOT IN ('Guadeloupe', 'Guyane', 'La-Reunion', 'Martinique', 'Mayotte')
+                AND a.libelle NOT IN ('Guadeloupe', 'Guyane', 'La Réunion', 'Martinique', 'Mayotte')
                 ORDER BY a.libelle
             ");
             $stmt->execute();
@@ -1146,7 +1161,7 @@ function getArborescenceChildren($pdo) {
                 SELECT COUNT(*) as nb_enfants
                 FROM arborescence a
                 WHERE a.parent_id IN (
-                    SELECT id FROM arborescence WHERE type_element = 'region' AND libelle IN ('Guadeloupe', 'Guyane', 'La-Reunion', 'Martinique', 'Mayotte')
+                    SELECT id FROM arborescence WHERE type_element = 'region' AND libelle IN ('Guadeloupe', 'Guyane', 'La Réunion', 'Martinique', 'Mayotte')
                 )
                 AND a.type_element = 'departement'
             ");
@@ -1183,7 +1198,7 @@ function getArborescenceChildren($pdo) {
                     (SELECT COUNT(*) FROM arborescence c WHERE c.parent_id = a.id AND c.type_element != 'circonscription') as nb_enfants
                 FROM arborescence a
                 WHERE a.parent_id IN (
-                    SELECT id FROM arborescence WHERE type_element = 'region' AND libelle IN ('Guadeloupe', 'Guyane', 'La-Reunion', 'Martinique', 'Mayotte')
+                    SELECT id FROM arborescence WHERE type_element = 'region' AND libelle IN ('Guadeloupe', 'Guyane', 'La Réunion', 'Martinique', 'Mayotte')
                 )
                 AND a.type_element = 'departement'
                 ORDER BY a.libelle
@@ -1674,8 +1689,8 @@ function getAllUtilisateurs($pdo) {
         $whereClause = "";
         $params = [];
 
-        if ($currentUserType == 1) {
-            // Super Admin : voit tous les utilisateurs (sauf lui-même optionnellement)
+        if ($currentUserType == 1 || $currentUserType == 5) {
+            // Super Admin ou Président : voit tous les utilisateurs
             $whereClause = "";
         } elseif ($currentUserType == 2) {
             // Admin : voit uniquement les référents (3) et membres (4)
@@ -2224,8 +2239,7 @@ function getAllCantons($pdo) {
             SELECT DISTINCT
                 m.numero_departement,
                 m.nom_departement,
-                m.canton,
-                m.circonscription
+                m.canton
             FROM maires m
             WHERE m.canton IS NOT NULL AND m.canton != ''
             ORDER BY m.numero_departement ASC, m.canton ASC
@@ -2733,8 +2747,8 @@ function getUtilisateursParRegion($pdo) {
     $currentUserType = $_SESSION['user_type'] ?? 0;
     $currentUserId = $_SESSION['user_id'] ?? 0;
 
-    // Seuls les admins (1, 2) et référents (3) peuvent accéder
-    if (!in_array($currentUserType, [1, 2, 3])) {
+    // Seuls les admins (1, 2), référents (3) et président (5) peuvent accéder
+    if (!in_array($currentUserType, [1, 2, 3, 5])) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Accès non autorisé']);
         exit;
@@ -2744,8 +2758,8 @@ function getUtilisateursParRegion($pdo) {
         $referents = [];
         $membres = [];
 
-        // Pour Admin et Super Admin : récupérer tous les référents avec leurs départements
-        if ($currentUserType == 1 || $currentUserType == 2) {
+        // Pour Admin, Super Admin et Président : récupérer tous les référents avec leurs départements
+        if ($currentUserType == 1 || $currentUserType == 2 || $currentUserType == 5) {
             $stmtRef = $pdo->query("
                 SELECT DISTINCT
                     u.id,
@@ -2808,8 +2822,8 @@ function getUtilisateursParRegion($pdo) {
             }
         }
 
-        // Pour Admin et Super Admin : récupérer tous les membres
-        if ($currentUserType == 1 || $currentUserType == 2) {
+        // Pour Admin, Super Admin et Président : récupérer tous les membres
+        if ($currentUserType == 1 || $currentUserType == 2 || $currentUserType == 5) {
             $stmtMembres = $pdo->query("
                 SELECT DISTINCT
                     u.id,

@@ -1262,16 +1262,16 @@ $userTypeLabel = $userTypeLabels[$userType] ?? 'Utilisateur';
                     <span>Maires</span>
                 </button>
 
-                <!-- Gestion Utilisateurs - Admin Général, Admin, Référent -->
-                <?php if ($userType <= 3): ?>
+                <!-- Gestion Utilisateurs - Admin Général, Admin, Référent, Président -->
+                <?php if ($userType <= 3 || $userType == 5): ?>
                 <button class="menu-item" data-page="gestionUtilisateurs.php" onclick="loadPageFromMenu('gestionUtilisateurs.php')">
                     <i class="bi bi-people-fill"></i>
                     <span>Gestion Utilisateurs</span>
                 </button>
                 <?php endif; ?>
 
-                <!-- Rapport Référents - Admin Général, Admin, Référent -->
-                <?php if ($userType <= 3): ?>
+                <!-- Rapport Référents - Admin Général, Admin, Référent, Président -->
+                <?php if ($userType <= 3 || $userType == 5): ?>
                 <button class="menu-item" data-page="rapport_referent.php" onclick="loadPageFromMenu('rapport_referent.php')">
                     <i class="bi bi-graph-up-arrow"></i>
                     <span>Rapport Référents</span>
@@ -1290,8 +1290,8 @@ $userTypeLabel = $userTypeLabels[$userType] ?? 'Utilisateur';
                     <span>Carte de FRANCE</span>
                 </button>
 
-                <!-- Rapport Admin - Admin Général, Admin -->
-                <?php if ($userType <= 2): ?>
+                <!-- Rapport Admin - Admin Général, Admin, Président -->
+                <?php if ($userType <= 2 || $userType == 5): ?>
                 <button class="menu-item" data-page="rapport_Admin.php" onclick="loadPageFromMenu('rapport_Admin.php')">
                     <i class="bi bi-bar-chart-line-fill"></i>
                     <span>Rapport Admin</span>

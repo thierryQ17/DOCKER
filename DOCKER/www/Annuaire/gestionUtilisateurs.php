@@ -84,6 +84,18 @@ if ($currentUserType == 1) {
             COUNT(CASE WHEN typeUtilisateur_id = 5 THEN 1 END) as president
         FROM utilisateurs
     ")->fetch(PDO::FETCH_ASSOC);
+} elseif ($currentUserType == 5) {
+    // Président : voit tous les utilisateurs (comme Super Admin)
+    $statsUtilisateurs = $pdo->query("
+        SELECT
+            COUNT(*) as total,
+            COUNT(CASE WHEN typeUtilisateur_id = 1 THEN 1 END) as super_admin,
+            COUNT(CASE WHEN typeUtilisateur_id = 2 THEN 1 END) as admin,
+            COUNT(CASE WHEN typeUtilisateur_id = 3 THEN 1 END) as referent,
+            COUNT(CASE WHEN typeUtilisateur_id = 4 THEN 1 END) as membre,
+            COUNT(CASE WHEN typeUtilisateur_id = 5 THEN 1 END) as president
+        FROM utilisateurs
+    ")->fetch(PDO::FETCH_ASSOC);
 } elseif ($currentUserType == 2) {
     // Admin : voit uniquement les référents (3) et membres (4)
     $statsUtilisateurs = $pdo->query("
@@ -179,15 +191,12 @@ if (!empty($myDepartements)) {
     $placeholders = implode(',', array_fill(0, count($deptNumbers), '?'));
     $stmtAllCantons = $pdo->prepare("
         SELECT DISTINCT
-            canton.libelle as canton,
-            dept.reference_id as numero_departement,
-            SUBSTRING(dept.libelle, LOCATE(' - ', dept.libelle) + 3) as nom_departement,
-            circo.libelle as circonscription
-        FROM arborescence canton
-        JOIN arborescence circo ON canton.parent_id = circo.id
-        JOIN arborescence dept ON circo.parent_id = dept.id
-        WHERE canton.type_element = 'canton' AND dept.reference_id IN ($placeholders)
-        ORDER BY dept.reference_id ASC, canton.libelle ASC
+            m.canton,
+            m.numero_departement,
+            m.nom_departement
+        FROM maires m
+        WHERE m.canton IS NOT NULL AND m.canton != '' AND m.numero_departement IN ($placeholders)
+        ORDER BY m.numero_departement ASC, m.canton ASC
     ");
     $stmtAllCantons->execute($deptNumbers);
     $allCantonsForMyDepts = $stmtAllCantons->fetchAll(PDO::FETCH_ASSOC);
@@ -254,6 +263,12 @@ $allDepartements = $pdo->query("
                             <span class="badge badge-referent" onclick="filterByRole(3)" id="badge-role-3" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Référent: <?= $statsUtilisateurs['referent'] ?></span>
                             <span class="badge badge-membre" onclick="filterByRole(4)" id="badge-role-4" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Membre: <?= $statsUtilisateurs['membre'] ?></span>
                             <?php elseif ($currentUserType == 2): // Admin voit référents et membres ?>
+                            <span class="badge badge-referent" onclick="filterByRole(3)" id="badge-role-3" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Référent: <?= $statsUtilisateurs['referent'] ?></span>
+                            <span class="badge badge-membre" onclick="filterByRole(4)" id="badge-role-4" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Membre: <?= $statsUtilisateurs['membre'] ?></span>
+                            <?php elseif ($currentUserType == 5): // Président voit tous les types ?>
+                            <span class="badge badge-president" onclick="filterByRole(5)" id="badge-role-5" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Président: <?= $statsUtilisateurs['president'] ?></span>
+                            <span class="badge badge-super-admin" onclick="filterByRole(1)" id="badge-role-1" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Super Admin: <?= $statsUtilisateurs['super_admin'] ?></span>
+                            <span class="badge badge-admin" onclick="filterByRole(2)" id="badge-role-2" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Admin: <?= $statsUtilisateurs['admin'] ?></span>
                             <span class="badge badge-referent" onclick="filterByRole(3)" id="badge-role-3" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Référent: <?= $statsUtilisateurs['referent'] ?></span>
                             <span class="badge badge-membre" onclick="filterByRole(4)" id="badge-role-4" title="Cliquer pour filtrer" style="font-size: 11px; padding: 4px 8px;">Membre: <?= $statsUtilisateurs['membre'] ?></span>
                             <?php elseif ($currentUserType == 3): // Référent voit uniquement les membres ?>
@@ -377,8 +392,8 @@ $allDepartements = $pdo->query("
                         </div>
 
                         <div class="row">
-                            <!-- Colonne Référents (visible pour Admin seulement) -->
-                            <?php if ($currentUserType == 1 || $currentUserType == 2): ?>
+                            <!-- Colonne Référents (visible pour Admin et Président) -->
+                            <?php if ($currentUserType == 1 || $currentUserType == 2 || $currentUserType == 5): ?>
                             <div class="col-md-6">
                                 <div class="region-tree-section">
                                     <h6 class="section-title">
@@ -411,7 +426,7 @@ $allDepartements = $pdo->query("
                             <?php endif; ?>
 
                             <!-- Colonne Membres -->
-                            <div class="col-md-<?= ($currentUserType == 1 || $currentUserType == 2) ? '6' : '12' ?>">
+                            <div class="col-md-<?= ($currentUserType == 1 || $currentUserType == 2 || $currentUserType == 5) ? '6' : '12' ?>">
                                 <div class="region-tree-section">
                                     <h6 class="section-title">
                                         <i class="bi bi-people text-success me-2"></i>Membres
@@ -554,7 +569,6 @@ $allDepartements = $pdo->query("
                                                            <?= $isSelected ? 'checked' : '' ?>
                                                            onchange="updateCantonCounts()">
                                                     <label class="form-check-label w-100" for="mycanton_<?= htmlspecialchars($cantonKey) ?>" style="cursor: pointer;">
-                                                        <small class="text-muted"><?= htmlspecialchars($canton['circonscription'] ?? '') ?>e circo -</small>
                                                         <?= htmlspecialchars($canton['canton']) ?>
                                                     </label>
                                                 </div>
@@ -716,7 +730,7 @@ $allDepartements = $pdo->query("
                                                 <?php foreach ($userTypes as $typeId => $typeName): ?>
                                                 <option value="<?= $typeId ?>"><?= htmlspecialchars($typeName) ?></option>
                                                 <?php endforeach; ?>
-                                                <?php elseif ($currentUserType == 2): // Admin peut créer référents et membres ?>
+                                                <?php elseif ($currentUserType == 2 || $currentUserType == 5): // Admin ou Président peut créer référents et membres ?>
                                                 <option value="">Sélectionner...</option>
                                                 <option value="3"><?= htmlspecialchars($userTypes[3] ?? 'Référent') ?></option>
                                                 <option value="4"><?= htmlspecialchars($userTypes[4] ?? 'Membre') ?></option>

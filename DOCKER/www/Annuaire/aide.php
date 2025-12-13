@@ -1,5 +1,5 @@
 <?php
-// Authentification UPR FREXIT
+// Authentification
 require_once __DIR__ . '/auth_middleware.php';
 
 // Récupérer les informations de l'utilisateur connecté
@@ -10,8 +10,9 @@ $currentUserNom = $_SESSION['user_nom'] ?? '';
 $currentUserName = $currentUserPrenom . ' ' . $currentUserNom;
 
 // Déterminer les sections à afficher selon le type d'utilisateur
-$showAdmin = ($currentUserType <= 2); // Admin Général et Admin
-$showReferent = ($currentUserType <= 3); // Admin + Référents
+// Type 5 (Président) a les mêmes droits que type 2 (Admin)
+$showAdmin = ($currentUserType <= 2 || $currentUserType == 5); // Admin Général, Admin et Président
+$showReferent = ($currentUserType <= 3 || $currentUserType == 5); // Admin + Référents + Président
 $showMembre = true; // Tous les utilisateurs
 ?>
 <!DOCTYPE html>

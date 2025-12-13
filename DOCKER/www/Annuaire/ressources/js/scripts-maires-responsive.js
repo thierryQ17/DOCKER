@@ -35,6 +35,7 @@
     const AppState = {
         currentRegion: '',
         currentDepartement: '',
+        currentNomDepartement: '',
         currentPage: 1,
         currentMaireId: null,
         currentMairesData: [],
@@ -266,37 +267,27 @@
             deptLink.addEventListener('click', (e) => {
                 e.preventDefault();
                 clearAllSearchFilters();
-                loadMaires(dept.region || region, dept.numero_departement);
-                bsSidebar.hide();
-            });
+                // Appliquer le filtre habitants par défaut et réinitialiser FilterState
+                const filtreHab = window.APP_CONFIG?.filtreHabitants || 1000;
+                document.getElementById('filterHabitantsMobile').value = filtreHab;
+                // Réinitialiser FilterState pour le nouveau département
+                if (typeof FilterState !== 'undefined') {
+                    FilterState.circo = '';
+                    FilterState.canton = '';
+                    FilterState.commune = '';
+                    FilterState.habitants = String(filtreHab);
+                }
 
-            // Partie droite avec les icônes d'action
-            const actionsDiv = document.createElement('div');
-            actionsDiv.className = 'd-flex align-items-center gap-1';
+                // Stocker le nom du département pour utilisation ultérieure
+                AppState.currentNomDepartement = dept.nom_departement;
 
-            // Icône 1 : Communes traitées (rouge pastel)
-            const btnTraitees = document.createElement('button');
-            btnTraitees.className = 'btn btn-sm p-1 border-0';
-            btnTraitees.style.cssText = 'width: 28px; height: 28px; border-radius: 4px; background: #f8d7da; color: #842029; border: 1px solid #f5c2c7;';
-            btnTraitees.innerHTML = '<i class="bi bi-check2-all" style="font-size: 14px;"></i>';
-            btnTraitees.title = 'Communes traitées';
-            btnTraitees.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                loadCommunesTraiteesDept(dept.region || region, dept.numero_departement);
-                bsSidebar.hide();
-            });
-
-            // Icône 2 : Mes fiches modifiables (vert pastel)
-            const btnModifiables = document.createElement('button');
-            btnModifiables.className = 'btn btn-sm p-1 border-0';
-            btnModifiables.style.cssText = 'width: 28px; height: 28px; border-radius: 4px; background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;';
-            btnModifiables.innerHTML = '<i class="bi bi-pencil-square" style="font-size: 14px;"></i>';
-            btnModifiables.title = 'Mes fiches modifiables';
-            btnModifiables.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                loadMesFichesModifiables(dept.region || region, dept.numero_departement);
+                // Membre (type 4) : filtrer par cantons attribués
+                // Autres rôles (Admin, Référent) : afficher tout le département
+                if (window.USER_FILTER && window.USER_FILTER.userType === 4 && window.USER_FILTER.writableCantons && window.USER_FILTER.writableCantons.length > 0) {
+                    loadMairesWithCantonsFilter(dept.region || region, dept.numero_departement, dept.nom_departement, filtreHab, window.USER_FILTER.writableCantons);
+                } else {
+                    loadMairesWithFilter(dept.region || region, dept.numero_departement, dept.nom_departement, filtreHab);
+                }
                 bsSidebar.hide();
             });
 
@@ -305,12 +296,8 @@
             badge.className = 'badge bg-primary rounded-pill ms-1';
             badge.textContent = dept.nb_maires || 0;
 
-            actionsDiv.appendChild(btnModifiables);
-            actionsDiv.appendChild(btnTraitees);
-            actionsDiv.appendChild(badge);
-
             item.appendChild(deptLink);
-            item.appendChild(actionsDiv);
+            item.appendChild(badge);
             container.appendChild(item);
         });
     }
@@ -604,6 +591,90 @@
             });
     }
 
+    // Charger les maires avec filtre habitants appliqué
+    function loadMairesWithFilter(region, departement, nomDepartement, maxHabitants, page = 1) {
+        if (AppState.isLoading) return;
+
+        AppState.isLoading = true;
+        AppState.currentRegion = region;
+        AppState.currentDepartement = departement;
+        AppState.currentNomDepartement = nomDepartement;
+        AppState.currentPage = page;
+
+        const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+
+        // Afficher l'en-tête de recherche avec description du filtre
+        updateSearchHeader(`${region} - ${nomDepartement} (${departement}) - Communes < ${maxHabitants} hab.`);
+
+        const params = new URLSearchParams({
+            action: 'getMaires',
+            region: region,
+            departement: departement,
+            page: page,
+            showAll: '1',
+            nbHabitants: maxHabitants
+        });
+
+        fetch(`api.php?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                AppState.isLoading = false;
+                if (data.success && data.maires) {
+                    updateSearchHeader(`${region} - ${nomDepartement} (${departement}) - Communes < ${maxHabitants} hab. (${data.maires.length} résultats)`);
+                    displayMairesCards(data);
+                } else {
+                    resultsContainer.innerHTML = '<div class="alert alert-warning m-3">Aucune commune trouvée</div>';
+                }
+            })
+            .catch(error => {
+                AppState.isLoading = false;
+                resultsContainer.innerHTML = '<div class="alert alert-danger m-3">Erreur de chargement</div>';
+            });
+    }
+
+    // Charger les maires avec filtre par cantons attribués + habitants
+    function loadMairesWithCantonsFilter(region, departement, nomDepartement, maxHabitants, cantons) {
+        if (AppState.isLoading) return;
+
+        AppState.isLoading = true;
+        AppState.currentRegion = region;
+        AppState.currentDepartement = departement;
+        AppState.currentNomDepartement = nomDepartement;
+        AppState.currentPage = 1;
+
+        const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+
+        // Afficher l'en-tête de recherche
+        updateSearchHeader(`${region} - ${nomDepartement} (${departement}) - Mes cantons < ${maxHabitants} hab.`);
+
+        const params = new URLSearchParams({
+            action: 'getMaires',
+            region: region,
+            departement: departement,
+            showAll: '1',
+            nbHabitants: maxHabitants,
+            cantons: cantons.join(',')
+        });
+
+        fetch(`api.php?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                AppState.isLoading = false;
+                if (data.success && data.maires) {
+                    updateSearchHeader(`${region} - ${nomDepartement} (${departement}) - Mes cantons < ${maxHabitants} hab. (${data.maires.length} résultats)`);
+                    displayMairesCards(data);
+                } else {
+                    resultsContainer.innerHTML = '<div class="alert alert-warning" style="margin: 80px 20px 20px 20px;">Aucune commune trouvée dans vos cantons</div>';
+                }
+            })
+            .catch(error => {
+                AppState.isLoading = false;
+                resultsContainer.innerHTML = '<div class="alert alert-danger m-3">Erreur de chargement</div>';
+            });
+    }
+
     // ==========================================
     // AFFICHAGE DES MAIRES EN TABLEAU
     // ==========================================
@@ -627,11 +698,20 @@
         AppState.currentMairesData = data.maires;
 
         // Construire le tableau avec le même style que la version desktop
-        // navbar = 56px (sauf iframe), searchHeader = 40px
-        // En mode iframe: pas de navbar, donc top = 40px
-        // En mode normal: navbar + searchHeader = 96px
-        const tableTop = isInIframe ? '40px' : '96px';
-        const tableHeight = isInIframe ? 'calc(100vh - 40px)' : 'calc(100vh - 96px)';
+        // Calculer dynamiquement la position top basée sur les éléments réels
+        const navbar = document.getElementById('mainNavbar');
+        const searchHeader = document.getElementById('searchHeader');
+        let navbarHeight = navbar ? navbar.offsetHeight : 0;
+        let searchHeaderHeight = searchHeader ? searchHeader.offsetHeight : 40;
+
+        // En mode iframe, pas de navbar
+        if (isInIframe) {
+            navbarHeight = 0;
+        }
+
+        const tableTopValue = navbarHeight + searchHeaderHeight;
+        const tableTop = tableTopValue + 'px';
+        const tableHeight = `calc(100vh - ${tableTopValue}px)`;
         let html = `<div style="overflow-x: auto; height: ${tableHeight}; overflow-y: auto; position: fixed; top: ${tableTop}; left: 0; right: 0; background: white;"><table style="width: 100%; border-collapse: collapse; background: white;">`;
 
         // En-tête du tableau (sticky)
@@ -722,7 +802,7 @@
             }
             html += `<td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; text-align: center;">${escapeHtml((maire.circonscription || 'N/A').replace(/\D/g, '') || 'N/A')}</td>`;
             html += `<td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem;">${escapeHtml(maire.canton || 'N/A')}</td>`;
-            html += `<td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; font-weight: 500;">${escapeHtml(maire.ville)}</td>`;
+            html += `<td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; font-weight: 500;">${escapeHtml(maire.commune || maire.ville)}</td>`;
             html += `<td style="padding: 10px 8px; text-align: right; ${textStyle} font-size: 0.85rem;">${maire.nombre_habitants ? parseInt(maire.nombre_habitants).toLocaleString('fr-FR') : 'N/A'}</td>`;
             html += '</tr>';
         });
@@ -853,7 +933,7 @@
         const cantonText = maire.canton ? ` • ${escapeHtml(maire.canton)}` : '';
         const habitantsText = nombreHabitants ? ` (${parseInt(nombreHabitants).toLocaleString('fr-FR')} hab.)` : '';
         modalTitle.innerHTML = `
-            <div>${escapeHtml(maire.ville)} - ${maire.code_postal || ''}${habitantsText}</div>
+            <div>${escapeHtml(maire.commune || maire.ville)} - ${maire.code_postal || ''}${habitantsText}</div>
             <small class="d-block mt-1 opacity-75" style="font-size: 0.8rem;">
                 ${escapeHtml(maire.region)} • ${escapeHtml(maire.circonscription || 'N/A')}${cantonText}
             </small>
@@ -1096,13 +1176,33 @@
 
                     // Reconstruire le HTML de la ligne
                     row.style.cssText = rowStyle + ' cursor: pointer; border-bottom: 1px solid #e9ecef;';
-                    row.innerHTML = `
-                        <td style="padding: 6px 4px; text-align: left; white-space: nowrap; font-size: 0.85rem;"><input type="checkbox" ${isChecked} disabled style="pointer-events: none; width: 15px; height: 15px; margin: 0; vertical-align: middle;">${statusIcon}</td>
+
+                    // Déterminer l'icône d'accès (stylo/cadenas)
+                    let accessIcon = '';
+                    const isWritable = row.dataset.writable === 'true';
+                    if (window.USER_FILTER && window.USER_FILTER.userType >= 1 && window.USER_FILTER.userType <= 4) {
+                        if (isWritable) {
+                            accessIcon = '<i class="bi bi-pencil-fill" style="font-size: 12px; color: #28a745;" title="Écriture"></i>';
+                        } else {
+                            accessIcon = '<i class="bi bi-lock-fill" style="font-size: 12px; color: #6c757d;" title="Consultation uniquement"></i>';
+                        }
+                    }
+
+                    // Construire le HTML avec ou sans colonne accès
+                    let rowHtml = `<td style="padding: 6px 4px; text-align: left; white-space: nowrap; font-size: 0.85rem;"><input type="checkbox" ${isChecked} disabled style="pointer-events: none; width: 15px; height: 15px; margin: 0; vertical-align: middle;">${statusIcon}</td>`;
+
+                    // Ajouter la colonne accès si utilisateur authentifié
+                    if (window.USER_FILTER && window.USER_FILTER.userType >= 1 && window.USER_FILTER.userType <= 4) {
+                        rowHtml += `<td style="padding: 6px 4px; text-align: center; font-size: 0.85rem;">${accessIcon}</td>`;
+                    }
+
+                    rowHtml += `
                         <td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; text-align: center;">${escapeHtml((maire.circonscription || 'N/A').replace(/\D/g, '') || 'N/A')}</td>
                         <td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem;">${escapeHtml(maire.canton || 'N/A')}</td>
-                        <td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; font-weight: 500;">${escapeHtml(maire.ville)}</td>
+                        <td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; font-weight: 500;">${escapeHtml(maire.commune || maire.ville)}</td>
                         <td style="padding: 10px 8px; text-align: right; ${textStyle} font-size: 0.85rem;">${maire.nombre_habitants ? parseInt(maire.nombre_habitants).toLocaleString('fr-FR') : 'N/A'}</td>
                     `;
+                    row.innerHTML = rowHtml;
                 }
 
                 // Fermer le modal
@@ -1511,7 +1611,7 @@
             const departement = `${maire.numero_departement || ''} ${maire.nom_departement || ''}`.trim();
             const circo = maire.circonscription || '';
             const canton = maire.canton || '';
-            const commune = maire.ville || '';
+            const commune = maire.commune || maire.ville || '';
             const nomMaire = maire.nom_maire || '';
             const telephone = maire.telephone || '';
             const habitants = maire.nombre_habitants || '';
@@ -1649,6 +1749,54 @@
                 }
             })
             .catch(error => console.error('Erreur chargement cantons:', error));
+
+        // Charger aussi les circos et cantons pour les selects de filtre
+        loadCircosForFilter();
+        loadCantonsForFilter();
+    }
+
+    // Charger les circonscriptions pour le select de filtre
+    function loadCircosForFilter() {
+        const selectCirco = document.getElementById('filterCircoMobile');
+        if (!selectCirco || !AppState.currentDepartement) return;
+
+        selectCirco.innerHTML = '<option value="">-- Toutes --</option>';
+
+        fetch(`api.php?action=getCirconscriptions&departement=${encodeURIComponent(AppState.currentDepartement)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.circonscriptions) {
+                    data.circonscriptions.forEach(circo => {
+                        const option = document.createElement('option');
+                        option.value = circo.numero;
+                        option.textContent = `${circo.numero}${circo.numero === '1' ? 'ère' : 'e'} circo`;
+                        selectCirco.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => console.error('Erreur chargement circos:', error));
+    }
+
+    // Charger les cantons pour le select de filtre
+    function loadCantonsForFilter() {
+        const selectCanton = document.getElementById('filterCantonMobile');
+        if (!selectCanton || !AppState.currentDepartement) return;
+
+        selectCanton.innerHTML = '<option value="">-- Tous --</option>';
+
+        fetch(`api.php?action=getCantons&departement=${encodeURIComponent(AppState.currentDepartement)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.cantons) {
+                    data.cantons.forEach(canton => {
+                        const option = document.createElement('option');
+                        option.value = canton;
+                        option.textContent = canton;
+                        selectCanton.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => console.error('Erreur chargement cantons:', error));
     }
 
     // Boutons d'action dans la modale
@@ -1739,8 +1887,6 @@
             params.append('region', AppState.currentRegion);
         }
 
-        updateSearchHeader(`Mes communes modifiables (${window.USER_FILTER.writableCantons.length} cantons)`);
-
         fetch(`api.php?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
@@ -1754,12 +1900,16 @@
                         );
                     });
 
+                    // MAJ searchHeader avec le nombre de communes
+                    updateSearchHeader(`Mes communes modifiables (${window.USER_FILTER.writableCantons.length} cantons) - ${maires.length} communes`);
+
                     if (maires.length > 0) {
                         displayMairesCards({ success: true, maires: maires });
                     } else {
                         resultsContainer.innerHTML = '<div class="alert alert-info m-3">Aucune commune modifiable trouvée</div>';
                     }
                 } else {
+                    updateSearchHeader(`Mes communes modifiables (${window.USER_FILTER.writableCantons.length} cantons) - 0 communes`);
                     resultsContainer.innerHTML = '<div class="alert alert-info m-3">Aucune commune trouvée</div>';
                 }
             })
@@ -1774,7 +1924,7 @@
         bsFiltresModal.hide();
     });
 
-    // Bouton "Toutes les fiches du département"
+    // Bouton "Toutes les communes du département" (SANS filtre habitants)
     document.getElementById('btnToutesFichesMobile')?.addEventListener('click', function() {
         bsFiltresModal.hide();
 
@@ -1784,8 +1934,34 @@
             return;
         }
 
-        // Charger toutes les fiches du département actuel
-        loadMaires(AppState.currentRegion, AppState.currentDepartement);
+        const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+
+        // Charger TOUTES les communes du département sans filtre habitants
+        const params = new URLSearchParams({
+            action: 'getMaires',
+            region: AppState.currentRegion,
+            departement: AppState.currentDepartement,
+            showAll: '1'
+        });
+
+        fetch(`api.php?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.maires) {
+                    AppState.currentMairesData = data.maires;
+                    // MAJ searchHeader avec le nombre de communes
+                    updateSearchHeader(`${AppState.currentNomDepartement || AppState.currentDepartement} - Toutes les communes (${data.maires.length})`);
+                    displayMairesCards(data);
+                } else {
+                    updateSearchHeader(`${AppState.currentNomDepartement || AppState.currentDepartement} - Toutes les communes (0)`);
+                    resultsContainer.innerHTML = '<div class="alert alert-info m-3">Aucune commune trouvée</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                resultsContainer.innerHTML = '<div class="alert alert-danger m-3">Erreur de chargement</div>';
+            });
     });
 
     // Bouton "Mes communes attitrées < filtreHabitants hab." - communes modifiables avec moins de X habitants
@@ -1847,15 +2023,16 @@
     });
 
     document.getElementById('btnResetFiltersMobile')?.addEventListener('click', function() {
-        // Réinitialiser tous les champs
+        // Réinitialiser tous les champs et remettre le filtre habitants par défaut
+        const filtreHab = window.APP_CONFIG?.filtreHabitants || 1000;
         FilterState.circo = '';
         FilterState.canton = '';
         FilterState.commune = '';
-        FilterState.habitants = '';
+        FilterState.habitants = String(filtreHab);
         document.getElementById('filterCircoMobile').value = '';
         document.getElementById('filterCantonMobile').value = '';
         document.getElementById('filterCommuneMobile').value = '';
-        document.getElementById('filterHabitantsMobile').value = '';
+        document.getElementById('filterHabitantsMobile').value = filtreHab;
         document.getElementById('filterComboMobile').value = '';
     });
 
@@ -1871,18 +2048,20 @@
         const value = this.value;
         if (!value) return; // Ne rien faire si option vide sélectionnée
 
+        // Récupérer la valeur actuelle du champ habitants (ou la valeur par défaut)
+        const currentHabitants = document.getElementById('filterHabitantsMobile').value || String(filtreHabitants);
+
         if (value === 'cantons700') {
             document.getElementById('filterCantonMobile').value = '';
-            document.getElementById('filterHabitantsMobile').value = String(filtreHabitants);
             FilterState.canton = '';
-            FilterState.habitants = String(filtreHabitants);
         } else {
-            // Canton sélectionné - garder le filtre < filtreHabitants
+            // Canton sélectionné - garder le filtre habitants actuel
             document.getElementById('filterCantonMobile').value = value;
-            document.getElementById('filterHabitantsMobile').value = String(filtreHabitants);
             FilterState.canton = value;
-            FilterState.habitants = String(filtreHabitants);
         }
+
+        // Garder la valeur habitants actuelle
+        FilterState.habitants = currentHabitants;
 
         // Sauvegarder les autres filtres
         FilterState.circo = document.getElementById('filterCircoMobile').value;
@@ -1907,13 +2086,184 @@
         bsFiltresModal.hide();
     });
 
+    // Event listener pour le select Circo - efface Canton et Commune
+    document.getElementById('filterCircoMobile')?.addEventListener('change', function() {
+        const value = this.value;
+        // Effacer les autres filtres
+        document.getElementById('filterCantonMobile').value = '';
+        document.getElementById('filterCommuneMobile').value = '';
+
+        FilterState.circo = value;
+        FilterState.canton = '';
+        FilterState.commune = '';
+        FilterState.habitants = document.getElementById('filterHabitantsMobile').value;
+
+        if (value) {
+            bsFiltresModal.hide();
+            // Appel API pour filtrer par circonscription
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+
+            const params = new URLSearchParams({
+                action: 'getMaires',
+                region: AppState.currentRegion,
+                departement: AppState.currentDepartement,
+                circo: value,
+                showAll: '1'
+            });
+            if (FilterState.habitants) {
+                params.append('nbHabitants', FilterState.habitants);
+            }
+
+            fetch(`api.php?${params.toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.maires) {
+                        AppState.currentMairesData = data.maires;
+                        updateSearchHeader(`${AppState.currentNomDepartement || AppState.currentDepartement} - Circo ${value} (${data.maires.length} communes)`);
+                        displayMairesCards(data);
+                    } else {
+                        resultsContainer.innerHTML = '<div class="alert alert-info m-3">Aucune commune trouvée</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    resultsContainer.innerHTML = '<div class="alert alert-danger m-3">Erreur de chargement</div>';
+                });
+        }
+    });
+
+    // Event listener pour le select Canton - efface Circo et Commune
+    document.getElementById('filterCantonMobile')?.addEventListener('change', function() {
+        const value = this.value;
+        // Effacer les autres filtres
+        document.getElementById('filterCircoMobile').value = '';
+        document.getElementById('filterCommuneMobile').value = '';
+
+        FilterState.circo = '';
+        FilterState.canton = value;
+        FilterState.commune = '';
+        FilterState.habitants = document.getElementById('filterHabitantsMobile').value;
+
+        if (value) {
+            bsFiltresModal.hide();
+            // Appel API pour filtrer par canton
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+
+            const params = new URLSearchParams();
+            params.append('action', 'getMaires');
+            params.append('region', AppState.currentRegion);
+            params.append('departement', AppState.currentDepartement);
+            params.append('canton', value);
+            params.append('showAll', '1');
+            if (FilterState.habitants) {
+                params.append('nbHabitants', FilterState.habitants);
+            }
+
+            const apiUrl = `api.php?${params.toString()}`;
+            console.log('Canton filter API URL:', apiUrl);
+            console.log('Canton value:', value, 'encoded:', encodeURIComponent(value));
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.maires) {
+                        AppState.currentMairesData = data.maires;
+                        updateSearchHeader(`${AppState.currentNomDepartement || AppState.currentDepartement} - Canton ${value} (${data.maires.length} communes)`);
+                        displayMairesCards(data);
+                    } else {
+                        resultsContainer.innerHTML = '<div class="alert alert-info m-3">Aucune commune trouvée</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    resultsContainer.innerHTML = '<div class="alert alert-danger m-3">Erreur de chargement</div>';
+                });
+        }
+    });
+
+    // Autocomplétion simple pour Commune - à partir de 2 caractères
+    document.getElementById('filterCommuneMobile')?.addEventListener('input', function() {
+        const value = this.value.trim();
+        const autocompleteList = document.getElementById('communeAutocompleteMobile');
+
+        // Masquer si moins de 2 caractères
+        if (value.length < 2) {
+            autocompleteList.innerHTML = '';
+            autocompleteList.style.display = 'none';
+            return;
+        }
+
+        // Effacer les autres filtres
+        document.getElementById('filterCircoMobile').value = '';
+        document.getElementById('filterCantonMobile').value = '';
+        FilterState.circo = '';
+        FilterState.canton = '';
+
+        // Rechercher via API pour avoir TOUTES les communes du département (pas seulement celles filtrées)
+        if (AppState.currentDepartement) {
+            fetch(`api.php?action=autocomplete&type=commune&term=${encodeURIComponent(value)}&departement=${encodeURIComponent(AppState.currentDepartement)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        autocompleteList.innerHTML = data.results.map(c =>
+                            `<div style="padding: 3px 6px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 0.75rem;" onmouseover="this.style.background='#e0f7f4'" onmouseout="this.style.background='white'">${escapeHtml(c)}</div>`
+                        ).join('');
+                        autocompleteList.style.display = 'block';
+
+                        // Click sur un item
+                        autocompleteList.querySelectorAll('div').forEach(item => {
+                            item.addEventListener('click', function() {
+                                const communeSelected = this.textContent;
+                                document.getElementById('filterCommuneMobile').value = communeSelected;
+                                autocompleteList.innerHTML = '';
+                                autocompleteList.style.display = 'none';
+                                bsFiltresModal.hide();
+
+                                // Recherche par commune via API (SANS filtre habitants)
+                                FilterState.commune = communeSelected;
+                                FilterState.habitants = '';
+                                FilterState.circo = '';
+                                FilterState.canton = '';
+
+                                const resultsContainer = document.getElementById('resultsContainer');
+                                resultsContainer.innerHTML = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+
+                                // Appel API pour récupérer la commune (sans limite habitants)
+                                fetch(`api.php?action=getMaires&region=${encodeURIComponent(AppState.currentRegion)}&departement=${encodeURIComponent(AppState.currentDepartement)}&commune=${encodeURIComponent(communeSelected)}&showAll=1`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success && data.maires && data.maires.length > 0) {
+                                            AppState.currentMairesData = data.maires;
+                                            displayFilteredResults(data.maires);
+                                        } else {
+                                            resultsContainer.innerHTML = '<div class="alert alert-warning" style="margin: 80px 20px 20px 20px;">Aucun résultat pour cette commune</div>';
+                                            updateSearchHeader(`${AppState.currentRegion} - Dép. ${AppState.currentDepartement} • Commune: ${communeSelected} (0 résultat)`);
+                                        }
+                                    })
+                                    .catch(err => {
+                                        console.error('Erreur:', err);
+                                        resultsContainer.innerHTML = '<div class="alert alert-danger m-3">Erreur de chargement</div>';
+                                    });
+                            });
+                        });
+                    } else {
+                        autocompleteList.innerHTML = '';
+                        autocompleteList.style.display = 'none';
+                    }
+                })
+                .catch(err => console.error('Erreur autocomplete:', err));
+        }
+    });
+
     // Lancer la recherche avec la touche Entrée dans les champs de filtre
-    ['filterCircoMobile', 'filterCantonMobile', 'filterCommuneMobile', 'filterHabitantsMobile'].forEach(fieldId => {
+    ['filterCommuneMobile', 'filterHabitantsMobile'].forEach(fieldId => {
         document.getElementById(fieldId)?.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 // Fermer les suggestions d'autocomplétion
-                closeAllAutocompleteLists();
+                document.getElementById('communeAutocompleteMobile').style.display = 'none';
                 // Simuler le clic sur le bouton Appliquer
                 document.getElementById('btnApplyFiltersMobile')?.click();
             }
@@ -1921,133 +2271,8 @@
     });
 
     // ==========================================
-    // AUTOCOMPLÉTION POUR LES FILTRES MOBILE
+    // AUTOCOMPLÉTION POUR LES FILTRES MOBILE (ancienne config - désactivée pour Circo/Canton)
     // ==========================================
-
-    // Configuration des champs avec autocomplétion
-    const autocompleteConfig = {
-        'filterCircoMobile': 'circo',
-        'filterCantonMobile': 'canton',
-        'filterCommuneMobile': 'commune'
-    };
-
-    // Fermer toutes les listes d'autocomplétion
-    function closeAllAutocompleteLists(except) {
-        const lists = document.querySelectorAll('.autocomplete-list-mobile');
-        lists.forEach(list => {
-            if (list !== except) {
-                list.remove();
-            }
-        });
-    }
-
-    // Créer et afficher la liste d'autocomplétion (condensée)
-    function showAutocompleteList(input, suggestions) {
-        closeAllAutocompleteLists();
-
-        if (!suggestions || suggestions.length === 0) return;
-
-        const list = document.createElement('div');
-        list.className = 'autocomplete-list-mobile';
-        list.style.cssText = 'position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #17a2b8; border-radius: 3px; max-height: 150px; overflow-y: auto; z-index: 1050; box-shadow: 0 2px 6px rgba(0,0,0,0.15);';
-
-        suggestions.forEach(item => {
-            const option = document.createElement('div');
-            option.style.cssText = 'padding: 4px 8px; cursor: pointer; font-size: 0.75rem; border-bottom: 1px solid #f0f0f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
-            option.textContent = item;
-
-            option.addEventListener('mouseenter', function() {
-                this.style.backgroundColor = '#e3f2fd';
-            });
-            option.addEventListener('mouseleave', function() {
-                this.style.backgroundColor = 'white';
-            });
-            option.addEventListener('click', function() {
-                input.value = item;
-                closeAllAutocompleteLists();
-
-                // Mettre à jour le FilterState selon le champ
-                if (input.id === 'filterCircoMobile') {
-                    FilterState.circo = item;
-                } else if (input.id === 'filterCantonMobile') {
-                    FilterState.canton = item;
-                } else if (input.id === 'filterCommuneMobile') {
-                    FilterState.commune = item;
-                }
-
-                // Sauvegarder tous les filtres actuels
-                FilterState.circo = document.getElementById('filterCircoMobile').value;
-                FilterState.canton = document.getElementById('filterCantonMobile').value;
-                FilterState.commune = document.getElementById('filterCommuneMobile').value;
-                FilterState.habitants = document.getElementById('filterHabitantsMobile').value;
-
-                // Lancer la recherche et fermer la modale
-                applyClientSideFilters();
-                bsFiltresModal.hide();
-            });
-
-            list.appendChild(option);
-        });
-
-        // Positionner la liste par rapport au conteneur parent
-        const parent = input.parentElement;
-        parent.style.position = 'relative';
-        parent.appendChild(list);
-    }
-
-    // Debounce pour l'autocomplétion
-    let autocompleteTimers = {};
-
-    // Ajouter l'autocomplétion aux champs
-    Object.keys(autocompleteConfig).forEach(fieldId => {
-        const input = document.getElementById(fieldId);
-        if (!input) return;
-
-        input.addEventListener('input', function() {
-            const term = this.value.trim();
-            const type = autocompleteConfig[fieldId];
-
-            // Annuler le timer précédent
-            if (autocompleteTimers[fieldId]) {
-                clearTimeout(autocompleteTimers[fieldId]);
-            }
-
-            // Fermer si moins de 2 caractères
-            if (term.length < 2) {
-                closeAllAutocompleteLists();
-                return;
-            }
-
-            // Vérifier qu'un département est sélectionné
-            if (!AppState.currentDepartement) {
-                return;
-            }
-
-            // Lancer la requête après un délai
-            autocompleteTimers[fieldId] = setTimeout(() => {
-                fetch(`api.php?action=autocomplete&type=${type}&term=${encodeURIComponent(term)}&departement=${encodeURIComponent(AppState.currentDepartement)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.results && data.results.length > 0) {
-                            showAutocompleteList(input, data.results);
-                        }
-                    })
-                    .catch(err => console.error('Erreur autocomplétion:', err));
-            }, 200);
-        });
-
-        // Fermer sur perte de focus (avec délai pour permettre le clic)
-        input.addEventListener('blur', function() {
-            setTimeout(() => closeAllAutocompleteLists(), 200);
-        });
-    });
-
-    // Fermer les listes quand on clique ailleurs
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.autocomplete-list-mobile') && !e.target.matches('input')) {
-            closeAllAutocompleteLists();
-        }
-    });
 
     // Filtrage côté client
     function applyClientSideFilters() {
@@ -2074,10 +2299,10 @@
                 if (!canton.includes(cantonFilter)) return false;
             }
 
-            // Filtre commune
+            // Filtre commune - correspondance EXACTE (pas includes)
             if (communeFilter) {
-                const commune = (maire.ville || '').toLowerCase();
-                if (!commune.includes(communeFilter)) return false;
+                const commune = (maire.commune || maire.ville || '').toLowerCase();
+                if (commune !== communeFilter) return false;
             }
 
             // Filtre habitants
@@ -2098,16 +2323,25 @@
         const resultsContainer = document.getElementById('resultsContainer');
 
         if (maires.length === 0) {
-            resultsContainer.innerHTML = '<div class="alert alert-warning m-3">Aucun résultat avec ces filtres</div>';
+            resultsContainer.innerHTML = '<div class="alert alert-warning" style="margin: 80px 20px 20px 20px;">Aucun résultat avec ces filtres</div>';
             return;
         }
 
         // Reconstruire le tableau avec les maires filtrés
-        // navbar = 56px (sauf iframe), searchHeader = 40px
-        // En mode iframe: pas de navbar, donc top = 40px
-        // En mode normal: navbar + searchHeader = 96px
-        const tableTop = isInIframe ? '40px' : '96px';
-        const tableHeight = isInIframe ? 'calc(100vh - 40px)' : 'calc(100vh - 96px)';
+        // Calculer dynamiquement la position top basée sur les éléments réels
+        const navbar = document.getElementById('mainNavbar');
+        const searchHeader = document.getElementById('searchHeader');
+        let navbarHeight = navbar ? navbar.offsetHeight : 0;
+        let searchHeaderHeight = searchHeader ? searchHeader.offsetHeight : 40;
+
+        // En mode iframe, pas de navbar
+        if (isInIframe) {
+            navbarHeight = 0;
+        }
+
+        const tableTopValue = navbarHeight + searchHeaderHeight;
+        const tableTop = tableTopValue + 'px';
+        const tableHeight = `calc(100vh - ${tableTopValue}px)`;
         let html = `<div style="overflow-x: auto; height: ${tableHeight}; overflow-y: auto; position: fixed; top: ${tableTop}; left: 0; right: 0; background: white;"><table style="width: 100%; border-collapse: collapse; background: white;">`;
 
         // En-tête
@@ -2177,7 +2411,7 @@
             }
             html += `<td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; text-align: center;">${escapeHtml((maire.circonscription || 'N/A').replace(/\D/g, '') || 'N/A')}</td>`;
             html += `<td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem;">${escapeHtml(maire.canton || 'N/A')}</td>`;
-            html += `<td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; font-weight: 500;">${escapeHtml(maire.ville)}</td>`;
+            html += `<td style="padding: 10px 8px; ${textStyle} font-size: 0.85rem; font-weight: 500;">${escapeHtml(maire.commune || maire.ville)}</td>`;
             html += `<td style="padding: 10px 8px; text-align: right; ${textStyle} font-size: 0.85rem;">${maire.nombre_habitants ? parseInt(maire.nombre_habitants).toLocaleString('fr-FR') : 'N/A'}</td>`;
             html += '</tr>';
         });
@@ -2187,14 +2421,28 @@
         resultsContainer.innerHTML = html;
 
         // Mettre à jour l'en-tête de recherche
-        const filterParts = [];
-        if (FilterState.circo) filterParts.push(`Circo: ${FilterState.circo}`);
-        if (FilterState.canton) filterParts.push(`Canton: ${FilterState.canton}`);
-        if (FilterState.commune) filterParts.push(`Commune: ${FilterState.commune}`);
-        if (FilterState.habitants) filterParts.push(`Max ${FilterState.habitants} hab.`);
+        let filterLabel = '';
+        let showHabitants = true;
 
-        if (filterParts.length > 0) {
-            updateSearchHeader(`${AppState.currentRegion} - Dép. ${AppState.currentDepartement} • ${filterParts.join(' • ')} (${maires.length} communes)`);
+        if (FilterState.circo) {
+            filterLabel = `Circo: ${FilterState.circo}`;
+        } else if (FilterState.canton) {
+            filterLabel = `Canton: ${FilterState.canton}`;
+        } else if (FilterState.commune) {
+            filterLabel = `Commune: ${FilterState.commune}`;
+            showHabitants = false; // Pas de filtre habitants pour recherche par commune
+        }
+
+        const curHabitant = FilterState.habitants || (window.APP_CONFIG?.filtreHabitants || 1000);
+
+        if (filterLabel) {
+            if (showHabitants) {
+                updateSearchHeader(`${AppState.currentRegion} - Dép. ${AppState.currentDepartement} • ${filterLabel} • Max ${curHabitant} hab. (${maires.length} communes)`);
+            } else {
+                updateSearchHeader(`${AppState.currentRegion} - Dép. ${AppState.currentDepartement} • ${filterLabel} (${maires.length} communes)`);
+            }
+        } else {
+            updateSearchHeader(`${AppState.currentRegion} - Dép. ${AppState.currentDepartement} • Max ${curHabitant} hab. (${maires.length} communes)`);
         }
     }
 

@@ -920,8 +920,27 @@ foreach ($circonscriptions as $row) {
 
                 html += '<div class="tree-root" id="treeRoot">';
 
-                // Toutes les régions
+                // Liste des régions DOM-TOM
+                const domtomRegions = ['Guadeloupe', 'Guyane', 'La Réunion', 'Martinique', 'Mayotte'];
+                const domtomDepts = [];
+
+                // Toutes les régions (sauf DOM-TOM)
                 data.regions.forEach(region => {
+                    // Vérifier si c'est une région DOM-TOM
+                    if (domtomRegions.includes(region.nom)) {
+                        // Collecter les départements DOM-TOM pour la section spéciale
+                        if (region.departements) {
+                            region.departements.forEach(dept => {
+                                domtomDepts.push({
+                                    numero: dept.numero,
+                                    nom: dept.nom,
+                                    region: region.nom
+                                });
+                            });
+                        }
+                        return; // Ne pas afficher dans la liste principale
+                    }
+
                     const nbDepts = region.departements ? region.departements.length : 0;
                     const regionId = region.nom.replace(/[^a-zA-Z0-9]/g, '_');
 
@@ -957,6 +976,39 @@ foreach ($circonscriptions as $row) {
                         </div>
                     `;
                 });
+
+                // Ajouter la section DOM-TOM à la fin
+                if (domtomDepts.length > 0) {
+                    html += `
+                        <div class="tree-node tree-region" data-region="DOM-TOM" id="region_DOMTOM" style="margin-top: 10px;">
+                            <div class="tree-header" onclick="toggleTreeNode(this)" style="background: linear-gradient(135deg, #20c997 0%, #198754 100%);">
+                                <span class="tree-toggle collapsed"><i class="bi bi-chevron-down"></i></span>
+                                <span class="tree-icon"><i class="bi bi-globe-americas"></i></span>
+                                <span class="tree-label">DOM-TOM</span>
+                                <span class="tree-count">${domtomDepts.length}</span>
+                            </div>
+                            <div class="tree-children" data-region="DOM-TOM">
+                    `;
+
+                    // Départements DOM-TOM
+                    domtomDepts.forEach(dept => {
+                        html += `
+                            <div class="tree-node tree-dept" data-dept="${dept.numero}">
+                                <div class="tree-header" onclick="loadDeptDetail('${dept.numero}', '${dept.nom.replace(/'/g, "\\'")}', this)">
+                                    <span class="tree-toggle collapsed"><i class="bi bi-chevron-down"></i></span>
+                                    <span class="tree-icon"><i class="bi bi-building"></i></span>
+                                    <span class="tree-label">${dept.numero} - ${dept.nom}</span>
+                                </div>
+                                <div class="tree-children dept-content"></div>
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
 
                 html += '</div>';
 
@@ -1007,6 +1059,14 @@ foreach ($circonscriptions as $row) {
 
             document.getElementById('btnBackFrance').style.display = 'none';
             document.getElementById('btnCantons').style.display = 'none';
+
+            // Refermer toutes les régions de l'arborescence
+            document.querySelectorAll('.tree-toggle').forEach(toggle => {
+                toggle.classList.add('collapsed');
+            });
+            document.querySelectorAll('.tree-children').forEach(children => {
+                children.classList.remove('expanded');
+            });
 
             const loadingEl = document.getElementById('mapLoading');
             loadingEl.style.display = 'block';

@@ -1,6 +1,6 @@
 {
     "environnement": "dev",
-    "filtreHabitants": 1000,
+    "filtreHabitants": 600,
     "defaultPage": {
         "1": {
             "type": "Admin Général",
